@@ -1,0 +1,33 @@
+.main{
+    text-align: center;
+    color: white;
+    padding: 150px 15px 250px 15px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: bold;
+}
+
+.top-p{
+    font-size: 40px;
+    padding: 0;
+    margin: 0;
+}
+
+.bottom-p{
+    margin: 0;
+    padding: 0;
+}
+
+@media only screen and (max-width: 768px) {
+
+    .main {
+        padding-top: 80px;
+    }
+
+    .top-p{
+        font-size: 30px;
+    }
+    
+    .bottom-p{
+        font-size: 13px;
+    }
+}

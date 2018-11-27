@@ -1,0 +1,87 @@
+.inner-div {
+    margin-top: 130px;
+    width: 900px;
+    color: white;
+}
+
+.div-content {
+    padding: 15px;
+    text-align: center;
+}
+
+.p-title {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 35px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.p-bottom {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin: 0;
+}
+
+.icons {
+    width: 20%;
+}
+
+.p-header {
+    font-weight: bold;
+    font-family: 'Roboto Condensed', sans-serif;
+    margin: 0;
+}
+
+.span-content {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 10px;
+}
+
+.social-div {
+    margin-bottom: 15px;
+}
+
+.social-icons {
+    width: 90%;
+    border-radius: 150px;
+}
+
+.links-div {
+    margin-top: 10px;
+}
+
+.social-links {
+    color: white;
+    text-decoration: none;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 12px;
+}
+.social-icons:hover {
+    text-decoration: underline;
+}
+
+@media only screen and (max-width: 1000px) {
+    .inner-div {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .inner-div {
+        margin-top: 50px;
+    }
+    
+    .div-content, .icon-div, .links-div {
+        width: 100%;
+    }
+
+    .icons, .social-icons {
+        width: 10%;
+    }
+}
+
+@media only screen and (max-width: 400px) {
+
+    .social-icons, .icons {
+        width: 20%;
+    }
+}
