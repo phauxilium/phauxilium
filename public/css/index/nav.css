@@ -53,6 +53,7 @@ body{
     position: absolute;
     width: 100%;
     display: none;
+    transition: 0.3s;
 }
 
 .sign-inner {
@@ -62,6 +63,7 @@ body{
     padding: 15px;
     width: 450px;
     height: 470px;
+    transition: 0.3s;
 }
 
 .sign-form {
@@ -73,7 +75,7 @@ body{
     text-align: right;
 }
 
-.close-icon {
+.close-icon, .menu-close-icon {
     font-size: 15px !important;
     cursor: pointer;
 }
@@ -160,6 +162,7 @@ i {
     font-size: 30px !important;
 }
 
+
 .menu-bar{
     width: 0px;
     position: fixed;
@@ -178,6 +181,10 @@ i {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
+.menu-close {
+    padding: 10px;
+    text-align: right;
+}
 
 @media only screen and (max-width: 1000px) {
     .nav-logo{

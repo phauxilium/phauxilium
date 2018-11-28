@@ -8,9 +8,6 @@ menuBtn.addEventListener('click', () => {
 
 document.body.addEventListener('click', (e) => {
     let classList = e.target.classList
-
-    if(classList.contains('col-3') || classList.contains('col-12') || classList.value === '' || classList.contains('sign-modal'))
-        menuBar.style.width = "0"
         
     if(classList.contains('sign-modal'))
         signModal.style.display = "block"
@@ -18,6 +15,7 @@ document.body.addEventListener('click', (e) => {
     if(classList.contains('close-icon'))
         signModal.style.display = "none"
 
-    console.log(classList)
+    if(classList.contains('menu-close-icon') || classList.contains('nav-mobile-btn'))
+        menuBar.style.width = "0"
 
 })
