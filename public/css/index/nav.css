@@ -31,7 +31,7 @@ body{
     transition: 0.1s;
 }
 
-.nav-desktop-btn:hover{
+.nav-desktop-btn:hover, .sign-in-desktop:hover{
     color: gray;
 }
 
@@ -48,8 +48,95 @@ body{
     transition: 0.2s;
 }
 
-.sign-in:hover{
-    color: gray;
+.sign-outer {
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    display: none;
+}
+
+.sign-inner {
+    margin-top: 50px;
+    border-radius: 15px;
+    background-color: white;
+    padding: 15px;
+    width: 450px;
+    height: 470px;
+}
+
+.sign-form {
+    padding: 5px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.close-div {
+    text-align: right;
+}
+
+.close-icon {
+    font-size: 15px !important;
+    cursor: pointer;
+}
+
+.sign-img {
+    width: 50%;
+}
+
+.label {
+    float: left;
+    text-align: left;
+}
+
+.input-container {
+    padding: 15px;
+}
+
+.inputs {
+    background-color: whitesmoke;
+    border: 1px solid lightgrey;
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.inputs:focus {
+    border: 1px solid black;
+} 
+
+.helper {
+    font-size: 13px;
+    color: red;
+    text-align: left;
+    float: left;
+}
+
+.sign-btn {
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    font-size: 15px;
+    padding: 5px 15px 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.forgot-div {
+    text-align: left;
+}
+
+.forgot-link, .sign-up-link {
+    color:#1976d2;
+    font-size: 13px;
+}
+
+.sign-btn-div {
+    text-align: right;
+}
+
+.remember-me {
+    font-size: 10px;
 }
 
 /*---------- Mobile ----------- */
@@ -62,6 +149,7 @@ body{
     margin-right: 10px;
     display: none;
     cursor: pointer;
+    outline: none;
 }
 
 .mobile-links {
@@ -71,7 +159,6 @@ body{
 i {
     font-size: 30px !important;
 }
-
 
 .menu-bar{
     width: 0px;
@@ -150,5 +237,13 @@ i {
 
     .menu-btn {
         margin-top: 40px;
+    }
+
+}
+
+@media only screen and (max-width: 500px) {
+    .sign-inner {
+        width: 100%;
+        border-radius: 0;
     }
 }
