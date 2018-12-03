@@ -1,0 +1,243 @@
+
+
+.inner-div {
+    padding: 10px 5px 10px 5px;
+}
+
+/*  --------------- PROFILE -------------- */
+
+.inner-profile-div {
+    background-color: white;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid lightgray;
+    box-shadow: 0 3px 5px 0 lightgray;
+}
+
+.img-content-div {
+    width: 180px;
+    height: 180px;
+    border-radius: 150px;
+    padding: 5px;
+    box-shadow: 0 3px 5px lightgray;
+}
+
+.image {
+    width: 100%;
+    height: 100%;
+    border-radius: 150px;
+}
+
+.details-div {
+    margin-top: 15px;
+    font-family: Arial;
+}
+
+.name {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.specialty {
+    font-size: 15px;
+}
+
+.since {
+    font-size: 12px;
+}
+
+.titles {
+    color: #1da1f2;
+    margin-bottom: 2px;
+}
+
+.contents {
+    font-size: 14px;
+}
+
+.clinic-info {
+    text-align: left;
+}
+
+.clinic-name {
+    font-size: 17px;
+    text-decoration: underline;
+}
+
+.view-sched, .hide-sched {
+    color: #1da1f2;
+    text-decoration: underline;
+    cursor: pointer;    
+}
+
+.sched-tbl {
+    width: 100%;
+}
+
+.sched-content {
+    height: 0;
+    overflow: hidden;
+}
+
+
+
+/*  ----------- TIMELINE --------------- */
+.timeline-div {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.inner-bar {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+}
+
+.bar-btn {
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 5px;
+    background-color: transparent;
+    outline: none;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.bar-btn:hover {
+    color: #1da1f2;
+    border-bottom: 2px solid #1da1f2;
+}
+
+.active {
+    color: #1da1f2;
+    border-bottom: 2px solid #1da1f2;
+}
+
+.todays-div {
+    margin-top: 8px;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid lightgrey;
+    border-top: 0;
+}
+
+.p-date {
+    margin-top: 0;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 10px;
+    text-decoration: underline;
+}
+
+.today-tbl {
+    width: 100%;
+}
+
+.sched-td {
+    padding: 15px;
+    text-align: left;
+}
+
+.re-sched, .cancel {
+    border: none;
+    color: white;
+    padding: 10px;
+    outline: none;
+    width: 100px;
+    border-radius: 3px;  
+    cursor: pointer;
+}
+
+.re-sched {
+    background-color: #1da1f2;
+}
+
+.cancel {
+    background-color: #dd5347;
+}
+
+/* ----------- Advertisments ------------- */
+
+.ads-div {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.ads-title {
+    font-size: 15px;
+    margin-top: 0;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid lightgrey;
+    box-shadow: 0 2px 2px 0 lightgray;
+    margin-bottom: 5px;
+}
+
+.inner-ads {
+    background-color: white;
+    padding: 10px;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+    margin-bottom: 5px;
+}
+
+
+.ads-img-div {
+    height: 150px;
+    width: 150px;
+    margin-bottom: 10px;
+}
+
+.ads-img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.ads-links {
+    color: #1da1f2;
+}
+
+.ads-content {
+    font-size: 12px;
+}
+
+@media only screen and (max-width: 900px) {
+    .img-content-div {
+        width: 130px;
+        height: 130px;
+    }
+
+    .ads-img {
+        width: 120px;
+        height: 120px;
+    }
+
+    .ads-img-div {
+        margin: 0;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .profile-div, .ads-div {
+        display: none;
+    }
+    
+    .timeline-div {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .sched-td {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .re-sched, .cancel {
+        font-size: 12px;
+        width: 70px;
+        padding: 5px;
+    }
+
+}

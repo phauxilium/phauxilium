@@ -1,3 +1,5 @@
+
+
 let menuBtn = document.querySelector('.menu-btn')
 let menuBar = document.querySelector('.menu-bar')
 let signModal = document.querySelector('.sign-outer')
@@ -18,4 +20,11 @@ document.body.addEventListener('click', (e) => {
     if(classList.contains('menu-close-icon') || classList.contains('nav-mobile-btn'))
         menuBar.style.width = "0"
 
+})
+
+let form = document.querySelector('.sign-form')
+
+form.addEventListener('submit', (e) => {
+    e.preventDefault()
+        
 })

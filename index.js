@@ -3,6 +3,7 @@ const bodyParser = require('body-parser')
 const helmet = require('helmet')
 const path = require('path')
 const indexRoutes = require('./routes/indexRoutes')
+const profileRoutes = require('./routes/profileRoutes')
 const PORT = process.env.PORT || 3000
 const app = express()
 
@@ -10,5 +11,7 @@ app.use(helmet())
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.set('view engine', 'ejs')
 app.use('/', indexRoutes)
+app.use('/profile', profileRoutes)
+app.get('*', (req, res) => res.send('Invalid URL!'))
 
 app.listen(PORT)
