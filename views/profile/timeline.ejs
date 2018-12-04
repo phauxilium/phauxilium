@@ -13,84 +13,108 @@
                 <div class="image-div">
                     <center>
                         <div class="img-content-div">
-                            <img src="/static/images/profile-images/ker.jpg" class="image">
+                            <img src="/static/images/profile-images/<%= img %>" class="image">
                         </div>
                     </center>
                     <div class="details-div">
                         <div class="name">
-                            Dr. Gerphil Kier De la Cruz
+                            <% if(doctor === true) {%> Dr. <% } %>
+                            <%= name %>
                         </div>
 
-                        <div class="specialty">
-                            Pediatrics/ Developmental and Behavioral Pediatrics
-                        </div>
+                        <% if(doctor === true) { %>
+                            <div class="specialty">
+                                Pediatrics/ Developmental and Behavioral Pediatrics
+                            </div>
+                            <div class="since">
+                                MD since 2004 
+                            </div>
 
-                        <div class="since">
-                            MD since 2004 
-                        </div>
+                            <button class="access-btn setAppointment ">Set an Appointment</button>
+                            <button class="access-btn sendMessage">Send Message</button>
 
-                        <h4 class="titles">About My Practice</h4>
-                        <div class="contents">
-                            I am a developmental and behavioral pediatrician. My practice deals with developmental and behavioral concerns of children such as ADHD, autism, learning disability, intellectual disability and the like. I also do school assessment to help children and their parents find better placement for them in terms of education.
-                        </div>
+                        <% } else { %>
+                            <div class="specialty">
+                                <%= address %>
+                            </div>
 
+                            <button class="access-btn sendMessage ">Send Message</button>
+                            <button class="access-btn addMedicalRecords">Add Medical Records</button>
+                        <% } %>
+
+                        <% if(doctor === true) { %>
+                            <h4 class="titles view-more">View more...</h4>
+                        <% } %>
                         
-                        <h4 class="titles">Clinic Information</h4>
-                        <div class="contents">
-                            <div class="clinic-name">
-                                M. Francisco Children's Medical Clinic
-                            </div>
-                            <div class="clinic-loc">
-                                497 F. Mariano Ave, Manggahan, Pasig City, Metro Manila
-                            </div>
-                            <div class="clinic-phone">
-                                Tel No.:  (632)6817158 / 09154524372
+                        <div class="details">
+                            <h4 class="titles">About My Practice</h4>
+                            <div class="contents">
+                                I am a developmental and behavioral pediatrician. My practice deals with developmental and behavioral concerns of children such as ADHD, autism, learning disability, intellectual disability and the like. I also do school assessment to help children and their parents find better placement for them in terms of education.
                             </div>
 
-                            <h4 class="view-sched">
-                                View clinic schedule
-                            </h4>
-
-                            <div class="sched-content">
-                                <h4 class="titles">Schedules</h4>
-                                <table class="sched-tbl">
-                                    <th>Day</th>
-                                    <th>Hours</th>
-                                    <tr>
-                                        <td>Monday</td>
-                                        <td>9:00am - 2:00pm</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Tuesday</td>
-                                        <td>9:00am - 2:00pm</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Wednessday</td>
-                                        <td>5:00pm - 7:00pm</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Thursday</td>
-                                        <td>9:00am - 2:00pm</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Friday</td>
-                                        <td>5:00pm - 7:00pm</td>
-                                    </tr>
-
-                                    <tr>
-                                        <td>Saturday</td>
-                                        <td>9:00am - 2:00pm</td>
-                                    </tr>
-                                </table>
-
-
-                                <div class="hide-sched">
-                                    Hide schedules
+                            
+                            <h4 class="titles">Clinic Information</h4>
+                            <div class="contents">
+                                <div class="clinic-name">
+                                    M. Francisco Children's Medical Clinic
                                 </div>
+                                <div class="clinic-loc">
+                                    497 F. Mariano Ave, Manggahan, Pasig City, Metro Manila
+                                </div>
+                                <div class="clinic-phone">
+                                    Tel No.:  (632)6817158 / 09154524372
+                                </div>
+
+                                <h4 class="view-sched">
+                                    View clinic schedule
+                                </h4>
+
+                                <div class="sched-content">
+                                    <h4 class="titles">Schedules</h4>
+                                    <table class="sched-tbl">
+                                        <th>Day</th>
+                                        <th>Hours</th>
+                                       
+                                            <tr>
+                                                <td>Monday</td>
+                                                <td>9:00am - 2:00pm</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Tuesday</td>
+                                                <td>9:00am - 2:00pm</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Wednessday</td>
+                                                <td>5:00pm - 7:00pm</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Thursday</td>
+                                                <td>9:00am - 2:00pm</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Friday</td>
+                                                <td>5:00pm - 7:00pm</td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>Saturday</td>
+                                                <td>9:00am - 2:00pm</td>
+                                            </tr>
+
+                                    </table>
+
+
+                                    <div class="hide-sched">
+                                        Hide schedules
+                                    </div>
+                                </div>
+
+                                <h4 class="titles view-less">View Less</h4>
+
                             </div>
                         </div>
 
@@ -100,24 +124,48 @@
         </div>
         <div class="col-6 inner-div timeline-div">
             <div class="col-12 inner-bar">
-                <div class="col-4 bar-btns-div">
-                    <button class="active bar-btn">
-                        Today's Schedule
-                    </button>
-                </div>
-                <div class="col-4 bar-btns-div">
-                    <button class="bar-btn">
-                        Upcoming Schedules
-                    </button>
-                </div>
-                <div class="col-4 bar-btns-div">
-                    <button class="bar-btn">
-                        Posts
-                    </button>
-                </div>
+                <% if(doctor === true) { %> 
+                    <div class="col-4 bar-btns-div">
+                        <button class="active bar-btn">
+                            Today's Schedule
+                        </button>
+                    </div>
+                    <div class="col-4 bar-btns-div">
+                        <button class="bar-btn">
+                            Upcoming Schedules
+                        </button>
+                    </div>
+                    <div class="col-3 bar-btns-div">
+                        <button class="bar-btn">
+                            Posts
+                        </button>
+                    </div>
+                <% } else { %>
+
+                    <div class="col-3 bar-btns-div">
+                        <button class="active bar-btn">
+                            Today's Schedule
+                        </button>
+                    </div>
+                    <div class="col-3 bar-btns-div">
+                        <button class="bar-btn">
+                            Upcoming Schedules
+                        </button>
+                    </div>
+                    <div class="col-3 bar-btns-div">
+                        <button class="bar-btn">
+                            Medical Records
+                        </button>
+                    </div>
+                    <div class="col-3 bar-btns-div">
+                        <button class="bar-btn">
+                            Posts
+                        </button>
+                    </div>
+                <% } %>
             </div>
             <div class="col-12 todays-div">
-                <p class="p-date">
+                <p class="date-now">
                     <%= month %> <%= day %>, <%= year %> 
                 </p>
 
@@ -125,79 +173,92 @@
                     <th>Time</th>
                     <th>Name</th>
                     <th></th>
-
-                    <tr>
-                        <td class="sched-td">9:00am</td>
-                        <td class="sched-td">Adrianne Dave Danozo</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sched-td">9:30am</td>
-                        <td class="sched-td">Jhon Michael Gonzales</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sched-td">10:00am</td>
-                        <td class="sched-td">Vinoe Saison</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sched-td">11:30am</td>
-                        <td class="sched-td">Paul Joseph Tiquio</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sched-td">12:00am</td>
-                        <td class="sched-td">Ace Velarde</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="sched-td">1:00pm</td>
-                        <td class="sched-td">Atena Daylisan</td>
-                        <td class="sched-td">
-                            <button class="re-sched">
-                                Reschedule
-                            </button>
-                            <button class="cancel">
-                                Cancel
-                            </button>
-                        </td>
-                    </tr>
+                        <% if(doctor === true) { %>                     <tr>
+                            <td class="sched-td">9:00am</td>
+                            <td class="sched-td">Adrianne Dave Danozo</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sched-td">9:30am</td>
+                            <td class="sched-td">Jhon Michael Gonzales</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sched-td">10:00am</td>
+                            <td class="sched-td">Vinoe Saison</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sched-td">11:30am</td>
+                            <td class="sched-td">Paul Joseph Tiquio</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sched-td">12:00am</td>
+                            <td class="sched-td">Ace Velarde</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="sched-td">1:00pm</td>
+                            <td class="sched-td">Atena Daylisan</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                    <% } else {%>
+                        <tr>
+                            <td class="sched-td">11:30am</td>
+                            <td class="sched-td">Dr. Gerphil Kier De la Cruz</td>
+                            <td class="sched-td">
+                                <button class="re-sched">
+                                    Reschedule
+                                </button>
+                                <button class="cancel">
+                                    Cancel
+                                </button>
+                            </td>
+                        </tr>
+                    <% } %>
                 </table>
             </div>
         </div>

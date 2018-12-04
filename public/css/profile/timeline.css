@@ -28,9 +28,17 @@
     border-radius: 150px;
 }
 
+.details {
+    display: none;
+}
+
 .details-div {
     margin-top: 15px;
     font-family: Arial;
+    cursor: pointer;
+    overflow: hidden;
+    height: 100%;
+    padding-bottom: 10px;    
 }
 
 .name {
@@ -40,6 +48,15 @@
 
 .specialty {
     font-size: 15px;
+}
+
+.access-btn {
+    background-color: #1da1f2;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    margin-top: 5px;
 }
 
 .since {
@@ -78,7 +95,6 @@
     height: 0;
     overflow: hidden;
 }
-
 
 
 /*  ----------- TIMELINE --------------- */
@@ -122,7 +138,7 @@
     border-top: 0;
 }
 
-.p-date {
+.date-now {
     margin-top: 0;
     margin-bottom: 20px;
     text-align: left;
@@ -219,11 +235,15 @@
 }
 
 @media only screen and (max-width: 768px) {
-    .profile-div, .ads-div {
+    .inner-div {
+        padding-bottom: 5px;
+    }
+
+    .ads-div {
         display: none;
     }
     
-    .timeline-div {
+    .profile-div, .timeline-div {
         width: 100%;
     }
 }
@@ -234,6 +254,21 @@
         padding: 5px;
     }
 
+    .titles {
+        font-size: 15px;
+    }
+
+    .clinic-name {
+        font-size: 14px;
+    }
+
+    .contents {
+        font-size: 12px;
+    }
+
+    .bar-btn {
+        font-size: 12px;
+    }
     .re-sched, .cancel {
         font-size: 12px;
         width: 70px;
