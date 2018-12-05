@@ -39,6 +39,7 @@ const person = {
             },
             upcoming: {}
         },
+        medRecords: {},
         doctor: true
     },
     
@@ -54,7 +55,7 @@ const person = {
             },
             upcoming: {}
         },
-        medicalRecords: {},
+        medRecords: {},
         doctor: false
     },
     
@@ -84,6 +85,7 @@ const person = {
             },
             upcoming: {}
         },
+        medRecords: {},
         doctor: true
     },
 
@@ -99,7 +101,21 @@ const person = {
             },
             upcoming: {}
         },
-        medicalRecords: {},
+        medRecords: {
+            'John Michael Gonzales': {
+                'Wednesday, December 5, 2018 - 9:30am': {
+                    findings: 'Lung Cancer'
+                }
+            },
+
+            'Gerphil Kier De la Cruz': {
+                'Monday, December 3, 2018 - 10:30am': {
+                    findings: 'Asthma'
+                }
+            }
+
+
+        },
         doctor: false
     },
 
@@ -119,6 +135,7 @@ const person = {
     },
 
 }
+
 
 
 route.get('/t/:name', (req, res) => {

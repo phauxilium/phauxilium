@@ -55,8 +55,33 @@ const showModal = (showDiv, btn, btnName) => {
 // -------------- Handling Submit Appointment Form ------------
 let appointmentForm = document.querySelector('.appointment-form')
 
+let socket = io()
+
 appointmentForm.addEventListener('submit', (e) => {    
     e.preventDefault()
+
+    let week = e.target.elements.setAppointmentWeek
+    let time = e.target.elements.setAppointmentTime
+    let date = e.target.elements.setAppointmentDate
+
+    // Emitting Events
+
+    socket.emit('submitAppointment', {
+        'week': week.value,
+        'time': time.value,
+        'date': date.value
+    })
+
+    week.value = 'Monday'
+    time.value = ''
+    date.value = ''
+
+    // socket.on('submitAppointment', data => {
+
+
+
+    // })
+
 
     let message = document.querySelector('.message')
 
@@ -108,6 +133,33 @@ addMedicalForm.addEventListener('submit', (e) => {
 })
 
 
+// ------------- Changing Active Buttons --------------
+// ------------ Changing Divs ----------------
+let barBtns = document.querySelectorAll('.bar-btn')
+let innerTimelineDivs = document.querySelectorAll('.inner-timeline-div')
+
+barBtns.forEach((barBtn, index) => {
+    barBtn.addEventListener('click', () => {
+
+        // Buttons
+        barBtns.forEach((btn) => {
+            btn.classList.remove('active')
+        })
+        barBtn.classList.add('active')
+
+        // Divs
+        innerTimelineDivs.forEach((innerTimelineDiv) => {
+            innerTimelineDiv.classList.remove('active-div')
+        })
+
+        innerTimelineDivs[index].classList.add('active-div')
+
+    })
+})
+
+
+
+// -------------- Body Event Listeners ----------------------
 let appointmentModal = document.querySelector('.appointment-modal')
 let setSchedBtn = document.querySelector('.setSched-btn')
 
@@ -121,6 +173,7 @@ document.body.addEventListener('click', (e) => {
 
     e.stopPropagation()
 
+    // ------------ Hiding Modals ----------------
     let classList = e.target.classList
     if(
         classList.contains('close-modal-icon') || 
@@ -137,6 +190,8 @@ document.body.addEventListener('click', (e) => {
 
     }
     
+
+    // -------------- Showing Modals -------------
     if(classList.contains('setAppointment')) {
         showModal(appointmentModal, setSchedBtn, 'Set Appointment')
     } else if(classList.contains('today-re-sched')) {
@@ -145,17 +200,6 @@ document.body.addEventListener('click', (e) => {
         showModal(cancelModal, '', '')
     } else if(classList.contains('addMedicalRecords')) {
         showModal(addMedicalModal, '', '')
-    }
-
-
-    let barBtn = document.querySelectorAll('.bar-btn')
-
-    barBtn.forEach((bar) => {
-        bar.classList.remove('active')
-    })
-
-    if(classList.contains('bar-btn')) {
-        classList.add('active')
     }
 
 })
