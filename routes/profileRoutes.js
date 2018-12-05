@@ -50,7 +50,6 @@ const person = {
         address: 'Mandurriao, Iloilo City',
         appointments: {
             today: {
-                '9:00am': 'Gerphil Kier De la Cruz',
                 '3:30pm': 'Jhon Michael Gonzales'
             },
             upcoming: {}

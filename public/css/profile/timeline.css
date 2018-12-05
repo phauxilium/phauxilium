@@ -163,7 +163,7 @@
     width: 100%;
 }
 
-.sched-td {
+.sched-td, .sched-td-today {
     padding: 15px;
     text-align: left;
 }
@@ -436,7 +436,7 @@
 }
 
 @media only screen and (max-width: 500px) {
-    .sched-td {
+    .sched-td, .sched-td-today {
         font-size: 12px;
         padding: 5px;
     }

@@ -69,19 +69,13 @@ appointmentForm.addEventListener('submit', (e) => {
     socket.emit('submitAppointment', {
         'week': week.value,
         'time': time.value,
-        'date': date.value
+        'date': date.value,
+        'name': 'Dr. Gerphil Kier De la Cruz'
     })
 
     week.value = 'Monday'
     time.value = ''
     date.value = ''
-
-    // socket.on('submitAppointment', data => {
-
-
-
-    // })
-
 
     let message = document.querySelector('.message')
 
@@ -98,6 +92,28 @@ appointmentForm.addEventListener('submit', (e) => {
     }, 3000)
 })
 
+
+// Listening for event from server side
+socket.on('submitAppointment', data => {
+    let todayTbl = document.querySelector('.today-tbl')
+    let schedTdToday = document.querySelectorAll('.sched-td-today')    
+    let row = todayTbl.insertRow((schedTdToday.length / 3) + 1)
+
+    let col1 = row.insertCell(0)
+    col1.classList.add('sched-td-today')
+    col1.innerHTML = `${data.time}am`
+
+    let col2 = row.insertCell(1)
+    col2.classList.add('sched-td-today')
+    col2.innerHTML = `${data.name}`
+
+    let col3 = row.insertCell(2)
+    col3.classList.add('sched-td-today')
+    col3.innerHTML = `
+        <button class="today-re-sched">Reschedule</button>
+        <button class="today-cancel">Cancel</button>
+    `
+})
 
 
 // -------------- Handling Submit Cancel Form -----------------

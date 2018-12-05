@@ -19,8 +19,8 @@ app.use('/profile', profileRoutes)
 app.get('*', (req, res) => res.send('Invalid URL!'))
 
 io.on('connection', socket => {
-    socket.on('submitAppointment', (data) => {
-        console.log(data)
+    socket.on('submitAppointment', data => {
+        io.emit('submitAppointment', data)
     })
 })
 
