@@ -5,29 +5,29 @@
 
 </head>
 
-    <%- include('nav') %>
-
     <div class="main col-12">
+        
+        <!-- ------------------ Profile ------------------  -->
         <div class="col-3 inner-div profile-div">
             <div class="inner-profile-div">
                 <div class="image-div">
                     <center>
                         <div class="img-content-div">
-                            <img src="/static/images/profile-images/<%= img %>" class="image">
+                            <img src="/static/images/profile-images/<%= data.img %>" class="image">
                         </div>
                     </center>
                     <div class="details-div">
                         <div class="name">
-                            <% if(doctor === true) {%> Dr. <% } %>
-                            <%= name %>
+                            <% if(data.doctor === true) { %> Dr. <% } %>
+                            <%= data.name %>
                         </div>
 
-                        <% if(doctor === true) { %>
+                        <% if(data.doctor === true) { %>
                             <div class="specialty">
-                                Pediatrics/ Developmental and Behavioral Pediatrics
+                               <%= data.specialty %>
                             </div>
                             <div class="since">
-                                MD since 2004 
+                                <%= data.since %>   
                             </div>
 
                             <button class="access-btn setAppointment ">Set an Appointment</button>
@@ -35,234 +35,160 @@
 
                         <% } else { %>
                             <div class="specialty">
-                                <%= address %>
+                                <%= data.address %>
                             </div>
 
-                            <button class="access-btn sendMessage ">Send Message</button>
                             <button class="access-btn addMedicalRecords">Add Medical Records</button>
+                            <button class="access-btn sendMessage ">Send Message</button>
                         <% } %>
 
-                        <% if(doctor === true) { %>
+                        <% if(data.doctor === true) { %>
                             <h4 class="titles view-more">View more...</h4>
-                        <% } %>
                         
-                        <div class="details">
-                            <h4 class="titles">About My Practice</h4>
-                            <div class="contents">
-                                I am a developmental and behavioral pediatrician. My practice deals with developmental and behavioral concerns of children such as ADHD, autism, learning disability, intellectual disability and the like. I also do school assessment to help children and their parents find better placement for them in terms of education.
-                            </div>
-
-                            
-                            <h4 class="titles">Clinic Information</h4>
-                            <div class="contents">
-                                <div class="clinic-name">
-                                    M. Francisco Children's Medical Clinic
-                                </div>
-                                <div class="clinic-loc">
-                                    497 F. Mariano Ave, Manggahan, Pasig City, Metro Manila
-                                </div>
-                                <div class="clinic-phone">
-                                    Tel No.:  (632)6817158 / 09154524372
+                            <div class="details">
+                                <h4 class="titles">About My Practice</h4>
+                                <div class="contents">
+                                    <%= data.practice %>
                                 </div>
 
-                                <h4 class="view-sched">
-                                    View clinic schedule
-                                </h4>
-
-                                <div class="sched-content">
-                                    <h4 class="titles">Schedules</h4>
-                                    <table class="sched-tbl">
-                                        <th>Day</th>
-                                        <th>Hours</th>
-                                       
-                                            <tr>
-                                                <td>Monday</td>
-                                                <td>9:00am - 2:00pm</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Tuesday</td>
-                                                <td>9:00am - 2:00pm</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Wednessday</td>
-                                                <td>5:00pm - 7:00pm</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Thursday</td>
-                                                <td>9:00am - 2:00pm</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Friday</td>
-                                                <td>5:00pm - 7:00pm</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Saturday</td>
-                                                <td>9:00am - 2:00pm</td>
-                                            </tr>
-
-                                    </table>
-
-
-                                    <div class="hide-sched">
-                                        Hide schedules
+                                
+                                <h4 class="titles">Clinic Information</h4>
+                                <div class="contents">
+                                    <div class="clinic-name">
+                                    <%= data.clinic_name %>
                                     </div>
+                                    <div class="clinic-loc">
+                                    <%= data.clinic_loc %>
+                                    </div>
+                                    <div class="clinic-phone">
+                                    <%= data.clinic_phone %>
+                                    </div>
+
+                                    <h4 class="view-sched">
+                                        View clinic schedule
+                                    </h4>
+
+                                    <div class="sched-content">
+                                        <h4 class="titles">Schedules</h4>
+                                        <table class="sched-tbl">
+                                            <th>Day</th>
+                                            <th>Hours</th>
+                                        
+                                                <% for(key in data.schedules) { %>
+
+                                                    <tr>
+                                                        <td class="my-sched-td">
+                                                            <%= key %>
+                                                        </td>
+                                                        <td class="my-sched-td">
+                                                            <%= data.schedules[key] %>
+                                                        </td>
+                                                    </tr>
+
+                                                <% } %>
+
+                                        </table>
+
+
+                                        <div class="hide-sched">
+                                            Hide schedules
+                                        </div>
+                                    </div>
+
+                                    <h4 class="titles view-less">View Less</h4>
+
                                 </div>
-
-                                <h4 class="titles view-less">View Less</h4>
-
                             </div>
-                        </div>
-
+                        <% } %>
                     </div>
                 </div>
             </div>
         </div>
+
+
+        <!-- ---------------- Timeline ---------------- -->
         <div class="col-6 inner-div timeline-div">
             <div class="col-12 inner-bar">
-                <% if(doctor === true) { %> 
-                    <div class="col-4 bar-btns-div">
-                        <button class="active bar-btn">
-                            Today's Schedule
-                        </button>
-                    </div>
-                    <div class="col-4 bar-btns-div">
-                        <button class="bar-btn">
-                            Upcoming Schedules
-                        </button>
-                    </div>
-                    <div class="col-3 bar-btns-div">
-                        <button class="bar-btn">
-                            Posts
-                        </button>
-                    </div>
-                <% } else { %>
 
-                    <div class="col-3 bar-btns-div">
-                        <button class="active bar-btn">
-                            Today's Schedule
-                        </button>
-                    </div>
-                    <div class="col-3 bar-btns-div">
-                        <button class="bar-btn">
-                            Upcoming Schedules
-                        </button>
-                    </div>
-                    <div class="col-3 bar-btns-div">
-                        <button class="bar-btn">
-                            Medical Records
-                        </button>
-                    </div>
-                    <div class="col-3 bar-btns-div">
-                        <button class="bar-btn">
-                            Posts
-                        </button>
-                    </div>
-                <% } %>
-            </div>
-            <div class="col-12 todays-div">
-                <p class="date-now">
-                    <%= month %> <%= day %>, <%= year %> 
-                </p>
-
-                <table class="today-tbl">
-                    <th>Time</th>
-                    <th>Name</th>
-                    <th></th>
-                        <% if(doctor === true) { %>                     <tr>
-                            <td class="sched-td">9:00am</td>
-                            <td class="sched-td">Adrianne Dave Danozo</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sched-td">9:30am</td>
-                            <td class="sched-td">Jhon Michael Gonzales</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sched-td">10:00am</td>
-                            <td class="sched-td">Vinoe Saison</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sched-td">11:30am</td>
-                            <td class="sched-td">Paul Joseph Tiquio</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sched-td">12:00am</td>
-                            <td class="sched-td">Ace Velarde</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="sched-td">1:00pm</td>
-                            <td class="sched-td">Atena Daylisan</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
-                    <% } else {%>
-                        <tr>
-                            <td class="sched-td">11:30am</td>
-                            <td class="sched-td">Dr. Gerphil Kier De la Cruz</td>
-                            <td class="sched-td">
-                                <button class="re-sched">
-                                    Reschedule
-                                </button>
-                                <button class="cancel">
-                                    Cancel
-                                </button>
-                            </td>
-                        </tr>
+                <!-- ------------ Today's schedules Div --------- -->
+                <div class="today-sched-div">
+                    <% if(data.doctor === true) { %> 
+                        <div class="col-4 bar-btns-div">
+                            <button class="active bar-btn">
+                                Today's Schedule
+                            </button>
+                        </div>
+                        <div class="col-4 bar-btns-div">
+                            <button class="bar-btn">
+                                Upcoming Schedules
+                            </button>
+                        </div>
+                        <div class="col-3 bar-btns-div">
+                            <button class="bar-btn">
+                                Posts
+                            </button>
+                        </div>
+                    <% } else { %>
+    
+                        <div class="col-3 bar-btns-div">
+                            <button class="active bar-btn">
+                                Today's Schedule
+                            </button>
+                        </div>
+                        <div class="col-3 bar-btns-div">
+                            <button class="bar-btn">
+                                Upcoming Schedules
+                            </button>
+                        </div>
+                        <div class="col-3 bar-btns-div">
+                            <button class="bar-btn">
+                                Medical Records
+                            </button>
+                        </div>
+                        <div class="col-3 bar-btns-div">
+                            <button class="bar-btn">
+                                Posts
+                            </button>
+                        </div>
                     <% } %>
-                </table>
+                </div>
+                <div class="col-12 todays-div">
+                    <p class="date-now">
+                        <%= week %>, <%= month %> <%= day %>, <%= year %> 
+                    </p>
+    
+                    <table class="today-tbl">
+                        <th>Time</th>
+                        <th>Name</th>
+                        <th></th>
+                    
+                            
+                        <% for(key in data.appointments.today) { %>
+                            <tr>
+                                <td class="sched-td">
+                                    <%= key %>
+                                </td>
+                                <td class="sched-td">
+                                    <% if(data.doctor === false) { %>
+                                        Dr.
+                                    <% } %>
+                                    <%= data.appointments.today[key] %>
+                                </td>
+                                <td class="sched-td">
+                                    <button class="today-re-sched">Reschedule</button>
+                                    <button class="today-cancel">Cancel</button>
+                                </td>
+                            </tr>     
+                        <% } %>
+                    </table>
+                </div>
             </div>
         </div>
 
+
+
+        <!-- -------------- Advertisements ------------------ -->
+        
         <div class="col-3 inner-div ads-div">
             <p class="ads-title">Ads</p>
 
@@ -297,6 +223,93 @@
             </div>
         </div>
     </div>
+
+    <%- include('nav') %>
+
+    <!-- ----------------- Modals --------------- -->
+    <div class="outer-modal-trick"></div>
+
+    <div class="outer-modal">
+        <center>
+            <div class="close-modal-div">
+                <i class="material-icons close-modal-icon">close</i>
+            </div>
+
+            <!--  Appoinment Modal -->
+            <div class="appointment-modal">
+                <div class="message">
+                </div>
+
+                <p class="date-now">
+                    <%= week %>, <%= month %> <%= day %>, <%= year %> 
+                </p>
+                <table class="sched-tbl">
+                    <th>Day</th>
+                    <th>Hours</th>
+                
+                        <% for(key in data.schedules) { %>
+
+                            <tr>
+                                <td class="my-sched-td">
+                                    <%= key %>
+                                </td>
+                                <td class="my-sched-td">
+                                    <%= data.schedules[key] %>
+                                </td>
+                            </tr>
+
+                        <% } %>
+
+                </table>
+
+                <form class="appointment-form">
+                    <select name="week-sched" class="setSched-inputs week-sched">
+                        <% weeks.forEach((value) => { %>
+                            <% if(value !== 'Sunday') { %>
+                                <option value="<%= value %>" class="options">
+                                    <%= value %>
+                                </option> 
+                            <% } %>
+                            </option>
+                        <% }) %>
+                    </select>
+                    <input type="time" name="time" class="setSched-inputs time"> <br />
+                    <input type="date" name="date" class="setSched-inputs date">
+                    <button class="setSched-inputs setSched-btn"></button>
+                </form>
+            </div>
+
+
+            <!-- Cancel Modal -->
+            <div class="cancel-modal">
+                <div class="cancel-message">
+                    Canceled Successfully
+                </div>
+                <form class="cancel-form">
+                    <textarea name="textarea" class="cancel-textarea" cols="30" rows="10" placeholder="Reason for canceling the appointment"></textarea>
+                    <button class="cancel-sched-btn">
+                        Cancel Appoinment
+                    </button>
+                </form>
+            </div>
+
+
+            <!-- Add Medical Records Modal -->
+            <div class="add-medical-modal">
+                <div class="add-medical-message">
+                    Added Successfully
+                </div>
+                <form class="add-medical-form">
+                    <textarea name="textarea" class="add-medical-textarea" cols="30" rows="10" placeholder="Add medical records"></textarea>
+                    <button class="add-medical-sched-btn">
+                        Add Medical Records
+                    </button>
+                </form>
+            </div>
+
+        </center>
+    </div>
+
 
     <%- include('../index/footer') %>
 

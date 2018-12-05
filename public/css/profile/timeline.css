@@ -1,5 +1,3 @@
-
-
 .inner-div {
     padding: 10px 5px 10px 5px;
 }
@@ -56,7 +54,9 @@
     border: none;
     padding: 10px;
     border-radius: 5px;
+    cursor: pointer;
     margin-top: 5px;
+    outline: none;
 }
 
 .since {
@@ -89,6 +89,11 @@
 
 .sched-tbl {
     width: 100%;
+    text-align: center;
+}
+
+.my-sched-td {
+    padding: 10px;
 }
 
 .sched-content {
@@ -135,7 +140,7 @@
     background-color: white;
     padding: 15px;
     border: 1px solid lightgrey;
-    border-top: 0;
+    box-shadow: 0 2px 2px 0 lightgrey;
 }
 
 .date-now {
@@ -155,7 +160,7 @@
     text-align: left;
 }
 
-.re-sched, .cancel {
+.today-re-sched, .today-cancel {
     border: none;
     color: white;
     padding: 10px;
@@ -165,15 +170,15 @@
     cursor: pointer;
 }
 
-.re-sched {
+.today-re-sched {
     background-color: #1da1f2;
 }
 
-.cancel {
+.today-cancel {
     background-color: #dd5347;
 }
 
-/* ----------- Advertisments ------------- */
+/* ----------- Advertisements ------------- */
 
 .ads-div {
     font-family: Arial, Helvetica, sans-serif;
@@ -218,12 +223,134 @@
     font-size: 12px;
 }
 
+
+/* ------------- Modals ------------ */
+
+.outer-modal-trick {
+    background-color: rgba(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: none;
+}
+
+.outer-modal {
+    padding: 10px;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    display: none;
+}
+
+/*  ------------ Appoinment ----------- */
+
+.appointment-modal, .cancel-modal, .add-medical-modal {
+    width: 500px;
+    background-color: white;
+    padding: 15px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    display: none;
+}
+
+.message {
+    background-color: #1da1f2;
+    color: white;
+    padding: 20px;
+    width: 100%;
+    border-radius: 5px;
+    display: none;    
+}
+
+.close-modal-div {
+    text-align: right;
+}
+
+.close-modal-icon {
+    cursor: pointer;
+    font-size: 30px;
+    color: lightgray;
+}
+
+.setSched-inputs {
+    margin-top: 5px;
+    border-radius: 5px;
+    outline: none;
+    width: 150px;
+    height: 30px;
+    padding: 3px;
+}
+
+.week-sched, .date, .time {
+    border: 1px solid lightgray;
+    background-color: transparent;
+}
+
+.setSched-btn {
+    border: none;
+    color: white;
+    background-color: #1da1f2;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Cancel Appointment ------------- Add Medical Records */
+
+.cancel-modal, .add-medical-modal {
+    text-align: left;
+}
+
+.cancel-message, .add-medical-message {
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    display: none;
+    transition: 0.3s;
+}
+
+.cancel-textarea, .add-medical-textarea {
+    padding: 10px;
+    outline: none;
+    resize: none;
+    width: 100%;
+    font-size: 15px;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.cancel-sched-btn, .add-medical-sched-btn {
+    background-color: #dd5347;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+    outline: none;
+}
+
+
+/* Add Medical Records */
+
+.add-medical-message, .add-medical-sched-btn {
+    background-color: #1da1f2;
+}
+
+
 @media only screen and (max-width: 900px) {
     .img-content-div {
         width: 130px;
         height: 130px;
     }
 
+    .access-btn {
+        font-size: 13px;
+    }
     .ads-img {
         width: 120px;
         height: 120px;
@@ -248,6 +375,45 @@
     }
 }
 
+@media only screen and (max-width: 550px) {
+    .date-now {
+        font-size: 15px;
+        margin: 3px;
+    }
+
+    .my-sched-td {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .setSched-inputs {
+        width: 120px;
+        font-size: 12px;
+    }
+
+    .appointment-modal, .cancel-modal, .add-medical-modal {
+        width: 100%;
+    }
+
+    .message, .cancel-message, .add-medical-message {
+        font-size: 12px;
+        padding: 10px;
+    }
+    
+    .close-modal-icon {
+        font-size: 20px;
+    }
+
+    .cancel-textarea, .add-medical-textarea {
+        font-size: 13px;
+    }
+
+    .cancel-sched-btn, .add-medical-sched-btn {
+        font-size: 12px;
+    }
+
+}
+
 @media only screen and (max-width: 500px) {
     .sched-td {
         font-size: 12px;
@@ -269,7 +435,8 @@
     .bar-btn {
         font-size: 12px;
     }
-    .re-sched, .cancel {
+
+    .today-re-sched, .today-cancel {
         font-size: 12px;
         width: 70px;
         padding: 5px;
