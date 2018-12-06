@@ -176,10 +176,9 @@ chatForm.addEventListener('submit', (e) => {
 
     let chatValue = e.target.elements.chatInput
     let name = e.target.elements.name
-
     socket.emit('chatSend', {
         name: name.value,
-        message: chatValue.value
+        message: chatValue.value,
     })
 
     chatValue.value = ''
@@ -194,9 +193,13 @@ socket.on('chatSend', data => {
     div.className = 'message-div'
 
     chatBody.append(div)
-    div.innerHTML = `<b class="from-name">${data.name}</b> <br /> ${data.message}`
+    div.innerHTML = `
+    <b class="from-name">${data.name}</b> <br /> 
+    ${data.message}`
 
 })
+
+
 
 
 // -------------- Body Event Listeners ----------------------
@@ -208,6 +211,8 @@ let cancelSchedBtn = document.querySelector('.cancel-sched-btn')
 
 let addMedicalModal = document.querySelector('.add-medical-modal')
 let addMedicalSchedBtn = document.querySelector('.add-medical-sched-btn')
+
+let centerInnerDiv = document.querySelectorAll('.center-inner-div') 
 
 document.body.addEventListener('click', (e) => {
 
@@ -242,5 +247,19 @@ document.body.addEventListener('click', (e) => {
         showModal(addMedicalModal, '', '')
     }
 
+
+    // ------------  Handling show Timeline and Chat Body
+    if(classList.contains('sched-icon')) {
+        centerInnerDiv.forEach((key) => {
+            key.classList.remove('active-center-div')
+        })
+        centerInnerDiv[0].classList.add('active-center-div')
+    } else if(classList.contains('sendMessage')) {
+        centerInnerDiv.forEach((key) => {
+            key.classList.remove('active-center-div')
+        })
+        centerInnerDiv[1].classList.add('active-center-div')
+    }
+     
 })
 

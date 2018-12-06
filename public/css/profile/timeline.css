@@ -102,22 +102,19 @@
 }
 
 
-/*  ----------- TIMELINE --------------- */
 
-.timeline-div {
-    display: none;
-}
+/*  ----------- TIMELINE --------------- */
 
 .center-div {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.inner-timeline-div {
+.inner-timeline-div, .center-inner-div {
     display: none;
 }
 
-.active-div {
+.active-div, .active-center-div {
     display: block;
 }
 
@@ -273,12 +270,13 @@
 }
 
 .message-div:nth-child(even) {
-    background-color: lightgray;
+    background-color: rgba(211, 211, 211, 0.3)
 }
 
 .from-name {
     font-size: 13px;
 }
+
 
 /* -------------- MEDICAL RECORDS ----------- */
 
