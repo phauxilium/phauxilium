@@ -211,9 +211,10 @@
                                             Date: <%= key %>
                                         </p>
                                         <% for(k in data.medRecords[keys][key]) { %>
-                                            <p>
-                                                Findings: <%= data.medRecords[keys][key][k] %>
-                                            </p>
+                                            Findings:
+                                            <a href="<%= data.medRecords[keys][key][k] %>">
+                                                <%= data.medRecords[keys][key][k] %>
+                                            </a>
                                         <% } %>
                                     <% } %>
                                 </div>
@@ -247,7 +248,7 @@
                         <img src="/static/images/profile-images/<%= data.img %>" class="chat-image">
                     </div>
 
-                    <div class="col-7 inner-chat-header chat-header-right">
+                    <div class="col-7 inner-chat-header chat-header-right chat-name">
                         <% if(data.doctor === true ) { %>
                             Dr.
                         <% } %>
@@ -261,6 +262,7 @@
                 <div class="col-12 chat-input-div">
                     <form class="col-12 chat-form">
                         <input type="hidden" name="name" value="<%= data.name %>">
+                        <input type="hidden" name="img" value="<%= data.img %>">
                         <div class="col-10 chat-textarea-div">
                             <textarea name="chatInput" cols="30" rows="10" class="chat-input" placeholder="Enter some text..."></textarea>
                         </div>

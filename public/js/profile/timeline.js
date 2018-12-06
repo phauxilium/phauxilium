@@ -176,9 +176,11 @@ chatForm.addEventListener('submit', (e) => {
 
     let chatValue = e.target.elements.chatInput
     let name = e.target.elements.name
+    let img = e.target.elements.img
     socket.emit('chatSend', {
         name: name.value,
         message: chatValue.value,
+        img: img.value
     })
 
     chatValue.value = ''
@@ -194,12 +196,25 @@ socket.on('chatSend', data => {
 
     chatBody.append(div)
     div.innerHTML = `
-    <b class="from-name">${data.name}</b> <br /> 
-    ${data.message}`
+     <b class="chat-name">
+        ${data.name}
+    </b> <br /> 
+    <div class="chat-output">${data.message}
+    </div>`
 
 })
 
 
+// ----------------- Adaptive Text Area --------------
+// var chatOutput = document.querySelector('chat-output');
+
+// chatOutput.addEventListener('keydown', () => {
+//     setTimeout(() => {
+//         this.style.cssText = 'height:auto; padding:0;'
+//         this.style.cssText = `height: ${this.scrollHeight}px`
+//     }, 0)
+// });
+        
 
 
 // -------------- Body Event Listeners ----------------------

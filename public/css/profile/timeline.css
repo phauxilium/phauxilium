@@ -203,7 +203,7 @@
 
 .chat-image {
     height: 100%;
-    width: 20%;
+    width: 50px;
     border-radius: 150px;
 }
 
@@ -274,10 +274,21 @@
     background-color: rgba(211, 211, 211, 0.3)
 }
 
-.from-name {
-    font-size: 13px;
+.chat-name {
+    font-size: 15px;
 }
 
+.chat-output {
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: transparent;
+    border: none;
+    padding-top: 5px;
+    height: 50px;
+}
 
 /* -------------- MEDICAL RECORDS ----------- */
 
@@ -455,6 +466,13 @@
 }
 
 
+@media only screen and (max-width: 950px) {
+    .send-chat-btn {
+        font-size: 12px;
+    }
+}
+
+
 @media only screen and (max-width: 900px) {
     .img-content-div {
         width: 130px;
@@ -472,6 +490,7 @@
     .ads-img-div {
         margin: 0;
     }
+
 }
 
 @media only screen and (max-width: 768px) {
@@ -525,6 +544,25 @@
         font-size: 12px;
     }
 
+    .chat-input {
+        font-size: 13px;
+    }
+
+    .chat-textarea-div {
+        width: 80%;
+    }
+
+    .chat-btn-div {
+        width: 20%;
+    }
+
+    .chat-name {
+        font-size: 12px;
+    }
+
+    .chat-output {
+        font-size: 13px;
+    }
 }
 
 @media only screen and (max-width: 500px) {
@@ -553,6 +591,14 @@
         font-size: 12px;
         width: 70px;
         padding: 5px;
+    }
+
+    .chat-textarea-div {
+        width: 75%;
+    }
+
+    .chat-btn-div {
+        width: 25%;
     }
 
 }

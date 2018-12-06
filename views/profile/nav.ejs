@@ -10,6 +10,19 @@
                 <button class="search-btn">
                     <i class="material-icons search-icon">search</i>
                 </button>
+                <div class="col-10 search-output-div">
+
+                <% for(key in doctors) { %>
+                    <a href="/profile/t/<%= doctors[key].uname %>">
+                        <div class="col-12 search-outputs">
+                            <img src="/static/images/profile-images/<%= doctors[key].img %>" class="search-output-img">
+                            <span class="search-output-name">
+                                <%= doctors[key].name %>
+                            </span>
+                        </div>
+                    </a>
+                <% } %>                    
+                </div>
             </div>
            
         </div>

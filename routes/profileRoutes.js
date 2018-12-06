@@ -54,7 +54,19 @@ const person = {
             },
             upcoming: {}
         },
-        medRecords: {},
+        medRecords: {
+            'John Michael Gonzales': {
+                'Wednesday, December 5, 2018 - 9:30am': {
+                    findings: 'https://www.nhs.uk/conditions/blood-pressure-test/'
+                }
+            },
+
+            'Gerphil Kier De la Cruz': {
+                'Monday, December 3, 2018 - 10:30am': {
+                    findings: 'https://emedicine.medscape.com/article/353436-overview'
+                }
+            }
+        },
         doctor: false
     },
     
@@ -100,21 +112,7 @@ const person = {
             },
             upcoming: {}
         },
-        medRecords: {
-            'John Michael Gonzales': {
-                'Wednesday, December 5, 2018 - 9:30am': {
-                    findings: 'Lung Cancer'
-                }
-            },
-
-            'Gerphil Kier De la Cruz': {
-                'Monday, December 3, 2018 - 10:30am': {
-                    findings: 'Asthma'
-                }
-            }
-
-
-        },
+        medRecords: {},
         doctor: false
     },
 
@@ -140,6 +138,18 @@ const person = {
 
 route.get('/t/:name', (req, res) => {
     let data;
+    let doctors = {
+        doctor1: {
+            uname: person.person1.uname,
+            name: person.person1.name,
+            img: person.person1.img
+        },
+        doctor2: {
+            uname: person.person3.uname,
+            name: person.person3.name,
+            img: person.person3.img
+        }
+    }
     let uname = req.params.name
     if(uname === 'kier') data = person.person1
     else if (uname === 'paul') data = person.person2
@@ -150,6 +160,7 @@ route.get('/t/:name', (req, res) => {
 
     res.render('profile/timeline', {
         data,
+        doctors: doctors,
         'weeks': weeks,
         'dateNow': `${weeks[getDay]} - ${months[getMonth]} ${getDate}, ${getYear}`
     })
