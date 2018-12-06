@@ -130,6 +130,7 @@ const person = {
             },
             upcoming: {}
         },
+        medRecords: {},
         doctor: false
     },
 
