@@ -150,10 +150,7 @@ route.get('/t/:name', (req, res) => {
     res.render('profile/timeline', {
         data,
         'weeks': weeks,
-        'week': weeks[getDay],
-        'month': months[getMonth],
-        'day': getDate,
-        'year': getYear
+        'dateNow': `${weeks[getDay]} - ${months[getMonth]} ${getDate}, ${getYear}`
     })
     
 })

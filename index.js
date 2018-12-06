@@ -22,6 +22,10 @@ io.on('connection', socket => {
     socket.on('submitAppointment', data => {
         io.emit('submitAppointment', data)
     })
+
+    socket.on('chatSend', data => {
+        io.emit('chatSend', data)
+    } )
 })
 
 http.listen(PORT)

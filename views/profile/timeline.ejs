@@ -106,135 +106,174 @@
         </div>
 
 
-        <!-- ---------------- Timeline ---------------- -->
-        <div class="col-6 inner-div timeline-div">
+        <!-- ---------------- Center Div ------------------ -->
+        <div class="col-6 inner-div center-div">
+
+            <!-- ---------------- Timeline ---------------- -->
+            <div class="timeline-div">
 
             <!-- ------------ Timeline Navigation Bar ------------ -->
-            <div class="col-12 inner-bar">
-                <div class="today-sched-div">
-                    <% if(data.doctor === true) { %> 
-                        <div class="col-4 bar-btns-div">
-                            <button class="active bar-btn">
-                                Today's Schedule
-                            </button>
-                        </div>
-                        <div class="col-4 bar-btns-div">
-                            <button class="bar-btn">
-                                Upcoming Schedules
-                            </button>
-                        </div>
-                        <div class="col-3 bar-btns-div">
-                            <button class="bar-btn">
-                                Posts
-                            </button>
-                        </div>
-                    <% } else { %>
-    
-                        <div class="col-3 bar-btns-div">
-                            <button class="active bar-btn">
-                                Today's Schedule
-                            </button>
-                        </div>
-                        <div class="col-3 bar-btns-div">
-                            <button class="bar-btn">
-                                Upcoming Schedules
-                            </button>
-                        </div>
-                        <div class="col-3 bar-btns-div">
-                            <button class="bar-btn">
-                                Medical Records
-                            </button>
-                        </div>
-                        <div class="col-3 bar-btns-div">
-                            <button class="bar-btn">
-                                Posts
-                            </button>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
-
-
-            <!-- ------------ Today's schedules Div --------- -->
-            
-            <div class="col-12 inner-timeline-div active-div todays-div">
-                <p class="date-now">
-                    <%= week %>, <%= month %> <%= day %>, <%= year %> 
-                </p>
-
-                <table class="today-tbl">
-                    <th>Time</th>
-                    <th>Name</th>
-                    <th></th>
-                
-                        
-                    <% for(key in data.appointments.today) { %>
-                        <tr>
-                            <td class="sched-td-today">
-                                <%= key %>
-                            </td>
-                            <td class="sched-td-today">
-                                <% if(data.doctor === false) { %>
-                                    Dr.
-                                <% } %>
-                                <%= data.appointments.today[key] %>
-                            </td>
-                            <td class="sched-td-today">
-                                <button class="today-re-sched">Reschedule</button>
-                                <button class="today-cancel">Cancel</button>
-                            </td>
-                        </tr>     
-                    <% } %>
-                </table>
-            </div>
-
-            <!-- --------------- Upcoming Schedules ----------- -->
-            <div class="col-12 inner-timeline-div upcoming-div">Nothing to Show</div>
-
-
-            <% if(data.doctor === false) { %> 
-
-                <div class="inner-timeline-div outer-medical-records-div">
-
-                    <% if(Object.keys(data.medRecords).length !== 0) { %>
-                        <!-- --------- Medical Records ----------- -->
-
-                        <% for(keys in data.medRecords) { %>
-                            <div class="col-12 medical-records-div">
-                                <p class="doc-name">
-                                    Dr. <%= keys %> 
-                                </p>
-                                <% for(key in data.medRecords[keys]) { %>
-                                    <p>
-                                        Date: <%= key %>
-                                    </p>
-                                    <% for(k in data.medRecords[keys][key]) { %>
-                                        <p>
-                                            Findings: <%= data.medRecords[keys][key][k] %>
-                                        </p>
-                                    <% } %>
-                                <% } %>
+                <div class="col-12 inner-bar">
+                    <div class="today-sched-div">
+                        <% if(data.doctor === true) { %> 
+                            <div class="col-4 bar-btns-div">
+                                <button class="active bar-btn">
+                                    Today's Schedule
+                                </button>
+                            </div>
+                            <div class="col-4 bar-btns-div">
+                                <button class="bar-btn">
+                                    Upcoming Schedules
+                                </button>
+                            </div>
+                            <div class="col-3 bar-btns-div">
+                                <button class="bar-btn">
+                                    Posts
+                                </button>
+                            </div>
+                        <% } else { %>
+        
+                            <div class="col-3 bar-btns-div">
+                                <button class="active bar-btn">
+                                    Today's Schedule
+                                </button>
+                            </div>
+                            <div class="col-3 bar-btns-div">
+                                <button class="bar-btn">
+                                    Upcoming Schedules
+                                </button>
+                            </div>
+                            <div class="col-3 bar-btns-div">
+                                <button class="bar-btn">
+                                    Medical Records
+                                </button>
+                            </div>
+                            <div class="col-3 bar-btns-div">
+                                <button class="bar-btn">
+                                    Posts
+                                </button>
                             </div>
                         <% } %>
+                    </div>
+                </div>
+    
+    
+                <!-- ------------ Today's schedules Div --------- -->
+                
+                <div class="col-12 inner-timeline-div active-div todays-div">
+                    <p class="date-now">
+                        <%= dateNow %>
+                    </p>
+    
+                    <table class="today-tbl">
+                        <th>Time</th>
+                        <th>Name</th>
+                        <th></th>
+                    
+                            
+                        <% for(key in data.appointments.today) { %>
+                            <tr>
+                                <td class="sched-td-today">
+                                    <%= key %>
+                                </td>
+                                <td class="sched-td-today">
+                                    <% if(data.doctor === false) { %>
+                                        Dr.
+                                    <% } %>
+                                    <%= data.appointments.today[key] %>
+                                </td>
+                                <td class="sched-td-today">
+                                    <!-- <button class="today-re-sched">Reschedule</button> -->
+                                    <button class="today-cancel">Cancel</button>
+                                </td>
+                            </tr>     
+                        <% } %>
+                    </table>
+                </div>
+    
+                <!-- --------------- Upcoming Schedules ----------- -->
+                <div class="col-12 inner-timeline-div upcoming-div">Nothing to show</div>
+    
+                <% if(data.doctor === false) { %> 
+    
+                    <div class="inner-timeline-div outer-medical-records-div">
+    
+                        <% if(Object.keys(data.medRecords).length !== 0) { %>
+                            <!-- --------- Medical Records ----------- -->
+    
+                            <% for(keys in data.medRecords) { %>
+                                <div class="col-12 medical-records-div">
+                                    <p class="doc-name">
+                                        Dr. <%= keys %> 
+                                    </p>
+                                    <% for(key in data.medRecords[keys]) { %>
+                                        <p>
+                                            Date: <%= key %>
+                                        </p>
+                                        <% for(k in data.medRecords[keys][key]) { %>
+                                            <p>
+                                                Findings: <%= data.medRecords[keys][key][k] %>
+                                            </p>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            <% } %>
+    
+                        <% } else { %>
+    
+                            <div class="col-12 medical-records-div">
+                                Nothing to show
+                            </div>
+    
+                        <% } %>
+                    </div>
+            
+                <% } %>
+    
+    
+    
+                <!-- ---------------- Posts -------------- -->
+                <div class="col-12 inner-timeline-div post-div">
+                    Nothing to show
+                </div>
+    
+            </div>
 
-                    <% } else { %>
 
-                        <div class="col-12 medical-records-div">
-                            Nothing to show
+            <!-- --------------- Chat Div ---------- -->
+            <div class="col-12 chat-div">
+                <div class="col-12 chat-header">
+                    <div class="col-5 inner-chat-header chat-header-left">
+                        <img src="/static/images/profile-images/<%= data.img %>" class="chat-image">
+                    </div>
+
+                    <div class="col-7 inner-chat-header chat-header-right">
+                        <% if(data.doctor === true ) { %>
+                            Dr.
+                        <% } %>
+                        <%= data.name %>
+                    </div>
+                </div>
+
+                <div class="col-12 chat-body">
+                </div>
+
+                <div class="col-12 chat-input-div">
+                    <form class="col-12 chat-form">
+                        <input type="hidden" name="name" value="<%= data.name %>">
+                        <div class="col-10 chat-textarea-div">
+                            <textarea name="chatInput" cols="30" rows="10" class="chat-input" placeholder="Enter some text..."></textarea>
                         </div>
 
-
-                    <% } %>
+                        <div class="col-2 chat-btn-div">
+                            <button class="send-chat-btn">
+                                Send
+                            </button>
+                        </div>
+                    </form>
                 </div>
-        
-            <% } %>
-
-
-            <!-- ---------------- Posts -------------- -->
-            <div class="col-12 inner-timeline-div post-div">
-                Nothing to show
             </div>
-                
+    
         </div>
 
 
@@ -296,7 +335,7 @@
                 </div>
 
                 <p class="date-now">
-                    <%= week %>, <%= month %> <%= day %>, <%= year %> 
+                    <%= dateNow %>
                 </p>
                 <table class="sched-tbl">
                     <th>Day</th>
@@ -318,17 +357,7 @@
                 </table>
 
                 <form class="appointment-form">
-                    <select name="setAppointmentWeek" class="setSched-inputs week-sched">
-                        <% weeks.forEach((value) => { %>
-                            <% if(value !== 'Sunday') { %>
-                                <option value="<%= value %>" class="options">
-                                    <%= value %>
-                                </option> 
-                            <% } %>
-                            </option>
-                        <% }) %>
-                    </select>
-                    <input type="time" name="setAppointmentTime" class="setSched-inputs time"> <br />
+                    <input type="time" name="setAppointmentTime" class="setSched-inputs time">
                     <input type="date" name="setAppointmentDate" class="setSched-inputs date">
                     <button class="setSched-inputs setSched-btn"></button>
                 </form>

@@ -103,7 +103,12 @@
 
 
 /*  ----------- TIMELINE --------------- */
+
 .timeline-div {
+    display: none;
+}
+
+.center-div {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -186,6 +191,94 @@
     background-color: #dd5347;
 }
 
+
+/* -------------- Chat Div ----------- */
+.chat-div {
+    font-family: Arial, Helvetica, sans-serif;
+    border: 1px solid lightgray;
+    background-color: white;
+}
+
+.chat-header {
+    height: 70px;
+    box-shadow: 0 2px 2px 0 lightgray;
+}
+
+.chat-image {
+    height: 100%;
+    border-radius: 150px;
+}
+
+.inner-chat-header {
+    height: 100%;
+}
+
+.chat-header-left {
+    text-align: right;
+    padding: 10px;
+}
+
+.chat-header-right {
+    padding-top: 25px;
+    text-align: left;
+}
+
+.chat-body {
+    text-align: left;
+    padding: 15px;
+    height: 400px;
+    overflow: auto;
+}
+
+.chat-input-div {
+    height: 100px;
+    border-top: 1px solid lightgray;
+}
+
+.chat-textarea-div {
+    padding: 10px;
+    padding-right: 0;
+}
+
+.chat-input {
+    width: 100%;
+    height: 78px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    resize: none;
+    outline: none;
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.chat-btn-div {
+    text-align: left !important;
+    padding: 10px;
+}
+
+.send-chat-btn {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: #1da1f2;
+    font-size: 20px;
+    height: 78px;
+    border: 1px solid #1da1f2;
+    cursor: pointer;
+    outline: none;
+}
+
+.message-div {
+    padding: 10px;
+}
+
+.message-div:nth-child(even) {
+    background-color: lightgray;
+}
+
+.from-name {
+    font-size: 13px;
+}
 
 /* -------------- MEDICAL RECORDS ----------- */
 
@@ -304,7 +397,7 @@
     padding: 3px;
 }
 
-.week-sched, .date, .time {
+.date, .time {
     border: 1px solid lightgray;
     background-color: transparent;
 }
@@ -391,7 +484,7 @@
         display: none;
     }
     
-    .profile-div, .timeline-div {
+    .profile-div, .center-div {
         width: 100%;
     }
 }

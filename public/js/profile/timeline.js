@@ -60,14 +60,12 @@ let socket = io()
 appointmentForm.addEventListener('submit', (e) => {    
     e.preventDefault()
 
-    let week = e.target.elements.setAppointmentWeek
     let time = e.target.elements.setAppointmentTime
     let date = e.target.elements.setAppointmentDate
 
     // Emitting Events
 
     socket.emit('submitAppointment', {
-        'week': week.value,
         'time': time.value,
         'date': date.value,
         'name': 'Dr. Gerphil Kier De la Cruz'
@@ -96,8 +94,7 @@ appointmentForm.addEventListener('submit', (e) => {
 // Listening for event from server side
 socket.on('submitAppointment', data => {
     let todayTbl = document.querySelector('.today-tbl')
-    let schedTdToday = document.querySelectorAll('.sched-td-today')    
-    let row = todayTbl.insertRow((schedTdToday.length / 3) + 1)
+    let row = todayTbl.insertRow(todayTbl.rows.length)
 
     let col1 = row.insertCell(0)
     col1.classList.add('sched-td-today')
@@ -109,10 +106,7 @@ socket.on('submitAppointment', data => {
 
     let col3 = row.insertCell(2)
     col3.classList.add('sched-td-today')
-    col3.innerHTML = `
-        <button class="today-re-sched">Reschedule</button>
-        <button class="today-cancel">Cancel</button>
-    `
+    col3.innerHTML = `<button class="today-cancel">Cancel</button>`
 })
 
 
@@ -173,6 +167,36 @@ barBtns.forEach((barBtn, index) => {
     })
 })
 
+
+// --------------- Handling Chat Listeners ----------------
+let chatForm = document.querySelector('.chat-form')
+
+chatForm.addEventListener('submit', (e) => {
+    e.preventDefault()
+
+    let chatValue = e.target.elements.chatInput
+    let name = e.target.elements.name
+
+    socket.emit('chatSend', {
+        name: name.value,
+        message: chatValue.value
+    })
+
+    chatValue.value = ''
+
+})
+
+
+
+socket.on('chatSend', data => {
+    let chatBody = document.querySelector('.chat-body')
+    let div = document.createElement('div')
+    div.className = 'message-div'
+
+    chatBody.append(div)
+    div.innerHTML = `<b class="from-name">${data.name}</b> <br /> ${data.message}`
+
+})
 
 
 // -------------- Body Event Listeners ----------------------
