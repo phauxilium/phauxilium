@@ -116,6 +116,10 @@ let cancelForm = document.querySelector('.cancel-form')
 cancelForm.addEventListener('submit', (e) => {
     e.preventDefault()
 
+    let removeThis = document.querySelectorAll('.remove-this')
+
+    // ================= TODO ==================
+
     let cancelMessage = document.querySelector('.cancel-message')
     e.target.elements.textarea.value = ''
     cancelMessage.style.display = 'block';
@@ -201,6 +205,14 @@ socket.on('chatSend', data => {
     </b> <br /> 
     <div class="chat-output">${data.message}
     </div>`
+    
+
+    let chatBodyHeight = chatBody.scrollHeight
+
+    chatBody.scrollTop = chatBodyHeight
+
+    console.log(chatBodyHeight)
+
 
 })
 
@@ -248,6 +260,10 @@ document.body.addEventListener('click', (e) => {
             cancelModal.style.display = "none"
             addMedicalModal.style.display = "none"
 
+            let removeThis = document.querySelectorAll('.remove-this')
+
+            removeThis.forEach(value => value.classList.remove('remove-this'))
+
     }
     
 
@@ -258,6 +274,7 @@ document.body.addEventListener('click', (e) => {
         showModal(appointmentModal, setSchedBtn, 'Reschedule')
     } else if(classList.contains('today-cancel')) {
         showModal(cancelModal, '', '')
+        classList.add('remove-this')
     } else if(classList.contains('addMedicalRecords')) {
         showModal(addMedicalModal, '', '')
     }

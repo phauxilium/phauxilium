@@ -2,7 +2,7 @@
     <div class="col-8 inner-nav inner-left">
         <div class="search-div">
             <div class="col-2">
-                <img src="/static/images/logoG.png" alt="" class="nav-logo">
+                <img src="/static/images/logoG.png" alt="Cannot load image" class="nav-logo">
             </div>
 
             <div class="col-10">
@@ -15,7 +15,7 @@
                 <% for(key in doctors) { %>
                     <a href="/profile/t/<%= doctors[key].uname %>">
                         <div class="col-12 search-outputs">
-                            <img src="/static/images/profile-images/<%= doctors[key].img %>" class="search-output-img">
+                            <img src="/static/images/profile-images/<%= doctors[key].img %>" alt="Cannot load image" class="search-output-img">
                             <span class="search-output-name">
                                 <%= doctors[key].name %>
                             </span>

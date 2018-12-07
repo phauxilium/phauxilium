@@ -47,8 +47,8 @@ document.body.addEventListener('click', (e) => {
         !classList.contains('search-outputs') &&
         !classList.contains('search-output-name') &&
         !classList.contains('search-output-img')
-        ){
+        )
             searchOutputDiv.style.display = "none"
-        }
+        
 
 })
