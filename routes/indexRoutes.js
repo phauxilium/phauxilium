@@ -1,4 +1,5 @@
 const express = require('express')
+const validator  = require('validator')
 const firebaseAdmin = require('../my_modules/firebaseAdmin')
 const router = express.Router()
 const firebase = new firebaseAdmin()
@@ -16,7 +17,7 @@ router.get('/contact', (req, res) => res.render('index/contact'))
 
 router.post('/signin', (req, res) => {
     let auth = {
-        email: req.body.email,
+        email: req.body.email.toLowerCase(),
         password: req.body.password,
         emailErr: '',
         passwordErr: ''
@@ -32,14 +33,33 @@ router.post('/signin', (req, res) => {
         } else {
             if(auth.password !== datas[auth.email].name)
                 auth.passwordErr = 'Invalid Password'
-            else {
+            else 
                 auth.email = crypto.encrypt('kier')
-            }
         }
-
         res.send(auth)
-
     })
+})
+
+
+router.post('/signup', (req, res) => {
+    let auth = {
+        email: req.body.email,
+        password: req.body.password,
+        cpassword: req.body.cpassword,
+        emailErr: '',
+        passwordErr: '',
+        cpasswordErr: ''
+    }
+
+    auth.emailErr = !validator.isEmail(auth.email) ? 'Invalid email' : auth.emailErr = ''
+
+    auth.passwordErr = auth.password.length < 8 ? passwordErr = 'Password must not be less than 8 characters' : ''
+
+    auth.cpasswordErr = auth.password !== auth.cpassword ? 'Password doesn\'t match' : ''
+
+    res.send(auth)
+
+    console.log(auth)
 
 })
 

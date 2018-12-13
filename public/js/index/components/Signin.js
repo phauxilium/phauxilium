@@ -12,44 +12,47 @@ class Signin {
     }
 
     appendRemoveEl() {
-        let signBtn = document.createElement('button')
-        
-        let signBtnParent = this.state.loading.parentElement
-                
-        this.state.loading.parentNode.removeChild(this.state.loading)
-        signBtn.textContent = 'Sign in'
-        signBtn.className = 'sign-btn'
-        signBtnParent.insertBefore(this.state.signBtn, signBtnParent.firstChild)
+        try{
+            let signBtn = document.createElement('button')
+            
+            let signBtnParent = this.state.loading.parentElement
+                    
+            this.state.loading.parentElement.removeChild(this.state.loading)
+            signBtn.textContent = 'Sign in'
+            signBtn.className = 'sign-btn'
+            signBtnParent.insertBefore(this.state.signBtn, signBtnParent.firstChild)
+        } catch(err) {
+            console.log(err)
+        }
     }
 
     submit(e) {
+        try {
+            e.preventDefault()
 
-        e.preventDefault()
-        
-        if(this.state.form.children[0].className === 'sign-div') {
+            if (this.state.form.children[0].className === 'sign-div') {
 
-            let signBtnParent = this.state.signBtn.parentElement
+                let signBtnParent = this.state.signBtn.parentElement
 
-            signBtnParent.removeChild(this.state.signBtn)
+                signBtnParent.removeChild(this.state.signBtn)
 
-            this.state.loading.textContent = 'Loading...'
+                this.state.loading.textContent = 'Loading...'
 
-            signBtnParent.insertBefore(this.state.loading, signBtnParent.firstChild)
+                signBtnParent.insertBefore(this.state.loading, signBtnParent.firstChild)
 
-            // AJAX POST request        
+                // AJAX POST request        
 
-            this.state.xhr.open('POST', '/signin', true)
-            this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+                this.state.xhr.open('POST', '/signin', true)
+                this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
-            let email = e.target.elements.emailSignin
-            let password = e.target.elements.passwordSignin
+                let email = e.target.elements.emailSignin
+                let password = e.target.elements.passwordSignin
 
-            this.state.xhr.send(`email=${email.value}&password=${password.value}`)
+                this.state.xhr.send(`email=${email.value}&password=${password.value}`)
 
-            this.state.xhr.onreadystatechange = () => {
-                
-                if(this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
-                    try {
+                this.state.xhr.onreadystatechange = () => {
+
+                    if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
                         this.appendRemoveEl()
 
                         let data = JSON.parse(this.state.xhr.responseText)
@@ -59,18 +62,17 @@ class Signin {
                         let passwordHelper = document.querySelector('.password-helper-signin')
                         passwordHelper.textContent = data.passwordErr
 
-                        if(data.emailErr === '' && data.passwordErr === '') {
+                        if (data.emailErr === '' && data.passwordErr === '') {
                             window.location = `/u/p/0/${data.email}`
 
                             email.value = ''
                             password.value = ''
                         }
-
-                    } catch (err) {
-                        throw err
                     }
                 }
             }
+        } catch(err) {
+            console.log(err)
         }
     }
 

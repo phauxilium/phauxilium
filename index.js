@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const helmet = require('helmet')
 const session = require('express-session')
 const path = require('path')
+const Session = require('./my_modules/configs')
 const indexRoutes = require('./routes/indexRoutes')
 const profileRoutes = require('./routes/profileRoutes')
 const PORT = process.env.PORT || 3000
@@ -17,12 +18,9 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
 app.set('trust proxy', 1)
-app.use(session({
-    secret: 'f25fae2cbf2458d6f62c80f162cb14e43b202f0b9d9d9fa2dc62e829ed3190d9',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-}))
+
+const sess = new Session()
+app.use(session(sess.getSession()))
 
 io.on('connection', socket => {
     socket.on('submitAppointment', data => {

@@ -1,9 +1,48 @@
-class Signup {
+class Signup extends Signin{
 
-
+    constructor(state) {
+        super(state)
+    }
+    
     submit(e) {
         e.preventDefault()
-        alert('hi')
+        
+        let signBtnParent = this.state.signBtn.parentElement
+        signBtnParent.removeChild(this.state.signBtn)
+
+        this.state.loading.textContent = 'Loading...'
+        signBtnParent.appendChild(this.state.loading)
+        
+        this.state.xhr.open('POST', '/signup', true)
+        this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+
+        let email = e.target.elements.emailSignup
+        let password = e.target.elements.passwordSignup
+        let cpassword = e.target.elements.cpasswordSignup
+
+        this.state.xhr.send(`email=${email.value}&password=${password.value}&cpassword=${cpassword.value}`)
+
+        this.state.xhr.onreadystatechange = () => {
+            if(this.state.xhr.readyState === 4 && this.state.xhr.status === 200)
+
+            try {
+                let data = JSON.parse(this.state.xhr.responseText)
+
+                this.appendRemoveEl()
+
+                let emailHelper = document.querySelector('.email-helper-signup')
+                emailHelper.textContent = data.emailErr
+
+                let passwordHelper = document.querySelector('.password-helper-signup')
+                passwordHelper.textContent = data.passwordErr
+
+                let cpasswordHelper = document.querySelector('.cpassword-helper-signup')
+                cpasswordHelper.textContent = data.cpasswordErr
+
+            } catch (err) {
+                console.log(err)
+            }
+        }
     }
 
     main() {
@@ -32,7 +71,7 @@ class Signup {
                             </span>
 
                             <div class="col-6 sign-btn-div">
-                                <button class="sign-btn">Sign-up</button> <br />
+                                <button class="sign-btn">Sign-up</button>
                             </div>
                         </div>
                     </div>`
