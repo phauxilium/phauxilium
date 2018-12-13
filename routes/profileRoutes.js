@@ -1,13 +1,17 @@
 const express = require('express')
 const route = express.Router()
+const Cryptos = require('../my_modules/cryptos')
+const crypto = new Cryptos()
+
+let sessionId
 
 let date = new Date()
 
-let weeks = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+let weeks = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
 let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-let getDay = date.getDay() - 1
+let getDay = date.getDay()
 let getDate = date.getDate()
 let getMonth = date.getMonth()
 let getYear = date.getFullYear()
@@ -135,14 +139,34 @@ const person = {
 }
 
 
+// ------------- Verification route -----------
+route.get('/p/0/:id', (req, res) => {
 
+    req.session.uid = crypto.decrypt(req.params.id)
+    res.redirect(`/u/t/${req.session.uid}`)
+    sessionId = req.session.uid
+   
+})
+
+// ------------- Profile route --------------
 route.get('/t/:name', (req, res) => {
+    let uname = req.params.name
+   
+    if(sessionId === undefined) {
+        res.redirect('/')
+        return
+    } else if(uname !== sessionId) {
+        console.log('TODO')
+    }
+ 
+    
     let data;
+    
     let doctors = {
         doctor1: {
             uname: person.person1.uname,
             name: person.person1.name,
-            img: person.person1.img
+            img: person.person1.img,
         },
         doctor2: {
             uname: person.person3.uname,
@@ -150,7 +174,7 @@ route.get('/t/:name', (req, res) => {
             img: person.person3.img
         }
     }
-    let uname = req.params.name
+
     if(uname === 'kier') data = person.person1
     else if (uname === 'paul') data = person.person2
     else if(uname === 'mike') data = person.person3

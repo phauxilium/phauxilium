@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "snyk test"
   },
   "repository": {
     "type": "git",
@@ -21,7 +21,12 @@
     "body-parser": "^1.18.3",
     "ejs": "^2.6.1",
     "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "firebase-admin": "^6.3.0",
     "helmet": "^3.15.0",
     "socket.io": "^2.2.0"
+  },
+  "devDependencies": {
+    "snyk": "^1.116.2"
   }
 }

@@ -367,8 +367,8 @@
 }
 
 /*  ------------ Appoinment ----------- */
-
-.appointment-modal, .cancel-modal, .add-medical-modal {
+.appointment-modal, .cancel-modal, .add-medical-modal  {
+    margin-top: 5%;
     width: 500px;
     background-color: white;
     padding: 15px;

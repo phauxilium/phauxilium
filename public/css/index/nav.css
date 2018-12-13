@@ -6,6 +6,8 @@ body{
     background-position: center center;
 }
 
+/*  ------------------ Navigation Bar --------------- */
+
 .outer-nav{
     box-shadow: 0 0 2px 0 white;
     padding: 0;
@@ -49,22 +51,22 @@ body{
     transition: 0.2s;
 }
 
+/* -------------  Sign in form ----------------- */
+
 .sign-outer {
     height: 100%;
     position: absolute;
     width: 100%;
     display: none;
-    transition: 0.3s;
 }
 
 .sign-inner {
-    margin-top: 50px;
+    margin-top: 5%;
     border-radius: 15px;
     background-color: white;
     padding: 15px;
     width: 450px;
-    height: 470px;
-    transition: 0.3s;
+    height: 460px;
 }
 
 .sign-form {
@@ -113,8 +115,9 @@ body{
 .helper {
     font-size: 13px;
     color: red;
-    text-align: left;
     float: left;
+    text-align: left;
+    padding: 5px;
 }
 
 .sign-btn {
@@ -131,7 +134,7 @@ body{
     text-align: left;
 }
 
-.forgot-link, .sign-up-link {
+.forgot-link, .sign-up-link, .sign-in-link {
     color:#1976d2;
     font-size: 13px;
 }
@@ -142,6 +145,16 @@ body{
 
 .remember-me {
     font-size: 10px;
+    text-align: left;
+}
+
+
+/* -------------- Signup form ------------ */
+
+
+/* ----------- Loading Div ---------- */
+.loading-div {
+    border: 1px solid red;
 }
 
 /*---------- Mobile ----------- */

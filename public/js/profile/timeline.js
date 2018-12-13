@@ -71,7 +71,6 @@ appointmentForm.addEventListener('submit', (e) => {
         'name': 'Dr. Gerphil Kier De la Cruz'
     })
 
-    week.value = 'Monday'
     time.value = ''
     date.value = ''
 
@@ -115,9 +114,6 @@ let cancelForm = document.querySelector('.cancel-form')
 
 cancelForm.addEventListener('submit', (e) => {
     e.preventDefault()
-
-    let removeThis = document.querySelectorAll('.remove-this')
-
     // ================= TODO ==================
 
     let cancelMessage = document.querySelector('.cancel-message')
@@ -172,25 +168,41 @@ barBtns.forEach((barBtn, index) => {
 })
 
 
+
 // --------------- Handling Chat Listeners ----------------
+
+
+const sendChat = () => {
+    
+    let name = document.querySelector('.chat-input-name')
+    let img = document.querySelector('.chat-input-img')
+    socket.emit('chatSend', {
+        name: name.value,
+        message: chatInput.value,
+        img: img.value
+    })
+
+    chatInput.value = ''
+}
+
 let chatForm = document.querySelector('.chat-form')
 
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault()
-
-    let chatValue = e.target.elements.chatInput
-    let name = e.target.elements.name
-    let img = e.target.elements.img
-    socket.emit('chatSend', {
-        name: name.value,
-        message: chatValue.value,
-        img: img.value
-    })
-
-    chatValue.value = ''
-
+    sendChat()
 })
 
+
+// ---------------- Handling Chat Input event ----------------
+let chatInput = document.querySelector('.chat-input')
+
+chatInput.addEventListener('keyup', (e) => {
+    
+    e.preventDefault()
+    
+    if(e.keyCode === 13)
+        sendChat()    
+})
 
 
 socket.on('chatSend', data => {
@@ -210,9 +222,6 @@ socket.on('chatSend', data => {
     let chatBodyHeight = chatBody.scrollHeight
 
     chatBody.scrollTop = chatBodyHeight
-
-    console.log(chatBodyHeight)
-
 
 })
 
@@ -259,11 +268,6 @@ document.body.addEventListener('click', (e) => {
             appointmentModal.style.display = "none"
             cancelModal.style.display = "none"
             addMedicalModal.style.display = "none"
-
-            let removeThis = document.querySelectorAll('.remove-this')
-
-            removeThis.forEach(value => value.classList.remove('remove-this'))
-
     }
     
 
@@ -274,7 +278,6 @@ document.body.addEventListener('click', (e) => {
         showModal(appointmentModal, setSchedBtn, 'Reschedule')
     } else if(classList.contains('today-cancel')) {
         showModal(cancelModal, '', '')
-        classList.add('remove-this')
     } else if(classList.contains('addMedicalRecords')) {
         showModal(addMedicalModal, '', '')
     }
