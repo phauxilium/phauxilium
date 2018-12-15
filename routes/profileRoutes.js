@@ -1,9 +1,9 @@
 const express = require('express')
 const route = express.Router()
-const Cryptos = require('../my_modules/cryptos')
+const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
-
-let sessionId
+const FireAdmin = require('../my_modules/FireAdmin')
+const fire = new FireAdmin()
 
 let date = new Date()
 
@@ -141,27 +141,49 @@ const person = {
 
 // ------------- Verification route -----------
 route.get('/p/0/:id', (req, res) => {
+    crypto.decrypt(req.params.id, (err, decrypted) => {
+        if(err)
+            res.redirect('/')
+        else {
+            const db = fire.firebase.database()
+            const ref = db.ref('users')
 
-    req.session.uid = crypto.decrypt(req.params.id)
-    res.redirect(`/u/t/${req.session.uid}`)
-    sessionId = req.session.uid
-   
+            ref.orderByKey().equalTo(decrypted).on('value', snapshots => {
+
+                let datas = snapshots.val()
+                if (datas === null)
+                    res.redirect('/')
+                else {
+                    req.session.ussID = decrypted
+                    res.redirect(`/u/t/${decrypted}`)
+                    console.log(req.session.ussID)
+                }
+            })
+        }
+    })
 })
+
 
 // ------------- Profile route --------------
 route.get('/t/:name', (req, res) => {
     let uname = req.params.name
-   
-    if(sessionId === undefined) {
+    let sessionID = req.session.ussID
+    console.log(sessionID)
+    if(sessionID === undefined) {
         res.redirect('/')
-        return
-    } else if(uname !== sessionId) {
-        console.log('TODO')
+    } else if(uname !== sessionID) {
+        res.send('TODO')
+    } else {
+        res.send(req.session.ussID)
     }
- 
-    
+})
+
+
+
+// --------------- Prototype --------------
+route.get('/profile/t/:uname', (req, res) => {    
     let data;
-    
+
     let doctors = {
         doctor1: {
             uname: person.person1.uname,
@@ -175,6 +197,7 @@ route.get('/t/:name', (req, res) => {
         }
     }
 
+    let uname = req.params.uname
     if(uname === 'kier') data = person.person1
     else if (uname === 'paul') data = person.person2
     else if(uname === 'mike') data = person.person3
@@ -188,7 +211,6 @@ route.get('/t/:name', (req, res) => {
         'weeks': weeks,
         'dateNow': `${weeks[getDay]} - ${months[getMonth]} ${getDate}, ${getYear}`
     })
-    
-})
+}) 
 
 module.exports = route

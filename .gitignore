@@ -1,3 +1,2 @@
 /node_modules/
-/config/
-/my_modules/
+/package-lock.json/
