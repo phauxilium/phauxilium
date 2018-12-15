@@ -156,7 +156,6 @@ route.get('/p/0/:id', (req, res) => {
                 else {
                     req.session.ussID = decrypted
                     res.redirect(`/u/t/${decrypted}`)
-                    console.log(req.session.ussID)
                 }
             })
         }
@@ -168,7 +167,6 @@ route.get('/p/0/:id', (req, res) => {
 route.get('/t/:name', (req, res) => {
     let uname = req.params.name
     let sessionID = req.session.ussID
-    console.log(sessionID)
     if(sessionID === undefined) {
         res.redirect('/')
     } else if(uname !== sessionID) {
