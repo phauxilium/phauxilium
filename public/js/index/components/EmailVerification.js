@@ -38,6 +38,8 @@ class EmailVerification extends Signin {
                         this.appendLoading()
 
                         setTimeout(() => {
+                            this.appendRemoveEl()
+
                             let SignIn = new Signin()
                             let RenderDOM = new Render()
                             RenderDOM.render(SignIn.main(), signForm)
