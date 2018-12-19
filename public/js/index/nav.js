@@ -10,25 +10,29 @@ menuBtn.addEventListener('click', () => {
 let signInner = document.querySelector('.sign-inner')
 let signForm = document.querySelector('.sign-form')
 
+
 //  ------------------- Signin and Signup Form Submit 
 signForm.addEventListener('submit', (e) => {
-    let signIn = new Signin()
-    let signUp = new Signup()
-
-    e.preventDefault()
-    if(signForm.children[0].className === 'sign-div')
-        signIn.submit(e)
-    else if(signForm.children[0].className === 'signup-div')
-        signUp.submit(e)
-        
+    if(signForm.children[0].className === 'sign-div') {
+        let SignIn = new Signin()
+        SignIn.submit(e)
+    }
+    else if(signForm.children[0].className === 'signup-div') {
+        let SignUp = new Signup()
+        SignUp.submit(e)
+    }
+    else if(signForm.children[0].className === 'verification-div') {
+        let EmailVerify = new EmailVerification()
+        EmailVerify.submit(e)
+    }
 })
 
 
 //  --------------- Render Sign in Form
 const renderSignin = () => {
-    let signIn = new Signin()
-    let RenderDOM = new Render(signIn.main(), signForm)
-    RenderDOM.render()
+    let SignIn = new Signin()
+    let RenderDOM = new Render()
+    RenderDOM.render(SignIn.main(), signForm)
 }
 
 // ---------------- Event body listener
@@ -38,6 +42,7 @@ document.body.addEventListener('click', (e) => {
         // ------------- Mobile Show modal
         if(classList.contains('sign-modal')) {
             signModal.style.display = "block"
+            signInner.style.height = '460px'
             renderSignin()
         }
 
@@ -52,10 +57,10 @@ document.body.addEventListener('click', (e) => {
         if(classList.contains('sign-up-link')) {
             signInner.style.height = '500px'
 
-            let signUp = new Signup()
-            let RenderDOM = new Render(signUp.main(), signForm)
+            let SignUp = new Signup()
+            let RenderDOM = new Render()
 
-            RenderDOM.render()
+            RenderDOM.render(SignUp.main(), signForm)
         }
 
         //  -------------- Showing Sign in Form

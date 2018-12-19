@@ -10,11 +10,11 @@ const FireAdmin = require('./my_modules/FireAdmin')
 const Session = require('./my_modules/Configs')
 const indexRoutes = require('./routes/indexRoutes')
 const profileRoutes = require('./routes/profileRoutes')
+const prototypeRoutes = require('./routes/prototypeRoutes')
 const PORT = process.env.PORT || 3000
 
 const firebase = new FireAdmin()
 firebase.fireConnect()
-
 app.use(helmet())
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
@@ -40,6 +40,7 @@ io.on('connection', socket => {
 
 app.use('/', indexRoutes)
 app.use('/u', profileRoutes)
+app.use('/profile', prototypeRoutes)
 app.get('*', (req, res) => res.send('Invalid URL!'))
 
 http.listen(PORT)

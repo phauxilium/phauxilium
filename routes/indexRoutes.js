@@ -1,9 +1,11 @@
 const express = require('express')
-const validator  = require('validator')
+// const validator  = require('validator')
+const nodemailer = require('nodemailer')
 const FireAdmin = require('../my_modules/FireAdmin')
 const router = express.Router()
 const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
+const Mailer = require('../my_modules/Configs')
 
 router.get('/', (req, res) => res.render('index/index'))
 
@@ -14,61 +16,128 @@ router.get('/contact', (req, res) => res.render('index/contact'))
 //  --------------- Initializing FireAdmin
 const fire = new FireAdmin()
 
-
 // ----------------------- Sign in ------------------
 router.post('/signin', (req, res) => {
     let auth = {
         email: req.body.email.toLowerCase(),
         password: req.body.password,
-        emailErr: '',
-        passwordErr: ''
+        err: {
+            emailErr: '',
+            passwordErr: ''
+        }
     }
 
     if(auth.email === '' || auth.password === '') {
         if(auth.email === '')
-            auth.emailErr = 'Can\'t be empty'
+            auth.err.emailErr = 'Can\'t be empty'
 
         if(auth.password === '')
-            auth.passwordErr = 'Can\'t be empty'
+            auth.err.passwordErr = 'Can\'t be empty'
 
-        res.send(auth)
-    } else {
+        res.send(auth.err)
+    }
+    // } else if(!validator.isEmail(auth.email)) {
+    //     auth.emailErr = 'Invalid email'
+    //     res.send(auth)
+    // } 
+    else {
         const db = fire.firebase.database()
         const ref = db.ref('users')
 
         ref.orderByKey().equalTo(auth.email).on('value', snapshots => {
             let datas = snapshots.val()
             if (datas === null) {
-                auth.emailErr = 'Invalid email'
+                auth.err.emailErr = 'Invalid email'
             } else {
                 if (auth.password !== datas[auth.email].name)
-                    auth.passwordErr = 'Invalid Password'
+                    auth.err.passwordErr = 'Invalid Password'
                 else
                     auth.email = crypto.encrypt(auth.email)
+
+                    req.session.ussID = auth.email
             }
-            res.send(auth)
+            res.send(auth.err)
+
         })
     }
 })
 
+
+
 //  --------------------- Signup ----------------------
 router.post('/signup', (req, res) => {
+    const db = fire.firebase.database()
+    const ref = db.ref('users')
+
     let auth = {
         email: req.body.email,
         password: req.body.password,
         cpassword: req.body.cpassword,
-        emailErr: '',
-        passwordErr: '',
-        cpasswordErr: ''
+        err: {
+            emailErr: '',
+            passwordErr: '',
+            cpasswordErr: '',
+            sendFailed: ''
+        }
     }
 
-    auth.emailErr = !validator.isEmail(auth.email) ? 'Invalid email' : auth.emailErr = ''
 
-    auth.passwordErr = auth.password.length < 8 ? passwordErr = 'Password must not be less than 8 characters' : ''
+    ref.orderByKey().equalTo(auth.email).on('value', snapshots => {
+        if(auth.email) {
+            auth.err.emailErr = snapshots.val() ? auth.err.emailErr = 'Email already exist' : ''
+        } else {
+            auth.err.emailErr = 'Email can\'t be empty'
+        }
 
-    auth.cpasswordErr = auth.password !== auth.cpassword ? 'Password doesn\'t match' : ''
+        auth.err.passwordErr = auth.password.length < 8 ? 'Password must not be less than 8 characters' : ''
 
-    res.send(auth)
+        auth.err.cpasswordErr = auth.password !== auth.cpassword ? 'Password doesn\'t match' : ''
+
+        if (!auth.err.emailErr && !auth.err.passwordErr && !auth.err.cpasswordErr) {
+            let random1 = Math.ceil(Math.random() * 1000 + 500)
+            let random2 = Math.floor(Math.random() * 2000 + 300)
+
+            req.session.evcode = `${random1}${random2}`
+            const mailer = new Mailer()
+            let services = mailer.getMailer()
+
+            let transport = nodemailer.createTransport(services)
+
+            let html = `<h3>You're verification code is</h3>
+                                    <h2>
+                                        <u style="color:blue">${ req.session.evcode }</u>
+                                    </h2>`
+
+            let mailOptions = mailer.getMailOptions(auth.email, html)
+
+            transport.sendMail(mailOptions, err => {
+                if(err){
+                    auth.err.sendFailed = 'An error occured'
+                    res.send(auth.err)
+                } else {
+                    res.send({
+                        'email': auth.email
+                    })
+                } 
+            })
+        } else {
+            res.send(auth.err)
+        }
+    })
+})
+
+// ------------ Nodemailer ---------------
+router.post('/e/v', (req, res) => {
+    let auth = {
+        code: req.body.code,
+        err: {
+            codeErr: ''
+        }
+    }
+
+    auth.err.codeErr = auth.code !== req.session.evcode ? 'Invalid code' : req.session.destroy()
+
+    res.send(auth.err)
 })
 
 module.exports = router

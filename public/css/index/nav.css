@@ -135,9 +135,13 @@ body{
     text-align: left;
 }
 
-.forgot-link, .sign-up-link, .sign-in-link {
+.forgot-link, .sign-up-link, .sign-in-link, .resend-link {
     color:#1976d2;
     font-size: 13px;
+}
+
+.resend-link {
+    font-size: 14px;
 }
 
 .sign-btn-div {
@@ -145,12 +149,19 @@ body{
 }
 
 .remember-me {
-    font-size: 10px;
     text-align: left;
 }
 
 
 /* -------------- Signup form ------------ */
+.sign-in-link {
+    font-size: 14px;
+}
+
+/* ------------------- Verification Form ------------- */
+.user-email {
+    text-align: left;
+}
 
 
 /* ----------- Loading Div ---------- */
@@ -168,12 +179,10 @@ body{
     margin-right: 10px;
     display: none;
     cursor: pointer;
-    outline: none;
 }
 
 .mobile-links {
     color: black;
-    outline: none;
 }
 
 i {

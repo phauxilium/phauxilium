@@ -51,10 +51,9 @@ class Signin {
                 this.state.xhr.send(`email=${email.value}&password=${password.value}`)
 
                 this.state.xhr.onreadystatechange = () => {
-
                     if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
                         this.appendRemoveEl()
-
+                        
                         let data = JSON.parse(this.state.xhr.responseText)
                         let emailHelper = document.querySelector('.email-helper-signin')
                         emailHelper.textContent = data.emailErr
@@ -63,7 +62,7 @@ class Signin {
                         passwordHelper.textContent = data.passwordErr
 
                         if (data.emailErr === '' && data.passwordErr === '') {
-                            window.location = `/u/p/0/${data.email}`
+                            window.location = '/u/t/'
 
                             email.value = ''
                             password.value = ''
@@ -92,8 +91,6 @@ class Signin {
                         
                         <div class="input-container">
                             <div class="col-6 forgot-div">
-                                <input type="checkbox" name="" id="" />
-                                <span class="remember-me">Remember me</span> <br />
                                 <span>
                                     <a href="#" class="forgot-link">Forgot password?</a>
                                 </span>

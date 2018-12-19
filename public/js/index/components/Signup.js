@@ -39,6 +39,21 @@ class Signup extends Signin{
                 let cpasswordHelper = document.querySelector('.cpassword-helper-signup')
                 cpasswordHelper.textContent = data.cpasswordErr
 
+                if(data.sendFailed)
+                    alert(data.sendFailed)
+                
+                if(!data.emailErr && !data.passwordErr && !data.cpasswordErr && !data.sendFailed) {
+                    let signForm = document.querySelector('.sign-form')
+
+                    let EmailVerify = new EmailVerification()
+                    let RenderDOM = new Render()
+
+                    RenderDOM.render(EmailVerify.main(), signForm)
+
+                    document.querySelector('.sign-inner').style.height = "400px"
+
+                    document.querySelector('.email-content').textContent = data.email
+                }
             } catch (err) {
                 console.log(err)
             }
