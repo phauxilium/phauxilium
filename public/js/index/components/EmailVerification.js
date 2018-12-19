@@ -7,11 +7,7 @@ class EmailVerification extends Signin {
         e.preventDefault()
 
         try {
-            let signBtnParent = this.state.signBtn.parentElement
-            signBtnParent.removeChild(this.state.signBtn)
-
-            this.state.loading.textContent = 'Loading...'
-            signBtnParent.appendChild(this.state.loading)
+            this.appendLoading()
 
             this.state.xhr.open('POST', '/e/v', true)
             this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
@@ -33,12 +29,21 @@ class EmailVerification extends Signin {
                     if(data.codeErr !== 'Invalid code') {
                         let signForm = document.querySelector('.sign-form')
 
-                        let SignIn = new Signin()
-                        let RenderDOM = new Render()
+                        codeHelper.classList.add('correct-helper')
+                        codeHelper.textContent = 'Code verified'
 
-                        RenderDOM.render(SignIn.main(), signForm)
+                        let signBtnParent = this.state.signBtn.parentElement
+                        signBtnParent.removeChild(this.state.signBtn)
 
-                        document.querySelector('.sign-inner').style.height = '460px'
+                        this.appendLoading()
+
+                        setTimeout(() => {
+                            let SignIn = new Signin()
+                            let RenderDOM = new Render()
+                            RenderDOM.render(SignIn.main(), signForm)
+
+                            document.querySelector('.sign-inner').style.height = '460px'
+                        }, 3000)
 
                     }
                 }

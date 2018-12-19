@@ -1,11 +1,11 @@
 const express = require('express')
-// const validator  = require('validator')
-const nodemailer = require('nodemailer')
+const validator  = require('validator')
 const FireAdmin = require('../my_modules/FireAdmin')
 const router = express.Router()
 const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
-const Mailer = require('../my_modules/Configs')
+const sgMail = require('@sendgrid/mail');
+const SendGrid = require('../my_modules/SendGrid')
 
 router.get('/', (req, res) => res.render('index/index'))
 
@@ -83,8 +83,11 @@ router.post('/signup', (req, res) => {
 
 
     ref.orderByKey().equalTo(auth.email).on('value', snapshots => {
-        if(auth.email) {
-            auth.err.emailErr = snapshots.val() ? auth.err.emailErr = 'Email already exist' : ''
+        
+        if(!validator.isEmail(auth.email)) {
+            auth.err.emailErr = 'Invalid email address'
+        } else if (auth.email) {
+            auth.err.emailErr = snapshots.val() ? auth.err.emailErr = 'Email already exist' : '' 
         } else {
             auth.err.emailErr = 'Email can\'t be empty'
         }
@@ -98,27 +101,26 @@ router.post('/signup', (req, res) => {
             let random2 = Math.floor(Math.random() * 2000 + 300)
 
             req.session.evcode = `${random1}${random2}`
-            const mailer = new Mailer()
-            let services = mailer.getMailer()
 
-            let transport = nodemailer.createTransport(services)
+            // TODO
+            // ---------- Send grid API ------------
+            let mail = new SendGrid()
+            sgMail.setApiKey(mail.getAPI());
+            mail.setMail(
+                auth.email,
+                `<h3>You're verification code is</h3> <h2><u style="color:blue">${ req.session.evcode }</u></h2>`
+            )
 
-            let html = `<h3>You're verification code is</h3>
-                                    <h2>
-                                        <u style="color:blue">${ req.session.evcode }</u>
-                                    </h2>`
+            let message = mail.getMail()
 
-            let mailOptions = mailer.getMailOptions(auth.email, html)
-
-            transport.sendMail(mailOptions, err => {
-                if(err){
-                    auth.err.sendFailed = 'An error occured'
+            sgMail.send(message)
+            .then(() => {
+                res.send(auth)
+            })
+            .catch((err) => {
+                if(err)
+                    auth.err.sendFailed = 'An error occur'
                     res.send(auth.err)
-                } else {
-                    res.send({
-                        'email': auth.email
-                    })
-                } 
             })
         } else {
             res.send(auth.err)
@@ -126,7 +128,7 @@ router.post('/signup', (req, res) => {
     })
 })
 
-// ------------ Nodemailer ---------------
+// ----------- Account Verification ----------------
 router.post('/e/v', (req, res) => {
     let auth = {
         code: req.body.code,

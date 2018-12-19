@@ -7,11 +7,7 @@ class Signup extends Signin{
     submit(e) {
         e.preventDefault()
         
-        let signBtnParent = this.state.signBtn.parentElement
-        signBtnParent.removeChild(this.state.signBtn)
-
-        this.state.loading.textContent = 'Loading...'
-        signBtnParent.appendChild(this.state.loading)
+        this.appendLoading()
         
         this.state.xhr.open('POST', '/signup', true)
         this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')

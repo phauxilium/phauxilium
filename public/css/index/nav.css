@@ -120,6 +120,10 @@ body{
     padding: 5px;
 }
 
+.correct-helper {
+    color: green;
+}
+
 .sign-btn {
     background-color: #1976d2;
     color: white;

@@ -11,6 +11,16 @@ class Signin {
                 }
     }
 
+    appendLoading() {
+        let signBtnParent = this.state.signBtn.parentElement
+
+        signBtnParent.removeChild(this.state.signBtn)
+
+        this.state.loading.textContent = 'Loading...'
+
+        signBtnParent.insertBefore(this.state.loading, signBtnParent.firstChild)
+    }
+
     appendRemoveEl() {
         try{
             let signBtn = document.createElement('button')
@@ -32,13 +42,7 @@ class Signin {
 
             if (this.state.form.children[0].className === 'sign-div') {
 
-                let signBtnParent = this.state.signBtn.parentElement
-
-                signBtnParent.removeChild(this.state.signBtn)
-
-                this.state.loading.textContent = 'Loading...'
-
-                signBtnParent.insertBefore(this.state.loading, signBtnParent.firstChild)
+                this.appendLoading()
 
                 // AJAX POST request        
 
