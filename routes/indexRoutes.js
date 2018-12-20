@@ -29,10 +29,10 @@ router.post('/signin', (req, res) => {
 
     if(auth.email === '' || auth.password === '') {
         if(auth.email === '')
-            auth.err.emailErr = 'Can\'t be empty'
+            auth.err.emailErr = 'Email cannot be empty'
 
         if(auth.password === '')
-            auth.err.passwordErr = 'Can\'t be empty'
+            auth.err.passwordErr = 'Password cannot be empty'
 
         res.send(auth.err)
     }
@@ -81,50 +81,59 @@ router.post('/signup', (req, res) => {
         }
     }
 
+    if (!validator.isEmail(auth.email)) {
+        auth.err.emailErr = 'Invalid email address'
+    } else if(!auth.email) {
+        auth.err.emailErr = 'Email cannot be empty'
+    }
 
-    ref.orderByKey().equalTo(auth.email).on('value', snapshots => {
-        
-        if(!validator.isEmail(auth.email)) {
-            auth.err.emailErr = 'Invalid email address'
-        } else if (auth.email) {
-            auth.err.emailErr = snapshots.val() ? auth.err.emailErr = 'Email already exist' : '' 
-        } else {
-            auth.err.emailErr = 'Email can\'t be empty'
-        }
+    auth.err.passwordErr = auth.password.length < 8 ? 'Password must not be less than 8 characters' : ''
 
-        auth.err.passwordErr = auth.password.length < 8 ? 'Password must not be less than 8 characters' : ''
+    auth.err.cpasswordErr = auth.password !== auth.cpassword ? 'Password does not match' : ''
 
-        auth.err.cpasswordErr = auth.password !== auth.cpassword ? 'Password doesn\'t match' : ''
 
-        if (!auth.err.emailErr && !auth.err.passwordErr && !auth.err.cpasswordErr) {
-            let random1 = Math.ceil(Math.random() * 1000 + 500)
-            let random2 = Math.floor(Math.random() * 2000 + 300)
+    if (!auth.err.emailErr && !auth.err.passwordErr && !auth.err.cpasswordErr) {
+        ref.orderByKey().equalTo(auth.email).on('value', snapshots => {
+            if(snapshots.val() === null) {
 
-            req.session.evcode = `${random1}${random2}`
+                if (!auth.err.emailErr && !auth.err.passwordErr && !auth.err.cpasswordErr) {
+                    let random1 = Math.ceil(Math.random() * 1000 + 500)
+                    let random2 = Math.floor(Math.random() * 2000 + 300)
 
-            // ---------- Send grid API ------------
-            let mail = new SendGrid()
-            sgMail.setApiKey(mail.getAPI());
-            mail.setMail(
-                auth.email,
-                `<h3>You're verification code is</h3> <h2><u style="color:blue">${ req.session.evcode }</u></h2>`
-            )
+                    req.session.evcode = `${random1}${random2}`
 
-            let message = mail.getMail()
+                    // ---------- Send grid API ------------
+                    let mail = new SendGrid()
+                    sgMail.setApiKey(mail.getAPI());
+                    mail.setMail(
+                        auth.email,
+                        `<h3>You're verification code is</h3> <h2><u style="color:blue">${req.session.evcode}</u></h2>`
+                    )
 
-            sgMail.send(message)
-            .then(() => {
-                res.send(auth)
-            })
-            .catch((err) => {
-                if(err)
-                    auth.err.sendFailed = 'An error occur'
+                    let message = mail.getMail()
+
+                    sgMail.send(message)
+                        .then(() => {
+                            res.send(auth)
+                        })
+                        .catch((err) => {
+                            if (err)
+                                auth.err.sendFailed = 'An error occur'
+                            res.send(auth.err)
+                        })
+                } else {
                     res.send(auth.err)
-            })
-        } else {
-            res.send(auth.err)
-        }
-    })
+                }
+
+            } else {
+                auth.err.emailErr = 'Email already exist'
+                res.send(auth.err)
+            }
+        })
+    } else {
+        res.send(auth.err)
+    }
+
 })
 
 // ----------- Account Verification ----------------
