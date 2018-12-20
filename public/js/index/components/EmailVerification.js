@@ -31,15 +31,10 @@ class EmailVerification extends Signin {
 
                         codeHelper.classList.add('correct-helper')
                         codeHelper.textContent = 'Code verified'
-
-                        let signBtnParent = this.state.signBtn.parentElement
-                        signBtnParent.removeChild(this.state.signBtn)
-
+                        
                         this.appendLoading()
 
                         setTimeout(() => {
-                            this.appendRemoveEl()
-
                             let SignIn = new Signin()
                             let RenderDOM = new Render()
                             RenderDOM.render(SignIn.main(), signForm)
