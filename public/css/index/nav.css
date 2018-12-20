@@ -98,18 +98,17 @@ body{
 }
 
 .inputs {
-    background-color: whitesmoke;
-    border: 1px solid lightgrey;
+    border: none;
+    border-bottom: 1px solid lightgray;
     width: 100%;
     padding: 10px;
     font-size: 15px;
-    border-radius: 5px;
-    outline: none;
     transition: 0.3s;
 }
 
 .inputs:focus {
-    border: 1px solid black;
+    border-bottom: 1px solid #1976d2;
+    box-shadow: 0 3px 4px -5px #1976d2;
 } 
 
 .helper {

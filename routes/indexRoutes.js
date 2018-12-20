@@ -102,7 +102,6 @@ router.post('/signup', (req, res) => {
 
             req.session.evcode = `${random1}${random2}`
 
-            // TODO
             // ---------- Send grid API ------------
             let mail = new SendGrid()
             sgMail.setApiKey(mail.getAPI());

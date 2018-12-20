@@ -83,7 +83,7 @@ class Signin {
         return `<div class="sign-div">
                         <div class="input-container">
                             <label class="label">Email</label>
-                            <input type="text" name="emailSignin" class="inputs" placeholder="example@example.com">
+                            <input type="text" name="emailSignin" class="inputs" placeholder="youremail@example.com">
                             <span class="helper email-helper-signin"></span>
                         </div>
     
