@@ -6,7 +6,6 @@ class Signup extends Signin{
     
     submit(e) {
         e.preventDefault()
-        
         this.appendLoading()
         
         this.state.xhr.open('POST', '/signup', true)

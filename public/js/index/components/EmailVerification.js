@@ -41,7 +41,6 @@ class EmailVerification extends Signin {
 
                             document.querySelector('.sign-inner').style.height = '460px'
                         }, 3000)
-
                     }
                 }
             }
