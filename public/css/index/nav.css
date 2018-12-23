@@ -138,7 +138,7 @@ body{
     text-align: left;
 }
 
-.forgot-link, .sign-up-link, .sign-in-link, .resend-link {
+.forgot-link, .sign-up-link, .sign-in-link, .resend-link, .go-back{
     color:#1976d2;
     font-size: 13px;
 }
@@ -170,6 +170,32 @@ body{
 /* ----------- Loading Div ---------- */
 .loading-div {
     border: 1px solid red;
+}
+
+
+/* ------------ Complete Signup --------------- */
+.c-title {
+    margin-top: 0;
+}
+
+.description {
+    font-size: 14px;
+}
+
+.next-cont {
+    display: none;
+}
+
+.active-cont {
+    display: block;
+}
+
+.select {
+    background-color: transparent; 
+}
+
+.asterisk {
+    color: red;
 }
 
 /*---------- Mobile ----------- */

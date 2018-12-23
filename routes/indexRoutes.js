@@ -51,7 +51,12 @@ router.post('/signin', (req, res) => {
               }else {
                   auth.email = crypto.encrypt(auth.email)
                   req.session.ussID = auth.email
-                  res.send(auth.err)
+                  if(datas[encryptEmail].complete === false) {
+                      auth.err.completeFailed = true
+                      res.send(auth.err)
+                  } else {
+                      res.send(auth.err)
+                  }
               }
             }
         })
@@ -166,6 +171,36 @@ router.post('/e/v', (req, res) => {
                 res.send(codeAuth.err)
             }
         }) 
+    }
+})
+
+// ---------------- Complete Signup
+router.post('/c/v', (req, res) => {
+    let auth = {
+        uType: req.body.uType,
+        fname: req.body.fname,
+        mname: req.body.mname,
+        lname: req.body.lname,
+        dob: req.body.dob,
+        gender: req.body.gender,
+        address: req.body.address,
+        err : {
+            uTypeErr: '',
+            fnameErr: '',
+            mnameErr: '',
+            lnameErr: '',
+        }
+    }
+
+    if(!auth.fname || !auth.mname || !auth.lname) {
+        auth.err.fnameErr = !auth.fname ? 'Firstname cannot be empty' : ''
+
+        auth.err.mnameErr = !auth.mname ? 'Middle name cannot be empty' : ''
+
+        auth.err.lnameErr = !auth.lname ? 'Lastname cannot be empty' : ''
+        res.send(auth.err)
+    } else {
+        res.send(auth.err)
     }
 })
 

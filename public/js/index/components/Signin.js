@@ -66,10 +66,20 @@ class Signin {
                         passwordHelper.textContent = data.passwordErr
 
                         if (data.emailErr === '' && data.passwordErr === '') {
-                            window.location = '/u/t/'
+                            
+                            if(data.completeFailed) {
+                                let ChooseSign = new ChooseSignup()
+                                let RenderDOM = new Render()
 
-                            email.value = ''
-                            password.value = ''
+                                let signForm = document.querySelector('.sign-form')
+                                RenderDOM.render(ChooseSign.main(), signForm)
+
+                            } else {
+                                window.location = '/u/t/'
+
+                                email.value = ''
+                                password.value = ''
+                            }
                         }
                     }
                 }
