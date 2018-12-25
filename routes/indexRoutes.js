@@ -174,8 +174,11 @@ router.post('/e/v', (req, res) => {
     }
 })
 
-// ---------------- Complete Signup
-router.post('/c/v', (req, res) => {
+
+//  TODO
+//  MAKE BOTH PATIENT AND DOCTOR SIGNUP
+// ---------------- Patient Complete Signup
+router.post('/c/s/p', (req, res) => {
     let auth = {
         uType: req.body.uType,
         fname: req.body.fname,
@@ -183,24 +186,66 @@ router.post('/c/v', (req, res) => {
         lname: req.body.lname,
         dob: req.body.dob,
         gender: req.body.gender,
+        contact: req.body.contact,
         address: req.body.address,
         err : {
             uTypeErr: '',
             fnameErr: '',
             mnameErr: '',
             lnameErr: '',
+            dobErr: '',
+            genderErr: '',
+            contactErr: '',
+            addressErr: '',
+            error: ''
         }
     }
 
     if(!auth.fname || !auth.mname || !auth.lname) {
-        auth.err.fnameErr = !auth.fname ? 'Firstname cannot be empty' : ''
+        auth.err.fnameErr = !auth.fname ? 'This field is required.' : ''
 
-        auth.err.mnameErr = !auth.mname ? 'Middle name cannot be empty' : ''
+        auth.err.mnameErr = !auth.mname ? 'This field is required.' : ''
 
-        auth.err.lnameErr = !auth.lname ? 'Lastname cannot be empty' : ''
+        auth.err.lnameErr = !auth.lname ? 'This field is required.' : ''
+        auth.err.error = 'Error'
+
         res.send(auth.err)
-    } else {
+    } else if(!auth.dob || !auth.gender || !auth.contact || !auth.address) {        
+        auth.err.dobErr = !auth.dob ? 'This field is required' : ''
+
+        auth.err.genderErr = !auth.gender ? 'This field is required' : ''
+
+        auth.err.contactErr = !auth.contact ? 'This field is required' : ''
+
+        auth.err.addressErr = !auth.address ? 'This field is required' : ''
+
+        auth.err.error = 'Error'
         res.send(auth.err)
+
+    }else {
+        auth.err.error = ''
+
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref('users')
+        const userRef = ref.child(req.session.ussID)
+        userRef.update({
+            uType: auth.uType,
+            fname: auth.fname,
+            mname: auth.mname,
+            lname: auth.lname,
+            dob: auth.dob,
+            gender: auth.gender,
+            contact: auth.contact,
+            address: auth.address,
+            complete: true
+        }, err => {
+            if(!err)
+                    res.send(auth.err)
+            else {
+                auth.err.fireError = err ? 'An error occur' : ''
+            }
+        })
     }
 })
 

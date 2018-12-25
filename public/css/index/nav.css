@@ -61,7 +61,7 @@ body{
 }
 
 .sign-inner {
-    margin-top: 5%;
+    margin-top: 10%;
     border-radius: 15px;
     background-color: white;
     padding: 15px;
@@ -196,6 +196,16 @@ body{
 
 .asterisk {
     color: red;
+}
+
+.signup-message {
+    display: none;
+    border-radius: 5px;
+    color: white;
+    width: 100%;
+    float: left;
+    padding: 10px;
+    margin-bottom: 5px;
 }
 
 /*---------- Mobile ----------- */

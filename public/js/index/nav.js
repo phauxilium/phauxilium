@@ -12,6 +12,7 @@ let signForm = document.querySelector('.sign-form')
 
 //  ------------------- Initializing PatientSignup ----------------
 let PatientSign = new PatientSignup()
+let DoctorSign = new DoctorSignup()
 
 //  ------------------- Signin and Signup Form Submit 
 signForm.addEventListener('submit', (e) => {
@@ -28,24 +29,18 @@ signForm.addEventListener('submit', (e) => {
         EmailVerify.submit(e)
     } else if(signForm.children[0].className === 'c-signup') {
         e.preventDefault()
-        
+        let ChooseSign = new ChooseSignup()
+    
         let radio = e.target.elements.radio[0].checked
-        if(radio)
-            console.log('doctor')
-        else {
-            let RenderDOM = new Render()
-            RenderDOM.render(PatientSign.main(), signForm)
-            signInner.style.height = '500px'
-            // ------------ Go back Event Listener -----------
-            let goBack = document.querySelector('.go-back')
-            goBack.addEventListener('click', () => {
-                PatientSign.goBack()
-            })
-        }
-            
+                
+        radio ? ChooseSign.completeSignup(DoctorSign) : ChooseSign.completeSignup(PatientSign)
 
     } else if(signForm.children[0].className === 'patient-signup') {
         PatientSign.submit(e)
+    
+    } else if(signForm.children[0].className === 'doctor-signup') {
+        DoctorSign.submit(e)
+
     }
 })
 

@@ -1,4 +1,16 @@
 class ChooseSignup {
+
+    completeSignup(obj) {
+        let RenderDOM = new Render()
+        RenderDOM.render(obj.main(), signForm)
+        signInner.style.height = '500px'
+
+        // ------------ Go back Event Listener -----------
+        let goBack = document.querySelector('.go-back')
+        goBack.addEventListener('click', () => {
+            obj.goBack()
+        })
+    }
     main() {
         return `<div class="c-signup">
                             <h2 class="c-title">Complete signup</h2>

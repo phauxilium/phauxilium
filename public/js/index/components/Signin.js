@@ -1,13 +1,13 @@
 class Signin {
     constructor() {
                 this.state = {
-                    'form': document.querySelector('.sign-form'),
+                    form: document.querySelector('.sign-form'),
+                    
+                    loading: document.createElement('span'),
 
-                    'signBtn': document.querySelector('.sign-btn'),
+                    signBtn: document.querySelector('.sign-btn'),
 
-                    'loading': document.createElement('span'),
-
-                    'xhr': new XMLHttpRequest()
+                    xhr: new XMLHttpRequest()
                 }
     }
 
