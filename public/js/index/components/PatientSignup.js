@@ -47,12 +47,16 @@ class PatientSignup{
                 }
                 nextCont[this.state.elementIndex].classList.add('active-cont')
 
+                if (nextCont.length - 2 === this.state.elementIndex)
+                    this.state.signInner.style.height = '520px'
+                else
+                    this.state.signInner.style.height = '480px'
+
                 if(nextCont.length - 1 === this.state.elementIndex)
                     this.state.nextBtn[0].textContent = 'Submit'
-                else {
+                else
                     this.state.nextBtn[0].textContent = 'Next'
-                    this.state.signInner.style.height = '480px'
-                }
+                    
             })
         } else {
             let ChooseSign = new ChooseSignup()

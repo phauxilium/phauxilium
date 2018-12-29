@@ -107,7 +107,7 @@ router.post('/signup', (req, res) => {
 
                     // ---------- Send grid API ------------
                     let mail = new SendGrid()
-                    mail.setApi()
+                    mail.getApi()
                     mail.setMail(
                         auth.email,
                         `<p>You're verification code is <u style="color:blue; font-weight:bold;">${req.session.evcode}</u></p>`
@@ -176,7 +176,7 @@ router.post('/e/v', (req, res) => {
 
 
 //  TODO
-//  MAKE BOTH PATIENT AND DOCTOR SIGNUP
+//  MAKE BOTH PATIENT AND DOCTOR SIGNUP`
 // ---------------- Patient Complete Signup
 router.post('/c/s/p', (req, res) => {
     let auth = {

@@ -10,7 +10,7 @@ class Signin {
                     xhr: new XMLHttpRequest()
                 }
     }
-
+    
     appendLoading() {
         let signBtnParent = this.state.signBtn.parentElement
 

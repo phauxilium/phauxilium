@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 3000
 
 const firebase = new FireAdmin()
 firebase.fireConnect()
+
 app.use(helmet())
 app.use('/static', express.static(path.join(__dirname, 'public')))
 app.use(bodyParser.json())
@@ -22,10 +23,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
 
 const sess = new Session()
-if(app.get('env') === 'production') {
-    app.set('trust proxy', 1)
-    sess.state.session.cookie.secure = true
-}
+sess.setSession(app.get('env'))
 app.use(session(sess.getSession()))
 
 io.on('connection', socket => {
@@ -42,5 +40,6 @@ app.use('/', indexRoutes)
 app.use('/u', profileRoutes)
 app.use('/profile', prototypeRoutes)
 app.get('*', (req, res) => res.send('Invalid URL!'))
+app.post('*', (req, res) => res.send('Invalid URL!'))
 
 http.listen(PORT)

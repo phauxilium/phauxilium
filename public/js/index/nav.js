@@ -1,6 +1,6 @@
 let menuBtn = document.querySelector('.menu-btn')
 let menuBar = document.querySelector('.menu-bar')
-let signModal = document.querySelector('.sign-outer')
+let signOuter = document.querySelector('.sign-outer')
 
 menuBtn.addEventListener('click', () => {
     menuBar.style.width = "200px"
@@ -57,17 +57,18 @@ document.body.addEventListener('click', (e) => {
 
         // ------------- Mobile Show modal
         if(classList.contains('sign-modal')) {
-            signModal.style.display = "block"
+            signOuter.style.display = "block"
             signInner.style.height = '460px'
             renderSignin()
         }
 
         // --------------- Closing Modal
-        if(classList.contains('close-icon'))
-            signModal.style.display = "none"
+        if(classList.contains('close-icon')) 
+            signOuter.style.display = "none"
 
         // -------------- Mobile Close Menu bar
-        if(classList.contains('menu-close-icon') || classList.contains('nav-mobile-btn'))                  menuBar.style.width = "0"
+        if(classList.contains('menu-close-icon') || classList.contains('nav-mobile-btn'))
+            menuBar.style.width = "0"
 
         //  ----------------- Showing Sign up Form
         if(classList.contains('sign-up-link')) {

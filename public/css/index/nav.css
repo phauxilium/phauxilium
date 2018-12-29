@@ -57,11 +57,10 @@ body{
     height: 100%;
     position: absolute;
     width: 100%;
-    display: none;
 }
 
 .sign-inner {
-    margin-top: 10%;
+    margin-top: 8%;
     border-radius: 15px;
     background-color: white;
     padding: 15px;
@@ -206,6 +205,11 @@ body{
     float: left;
     padding: 10px;
     margin-bottom: 5px;
+}
+
+.terms-helper {
+    width: 100%;
+    text-align: center;
 }
 
 /*---------- Mobile ----------- */
