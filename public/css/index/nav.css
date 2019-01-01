@@ -57,6 +57,7 @@ body{
     height: 100%;
     position: absolute;
     width: 100%;
+    display: none;
 }
 
 .sign-inner {
@@ -207,7 +208,7 @@ body{
     margin-bottom: 5px;
 }
 
-.terms-helper {
+.agreement-helper {
     width: 100%;
     text-align: center;
 }

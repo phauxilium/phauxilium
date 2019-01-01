@@ -1,7 +1,6 @@
 class PatientSignup{
     constructor() {
         this.state = {
-            xhr: new XMLHttpRequest(),
             loading: document.createElement('span'),
             signInner: document.querySelector('.sign-inner'),
             nextBtn: document.getElementsByClassName('sign-btn'),
@@ -48,7 +47,7 @@ class PatientSignup{
                 nextCont[this.state.elementIndex].classList.add('active-cont')
 
                 if (nextCont.length - 2 === this.state.elementIndex)
-                    this.state.signInner.style.height = '520px'
+                    this.state.signInner.style.height = '500px'
                 else
                     this.state.signInner.style.height = '480px'
 
@@ -71,20 +70,26 @@ class PatientSignup{
         e.preventDefault()
         let nextCont = document.querySelectorAll('.next-cont')
 
+        let auth = {
+            fname: e.target.elements.fname.value,
+            mname: e.target.elements.mname.value,
+            lname: e.target.elements.lname.value,
+            dob: e.target.elements.dob.value,
+            gender: e.target.elements.gender.value,
+            contact: e.target.elements.contact.value,
+            address: e.target.elements.address.value,
+            agreement: e.target.elements.agreement.checked
+        }
+
         if (this.state.nextBtn[0].textContent === 'Next') {
-            this.state.xhr.open('POST', '/c/s/p', true)
-            this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
-            let fname = e.target.elements.fname.value
-            let mname = e.target.elements.mname.value
-            let lname = e.target.elements.lname.value
-           
-            this.state.xhr.send(`uType=patient&fname=${fname}&mname=${mname}&lname=${lname}`)
-
-            this.state.xhr.onreadystatechange = () => {
-                if(this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
+            const Ajax = new AjaxAPI()
+            Ajax.post('/c/s/p', `uType=patient&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}`)
+   
+            Ajax.xhr.onreadystatechange = () => {
+                if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
                     try {
-                        let datas = JSON.parse(this.state.xhr.responseText)
+                        let datas = JSON.parse(Ajax.xhr.responseText)
 
                         let fnameHelper = document.querySelector('.fname-helper')
                         fnameHelper.textContent = datas.fnameErr ? datas.fnameErr : ''
@@ -107,7 +112,7 @@ class PatientSignup{
 
                                 if (nextCont.length - 1 === this.state.elementIndex) {
                                     this.state.nextBtn[0].textContent = 'Submit'
-                                    this.state.signInner.style.height = '520px'
+                                    this.state.signInner.style.height = '570px'
                                 }
                                 else 
                                     this.state.nextBtn[0].textContent = 'Next'
@@ -116,7 +121,6 @@ class PatientSignup{
                                 this.state.elementIndex = nextCont.length - 1
                             }
                         }
-                        
                     } catch(err) {
                         console.log(err)
                     }
@@ -126,43 +130,32 @@ class PatientSignup{
 
             this.appendLoading()
 
-            this.state.xhr.open('POST', '/c/s/p', true)
-            this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
-            
-            let fname = e.target.elements.fname.value
-            let mname = e.target.elements.mname.value
-            let lname = e.target.elements.lname.value
-            let dob = e.target.elements.dob.value
-            let gender = e.target.elements.gender.value
-            let contact = e.target.elements.contact.value
-            let address = e.target.elements.address.value
-                
-            this.state.xhr.send(`uType=patient&fname=${fname}&mname=${mname}&lname=${lname}&dob=${dob}&gender=${gender}&contact=${contact}&address=${address}`)
-
-            this.state.xhr.onreadystatechange = () => {
+            const Ajax = new AjaxAPI()
+            Ajax.post('/c/s/p', `uType=patient&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&agreement=${auth.agreement}`)
+          
+            Ajax.xhr.onreadystatechange = () => {
                 try {
-                    if(this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
-                        let datas = JSON.parse(this.state.xhr.responseText)
+                    if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
 
                         this.appendRemoveEl()
 
-                        let dobHelper = document.querySelector('.dob-helper')
-                        dobHelper.textContent = datas.dobErr ? datas.dobErr : ''
+                        document.querySelector('.dob-helper').textContent = datas.dobErr ? datas.dobErr : ''
 
-                        let genderHelper = document.querySelector('.gender-helper')
-                        genderHelper.textContent = datas.genderErr ? datas.genderErr : ''
+                        document.querySelector('.gender-helper').textContent = datas.genderErr ? datas.genderErr : ''
 
-                        let contactHelper = document.querySelector('.contact-helper')
-                        contactHelper.textContent = datas.contactErr ? datas.contactErr : ''
+                         document.querySelector('.contact-helper').textContent = datas.contactErr ? datas.contactErr : ''
 
-                        let addressHelper = document.querySelector('.address-helper')
-                        addressHelper.textContent = datas.addressErr ? datas.addressErr : ''
+                         document.querySelector('.address-helper').textContent = datas.addressErr ? datas.addressErr : ''
+
+                        document.querySelector('.agreement-helper').textContent = datas.agreementErr ? datas.agreementErr : ''
 
                         let signupMessage = document.querySelector('.signup-message')
 
-                        if(!datas.error) {
-                            this.state.signInner.style.height = '530px'
+                        if(!datas.error && !datas.agreementErr) {
+                            this.state.signInner.style.height = '580px'
 
+                            this.state.elementIndex = 0
                             this.appendLoading()
 
                             signupMessage.style.display = 'block'
@@ -178,10 +171,11 @@ class PatientSignup{
 
                                 this.state.signInner.style.height = '460px'
                             }, 3000)
+
+                            document.querySelector('.email').focus()
                         } else if(datas.fireError) {
                             alert(datas.fireError)
                         }
-                    
                     }
                 } catch(err) {
                     console.log(err)
@@ -196,7 +190,7 @@ class PatientSignup{
                             <div class="next-cont active-cont">
                                 <div class="input-container">
                                     <label class="label"><label class="asterisk">*</label> Firstname</label>
-                                    <input type="text" name="fname" class="inputs" placeholder="Firstname">
+                                    <input type="text" name="fname" class="inputs fname" placeholder="Firstname">
                                     <span class="helper fname-helper"></span>
                                 </div>
                         
@@ -241,6 +235,15 @@ class PatientSignup{
                                     <input type="text" name="address" class="inputs" placeholder="Address">
                                     <span class="helper address-helper"></span>
                                 </div>
+
+                                <div class="input-container">
+                                    <label class="container-check"><span class="agreement">I accept the Terms and Condition</span>
+                                        <input type="checkbox" name="agreement">
+                                        <span class="checkmark-check"></span>
+                                    </label>
+                                        <span class="helper agreement-helper"></span>
+                                </div>
+
                             </div>
                         
                         

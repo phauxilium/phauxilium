@@ -1,14 +1,25 @@
+//  WHEN PASSWORD IS INCORRECT IT IS RETURNING IN LANDING PAGE ------------- FIX THIS -------------------
 class Signin {
     constructor() {
                 this.state = {
                     form: document.querySelector('.sign-form'),
-                    
                     loading: document.createElement('span'),
-
                     signBtn: document.querySelector('.sign-btn'),
-
+                    inputs: document.querySelectorAll('.inputs'),
                     xhr: new XMLHttpRequest()
                 }
+    }
+
+    disableInputs() {
+        this.state.inputs.forEach((value) => {
+            value.setAttribute('disabled', '')
+        })
+    }
+
+    enableInputs() {
+        this.state.inputs.forEach((value) => {
+            value.removeAttribute('disabled', '')
+        })
     }
     
     appendLoading() {
@@ -44,6 +55,8 @@ class Signin {
 
                 this.appendLoading()
 
+               this.disableInputs()
+
                 // AJAX POST request        
 
                 this.state.xhr.open('POST', '/signin', true)
@@ -57,7 +70,9 @@ class Signin {
                 this.state.xhr.onreadystatechange = () => {
                     if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
                         this.appendRemoveEl()
-                        
+
+                        this.enableInputs()
+
                         let data = JSON.parse(this.state.xhr.responseText)
                         let emailHelper = document.querySelector('.email-helper-signin')
                         emailHelper.textContent = data.emailErr
@@ -65,8 +80,7 @@ class Signin {
                         let passwordHelper = document.querySelector('.password-helper-signin')
                         passwordHelper.textContent = data.passwordErr
 
-                        if (data.emailErr === '' && data.passwordErr === '') {
-                            
+                        if (!data.emailErr && !data.passwordErr) {   
                             if(data.completeFailed) {
                                 let ChooseSign = new ChooseSignup()
                                 let RenderDOM = new Render()
@@ -93,7 +107,7 @@ class Signin {
         return `<div class="sign-div">
                         <div class="input-container">
                             <label class="label">Email</label>
-                            <input type="text" name="emailSignin" class="inputs" placeholder="youremail@example.com">
+                            <input type="text" name="emailSignin" class="inputs email" placeholder="Email Address">
                             <span class="helper email-helper-signin"></span>
                         </div>
     

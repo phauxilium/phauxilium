@@ -3,6 +3,12 @@ class DoctorSignup extends PatientSignup {
         super(state)
     }
 
+    agreementClick() {
+        document.querySelector('.agreement').addEventListener('click', () => {
+            window.open('/terms-and-condition')
+        })
+    }
+
     changeContainer() {
         let nextCont = document.querySelectorAll('.next-cont')
         if (this.state.elementIndex !== nextCont.length - 1) {
@@ -25,111 +31,140 @@ class DoctorSignup extends PatientSignup {
             }
         }
     }
-
-    // ------------ TODO SUBMIT AND VALIDATE FORM ---------------
+    
     submit(e) {
         e.preventDefault()
-        
+
+            let nextCont = document.querySelector('.next-cont')
+
+            let auth = {
+                fname: e.target.elements.fname.value,
+                mname: e.target.elements.mname.value,
+                lname: e.target.elements.lname.value,
+                dob: e.target.elements.dob.value,
+                gender: e.target.elements.gender.value,
+                contact: e.target.elements.contact.value,
+                address: e.target.elements.address.value,
+                cAddress: e.target.elements.cAddress.value,
+                cContact: e.target.elements.cContact.value,
+                prc: e.target.elements.prc.value,
+                agreement: e.target.elements.agreement.checked
+            }
+            
         if (this.state.elementIndex === 0) {
-            // this.state.xhr.open('POST', '/c/s/p', true)
-            // this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
-            // let fname = e.target.elements.fname.value
-            // let mname = e.target.elements.mname.value
-            // let lname = e.target.elements.lname.value
+            const Ajax = new AjaxAPI()
+            Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}`)
+            
+            Ajax.xhr.onreadystatechange = () => {
+                if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                    try {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
 
-            // this.state.xhr.send(`uType=patient&fname=${fname}&mname=${mname}&lname=${lname}`)
+                        let fnameHelper = document.querySelector('.fname-helper')
+                        fnameHelper.textContent = datas.fnameErr ? datas.fnameErr : ''
 
-            // this.state.xhr.onreadystatechange = () => {
-            //     if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
-            //         try {
-            //             let datas = JSON.parse(this.state.xhr.responseText)
+                        let mnameHelper = document.querySelector('.mname-helper')
+                        mnameHelper.textContent = datas.mnameErr ? datas.mnameErr : ''
 
-            //             let fnameHelper = document.querySelector('.fname-helper')
-            //             fnameHelper.textContent = datas.fnameErr ? datas.fnameErr : ''
+                        let lnameHelper = document.querySelector('.lname-helper')
+                        lnameHelper.textContent = datas.lnameErr ? datas.lnameErr : ''
 
-            //             let mnameHelper = document.querySelector('.mname-helper')
-            //             mnameHelper.textContent = datas.mnameErr ? datas.mnameErr : ''
-
-            //             let lnameHelper = document.querySelector('.lname-helper')
-            //             lnameHelper.textContent = datas.lnameErr ? datas.lnameErr : ''
-
-            //             if (!datas.fnameErr && !datas.mnameErr && !datas.lnameErr) {
+                        if (!datas.fnameErr && !datas.mnameErr && !datas.lnameErr) 
                             this.changeContainer()
-                            // } else {
-                            //     this.state.elementIndex = nextCont.length - 1
-                            // }
-                        // }
-            //         } catch (err) {
-            //             console.log(err)
-            //         }
-            //     }
-            // }
+                         
+                    } catch (err) {
+                        console.log(err)
+                    }
+                }
+            }
         } else if (this.state.elementIndex === 1) {
-            this.changeContainer()
-            // // this.appendLoading()
 
-            // // this.state.xhr.open('POST', '/c/s/p', true)
-            // // this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+            const Ajax = new AjaxAPI()
+            Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}`)
 
-            // // let fname = e.target.elements.fname.value
-            // // let mname = e.target.elements.mname.value
-            // // let lname = e.target.elements.lname.value
-            // // let dob = e.target.elements.dob.value
-            // // let gender = e.target.elements.gender.value
-            // // let contact = e.target.elements.contact.value
-            // // let address = e.target.elements.address.value
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
 
-            // // this.state.xhr.send(`uType=patient&fname=${fname}&mname=${mname}&lname=${lname}&dob=${dob}&gender=${gender}&contact=${contact}&address=${address}`)
+                        let dobHelper = document.querySelector('.dob-helper')
+                        dobHelper.textContent = datas.dobErr ? datas.dobErr : ''
 
-            // // this.state.xhr.onreadystatechange = () => {
-            // //     try {
-            // //         if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
-            // //             let datas = JSON.parse(this.state.xhr.responseText)
+                        let genderHelper = document.querySelector('.gender-helper')
+                        genderHelper.textContent = datas.genderErr ? datas.genderErr : ''
 
-            // //             this.appendRemoveEl()
+                        let contactHelper = document.querySelector('.contact-helper')
+                        contactHelper.textContent = datas.contactErr ? datas.contactErr : ''
 
-            // //             let dobHelper = document.querySelector('.dob-helper')
-            // //             dobHelper.textContent = datas.dobErr ? datas.dobErr : ''
+                        let addressHelper = document.querySelector('.address-helper')
+                        addressHelper.textContent = datas.addressErr ? datas.addressErr : ''
 
-            // //             let genderHelper = document.querySelector('.gender-helper')
-            // //             genderHelper.textContent = datas.genderErr ? datas.genderErr : ''
+                        if (!datas.dobErr && !datas.genderErr && !datas.contactErr && !datas.addressErr)
+                            this.changeContainer()
+                      
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        } else if (this.state.elementIndex === 2) {
 
-            // //             let contactHelper = document.querySelector('.contact-helper')
-            // //             contactHelper.textContent = datas.contactErr ? datas.contactErr : ''
+            this.appendLoading()
 
-            // //             let addressHelper = document.querySelector('.address-helper')
-            // //             addressHelper.textContent = datas.addressErr ? datas.addressErr : ''
+            const Ajax = new AjaxAPI()
+            Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&cAddress=${auth.cAddress}&cContact=${auth.cContact}&prc=${auth.prc}&agreement=${auth.agreement}`)
 
-            // //             let signupMessage = document.querySelector('.signup-message')
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
 
-            // //             if (!datas.error) {
-            // //                 this.state.signInner.style.height = '530px'
+                        this.appendRemoveEl()
 
-            // //                 this.appendLoading()
+                        let datas = JSON.parse(Ajax.xhr.responseText)
 
-            // //                 signupMessage.style.display = 'block'
-            // //                 signupMessage.style.backgroundColor = '#1976d2'
-            // //                 signupMessage.textContent = 'Signup complete'
+                       document.querySelector('.c-address-helper').textContent = datas.cAddressErr ? datas.cAddressErr : ''
 
-            // //                 setTimeout(() => {
-            // //                     signupMessage.style.display = 'none'
+                        document.querySelector('.c-contact-helper').textContent = datas.cContactErr ? datas.cContactErr : ''
 
-            // //                     let SignIn = new Signin()
-            // //                     let RenderDOM = new Render()
-            // //                     RenderDOM.render(SignIn.main(), this.state.signForm)
+                        document.querySelector('.prc-helper').textContent = datas.prcErr ? datas.prcErr : ''
 
-            // //                     this.state.signInner.style.height = '460px'
-            // //                 }, 3000)
-            // //             } else if (datas.fireError) {
-            // //                 alert(datas.fireError)
-            // //             }
+                        document.querySelector('.agreement-helper').textContent = datas.agreementErr ? datas.agreementErr : ''
 
-            // //         }
-            // //     } catch (err) {
-            // //         console.log(err)
-            // //     }
-            // }
+                        let signupMessage = document.querySelector('.signup-message')
+            
+                        if(!datas.prcErr) {
+                            if (!datas.cAddressErr && !datas.cContactErr && !datas.prcErr && !datas.agreementErr) {
+                                this.appendLoading()
+                                this.state.elementIndex = 0
+
+                                this.state.signInner.style.height = '550px'
+
+                                signupMessage.style.display = 'block'
+                                signupMessage.style.backgroundColor = '#1976d2'
+                                signupMessage.textContent = 'Signup complete'
+
+                                setTimeout(() => {
+                                    signupMessage.style.display = 'none'
+
+                                    let SignIn = new Signin()
+                                    let RenderDOM = new Render()
+                                    RenderDOM.render(SignIn.main(), this.state.signForm)
+
+                                    this.state.signInner.style.height = '460px'
+                                }, 3000)
+
+                                document.querySelector('.emai').focus()
+
+                            } else if (datas.fireError) {
+                                alert(datas.fireError)
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
         }
     }
 
@@ -141,12 +176,12 @@ class DoctorSignup extends PatientSignup {
                             <div class="next-cont active-cont">
                                 <div class="input-container">
                                     <label class="label"><label class="asterisk">*</label> Firstname</label>
-                                    <input type="text" name="fname" class="inputs" placeholder="Firstname">
+                                    <input type="text" name="fname" class="inputs fname" placeholder="Firstname">
                                     <span class="helper fname-helper"></span>
                                 </div>
                         
                                 <div class="input-container">
-                                    <label class="label"><label class="asterisk">*</label> Middlename</label>
+                                    <label class="label"><label class="asterisk">*</label> Middle name</label>
                                     <input type="text" name="mname" class="inputs" placeholder="Middle Name">
                                     <span class="helper mname-helper"></span>
                                 </div>
@@ -194,14 +229,14 @@ class DoctorSignup extends PatientSignup {
                             <!-- Thir Index Container  -->
                             <div class="next-cont">
                                 <div class="input-container">
-                                    <label class="label"><label class="asterisk">*</label> Clinic Address</label>
-                                    <input type="text" name="cAddress" class="inputs" placeholder="Clinic Address">
+                                    <label class="label"><label class="asterisk">*</label> Clinic address</label>
+                                    <input type="text" name="cAddress" class="inputs" placeholder="Clinic address">
                                     <span class="helper c-address-helper"></span>
                                 </div>
 
                                 <div class="input-container">
-                                    <label class="label"><label class="asterisk">*</label> Clinic Contact number</label>
-                                    <input type="text" name="cContact" class="inputs" placeholder="Clinic Contact Number">
+                                    <label class="label"><label class="asterisk">*</label> Clinic contact number</label>
+                                    <input type="text" name="cContact" class="inputs" placeholder="Clinic contact number">
                                     <span class="helper c-contact-helper"></span>
                                 </div>
                             
@@ -212,11 +247,11 @@ class DoctorSignup extends PatientSignup {
                                 </div>
 
                                 <div class="input-container">
-                                    <label class="container-check">Accept our Terms and Condition
-                                        <input type="checkbox" checked="checked">
+                                    <label class="container-check"><span class="agreement">I accept the Terms and Condition</span>
+                                        <input type="checkbox" name="agreement">
                                         <span class="checkmark-check"></span>
                                     </label>
-                                        <span class="helper terms-helper"></span>
+                                        <span class="helper agreement-helper"></span>
                                 </div>
                             </div>
                         

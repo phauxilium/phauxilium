@@ -5,6 +5,8 @@ class ChooseSignup {
         RenderDOM.render(obj.main(), signForm)
         signInner.style.height = '500px'
 
+        document.querySelector('.fname').focus()
+        
         // ------------ Go back Event Listener -----------
         let goBack = document.querySelector('.go-back')
         goBack.addEventListener('click', () => {

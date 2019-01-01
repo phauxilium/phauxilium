@@ -59,7 +59,7 @@ class Signup extends Signin{
         return `<div class="signup-div">
                         <div class="input-container">
                             <label class="label">Email</label>
-                            <input type="text" name="emailSignup" class="inputs" placeholder="youremail@example.com">
+                            <input type="text" name="emailSignup" class="inputs email" placeholder="youremail@example.com">
                             <span class="helper email-helper-signup"></span>
                         </div>
 

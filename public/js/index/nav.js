@@ -34,13 +34,13 @@ signForm.addEventListener('submit', (e) => {
         let radio = e.target.elements.radio[0].checked
                 
         radio ? ChooseSign.completeSignup(DoctorSign) : ChooseSign.completeSignup(PatientSign)
+        DoctorSign.agreementClick()
 
     } else if(signForm.children[0].className === 'patient-signup') {
         PatientSign.submit(e)
     
     } else if(signForm.children[0].className === 'doctor-signup') {
         DoctorSign.submit(e)
-
     }
 })
 
@@ -60,11 +60,16 @@ document.body.addEventListener('click', (e) => {
             signOuter.style.display = "block"
             signInner.style.height = '460px'
             renderSignin()
+
+            document.querySelector('.email').focus()
         }
 
         // --------------- Closing Modal
-        if(classList.contains('close-icon')) 
+        if(classList.contains('close-icon')) {
             signOuter.style.display = "none"
+            PatientSign.state.elementIndex = 0
+            DoctorSign.state.elementIndex = 0
+        }
 
         // -------------- Mobile Close Menu bar
         if(classList.contains('menu-close-icon') || classList.contains('nav-mobile-btn'))
@@ -78,12 +83,16 @@ document.body.addEventListener('click', (e) => {
             let RenderDOM = new Render()
 
             RenderDOM.render(SignUp.main(), signForm)
+
+            document.querySelector('.email').focus()
         }
 
         //  -------------- Showing Sign in Form
         if(classList.contains('sign-in-link')) {
             signInner.style.height = '460px'
             renderSignin()
+
+            document.querySelector('.email').focus()
         }
 })
 

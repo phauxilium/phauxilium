@@ -188,6 +188,11 @@ router.post('/c/s/p', (req, res) => {
         gender: req.body.gender,
         contact: req.body.contact,
         address: req.body.address,
+        cAddress: req.body.cAddress,
+        cContact: req.body.cContact,
+        prc: req.body.prc,
+        agreement: req.body.agreement,
+
         err : {
             uTypeErr: '',
             fnameErr: '',
@@ -197,10 +202,15 @@ router.post('/c/s/p', (req, res) => {
             genderErr: '',
             contactErr: '',
             addressErr: '',
+            cAddress: '',
+            cContact: '',
+            prc: '',
+            agreementErr: '',
             error: ''
         }
     }
 
+    // ============== FOR EMPTY INPUTS
     if(!auth.fname || !auth.mname || !auth.lname) {
         auth.err.fnameErr = !auth.fname ? 'This field is required.' : ''
 
@@ -210,6 +220,8 @@ router.post('/c/s/p', (req, res) => {
         auth.err.error = 'Error'
 
         res.send(auth.err)
+
+    // ============== FOR EMPTY INPUTS
     } else if(!auth.dob || !auth.gender || !auth.contact || !auth.address) {        
         auth.err.dobErr = !auth.dob ? 'This field is required' : ''
 
@@ -222,7 +234,62 @@ router.post('/c/s/p', (req, res) => {
         auth.err.error = 'Error'
         res.send(auth.err)
 
-    }else {
+    // ============== FOR DOCTOR EMPTY INPUTS
+    } else if ((auth.uType === 'doctor') && (!auth.cAddress || !auth.cContact || !auth.prc)) {
+        auth.err.cAddressErr = !auth.cAddress ? 'This field is required' : ''
+
+        auth.err.cContactErr = !auth.cContact ? 'This field is required' : ''
+
+        auth.err.prcErr = !auth.prc ? 'This field is required' : ''
+
+        res.send(auth.err)
+
+    // ============== FOR NOT TERMS AND CONDITON NOT AGREED
+    } else if (auth.agreement === 'false') {
+        auth.err.agreementErr = auth.agreement === 'false' ? 'You need to agree in our Terms and Condition' : ''
+        res.send(auth.err)
+    
+    // ============== FOR THE SAME PRC LICENSE NUMBER 
+    } else if((auth.uType === 'doctor') && (auth.prc)) {
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref('users')
+
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+
+            for (data in datas) {
+                if(datas[data].prc === auth.prc) {
+                    auth.err.prcErr = 'PRC License already exist'
+                }
+            }
+            if(auth.err.prc) {
+                res.send(auth.err)
+            } else {
+                const userRef = ref.child(req.session.ussID)
+                userRef.update({
+                    uType: auth.uType,
+                    fname: auth.fname,
+                    mname: auth.mname,
+                    lname: auth.lname,
+                    dob: auth.dob,
+                    gender: auth.gender,
+                    contact: auth.contact,
+                    address: auth.address,
+                    clinicAddress: [auth.cAddress],
+                    clinicContact: [auth.cContact],
+                    prc: auth.prc,
+                    complete: true
+                }, err => {
+                    if (!err)
+                        res.send(auth.err)
+                    else {
+                        auth.err.fireError = err ? 'An error occur' : ''
+                    }
+                })
+            }
+        })
+    } else if(auth.uType === 'patient'){
         auth.err.error = ''
 
         const fire = new FireAdmin()
@@ -240,8 +307,8 @@ router.post('/c/s/p', (req, res) => {
             address: auth.address,
             complete: true
         }, err => {
-            if(!err)
-                    res.send(auth.err)
+            if (!err)
+                res.send(auth.err)
             else {
                 auth.err.fireError = err ? 'An error occur' : ''
             }
