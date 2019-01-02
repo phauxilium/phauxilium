@@ -46,13 +46,13 @@ router.post('/signin', (req, res) => {
                 res.send(auth.err)
             } else {
               if (crypto.encrypt(auth.password) !== datas[encryptEmail].password) {
-                  res.send(auth.err)
                   auth.err.passwordErr = 'Invalid password'
+                  res.send(auth.err)
               }else {
                   auth.email = crypto.encrypt(auth.email)
                   req.session.ussID = auth.email
                   if(datas[encryptEmail].complete === false) {
-                      auth.err.completeFailed = true
+                      auth.err.completeErr = true
                       res.send(auth.err)
                   } else {
                       res.send(auth.err)
@@ -175,8 +175,6 @@ router.post('/e/v', (req, res) => {
 })
 
 
-//  TODO
-//  MAKE BOTH PATIENT AND DOCTOR SIGNUP`
 // ---------------- Patient Complete Signup
 router.post('/c/s/p', (req, res) => {
     let auth = {
@@ -259,11 +257,13 @@ router.post('/c/s/p', (req, res) => {
             let datas = snapshots.val()
 
             for (data in datas) {
-                if(datas[data].prc === auth.prc) {
+                if ((datas[data].uType === 'doctor') && (datas[data].prc === auth.prc)) {
                     auth.err.prcErr = 'PRC License already exist'
                 }
             }
-            if(auth.err.prc) {
+
+            // Updating Doctor Data
+            if(auth.err.prcErr) {
                 res.send(auth.err)
             } else {
                 const userRef = ref.child(req.session.ussID)
@@ -279,7 +279,10 @@ router.post('/c/s/p', (req, res) => {
                     clinicAddress: [auth.cAddress],
                     clinicContact: [auth.cContact],
                     prc: auth.prc,
-                    complete: true
+                    messages: [0],
+                    notifs: [0],
+                    complete: true,
+                    verified: false
                 }, err => {
                     if (!err)
                         res.send(auth.err)
@@ -305,6 +308,8 @@ router.post('/c/s/p', (req, res) => {
             gender: auth.gender,
             contact: auth.contact,
             address: auth.address,
+            messages: [0],
+            notifs: [0],
             complete: true
         }, err => {
             if (!err)

@@ -7,7 +7,7 @@ class Signup extends Signin{
     submit(e) {
         e.preventDefault()
         this.appendLoading()
-        
+        this.disableInputs()
         this.state.xhr.open('POST', '/signup', true)
         this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
@@ -24,6 +24,7 @@ class Signup extends Signin{
                 let data = JSON.parse(this.state.xhr.responseText)
 
                 this.appendRemoveEl()
+                this.enableInputs()
 
                 let emailHelper = document.querySelector('.email-helper-signup')
                 emailHelper.textContent = data.emailErr

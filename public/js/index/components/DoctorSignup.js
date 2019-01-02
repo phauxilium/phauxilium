@@ -109,9 +109,9 @@ class DoctorSignup extends PatientSignup {
                 }
             }
         } else if (this.state.elementIndex === 2) {
-
             this.appendLoading()
-
+            this.disableInputs()
+            
             const Ajax = new AjaxAPI()
             Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&cAddress=${auth.cAddress}&cContact=${auth.cContact}&prc=${auth.prc}&agreement=${auth.agreement}`)
 
@@ -120,7 +120,7 @@ class DoctorSignup extends PatientSignup {
                     if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
 
                         this.appendRemoveEl()
-
+                        this.enableInputs()
                         let datas = JSON.parse(Ajax.xhr.responseText)
 
                        document.querySelector('.c-address-helper').textContent = datas.cAddressErr ? datas.cAddressErr : ''
@@ -152,10 +152,9 @@ class DoctorSignup extends PatientSignup {
                                     RenderDOM.render(SignIn.main(), this.state.signForm)
 
                                     this.state.signInner.style.height = '460px'
+
+                                    document.querySelector('.email').focus()
                                 }, 3000)
-
-                                document.querySelector('.emai').focus()
-
                             } else if (datas.fireError) {
                                 alert(datas.fireError)
                             }

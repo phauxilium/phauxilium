@@ -62,10 +62,10 @@ class Signin {
                 this.state.xhr.open('POST', '/signin', true)
                 this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
-                let email = e.target.elements.emailSignin
-                let password = e.target.elements.passwordSignin
+                let email = e.target.elements.emailSignin.value
+                let password = e.target.elements.passwordSignin.value
 
-                this.state.xhr.send(`email=${email.value}&password=${password.value}`)
+                this.state.xhr.send(`email=${email}&password=${password}`)
 
                 this.state.xhr.onreadystatechange = () => {
                     if (this.state.xhr.readyState === 4 && this.state.xhr.status === 200) {
@@ -81,19 +81,15 @@ class Signin {
                         passwordHelper.textContent = data.passwordErr
 
                         if (!data.emailErr && !data.passwordErr) {   
-                            if(data.completeFailed) {
+                            if(data.completeErr) {
                                 let ChooseSign = new ChooseSignup()
                                 let RenderDOM = new Render()
 
                                 let signForm = document.querySelector('.sign-form')
                                 RenderDOM.render(ChooseSign.main(), signForm)
 
-                            } else {
+                            } else
                                 window.location = '/u/t/'
-
-                                email.value = ''
-                                password.value = ''
-                            }
                         }
                     }
                 }

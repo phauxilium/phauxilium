@@ -8,7 +8,7 @@ class EmailVerification extends Signin {
 
         try {
             this.appendLoading()
-
+            this.disableInputs()
             this.state.xhr.open('POST', '/e/v', true)
             this.state.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
 
@@ -21,7 +21,7 @@ class EmailVerification extends Signin {
 
                     let data = JSON.parse(this.state.xhr.responseText)
                     this.appendRemoveEl()
-
+                    this.enableInputs()
                     let codeHelper = document.querySelector('.code-helper')
 
                     codeHelper.textContent = data.codeErr

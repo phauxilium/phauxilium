@@ -9,6 +9,17 @@ class PatientSignup{
         }
     }
 
+    disableInputs() {
+        document.querySelectorAll('.inputs').forEach((value) => {
+            value.setAttribute('disabled', '')
+        })
+    }
+
+    enableInputs() {
+        document.querySelectorAll('.inputs').forEach((value) => {
+            value.removeAttribute('disabled', '')
+        })
+    }
 
     appendLoading() {
         let signBtnParent = this.state.nextBtn[0].parentElement
@@ -129,7 +140,7 @@ class PatientSignup{
         } else if (this.state.nextBtn[0].textContent === 'Submit') {
 
             this.appendLoading()
-
+            this.disableInputs()
             const Ajax = new AjaxAPI()
             Ajax.post('/c/s/p', `uType=patient&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&agreement=${auth.agreement}`)
           
@@ -139,7 +150,7 @@ class PatientSignup{
                         let datas = JSON.parse(Ajax.xhr.responseText)
 
                         this.appendRemoveEl()
-
+                        this.enableInputs()
                         document.querySelector('.dob-helper').textContent = datas.dobErr ? datas.dobErr : ''
 
                         document.querySelector('.gender-helper').textContent = datas.genderErr ? datas.genderErr : ''
@@ -170,9 +181,9 @@ class PatientSignup{
                                 RenderDOM.render(SignIn.main(), this.state.signForm)
 
                                 this.state.signInner.style.height = '460px'
-                            }, 3000)
 
-                            document.querySelector('.email').focus()
+                                document.querySelector('.email').focus()
+                            }, 3000)
                         } else if(datas.fireError) {
                             alert(datas.fireError)
                         }
