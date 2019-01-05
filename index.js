@@ -7,14 +7,18 @@ const helmet = require('helmet')
 const session = require('express-session')
 const path = require('path')
 const FireAdmin = require('./my_modules/FireAdmin')
+const firebase = new FireAdmin()
+firebase.fireConnect()
 const Session = require('./my_modules/ExpressSession')
+const Cloudinary = require('./my_modules/Cloudinary')
 const indexRoutes = require('./routes/indexRoutes')
 const profileRoutes = require('./routes/profileRoutes')
 const prototypeRoutes = require('./routes/prototypeRoutes')
+const addSpecialization = require('./sockets/AddSpecialization')(io)
 const PORT = process.env.PORT || 3000
 
-const firebase = new FireAdmin()
-firebase.fireConnect()
+const cloud = new Cloudinary()
+cloud.getConfig()
 
 app.use(helmet())
 app.use('/static', express.static(path.join(__dirname, 'public')))
@@ -33,7 +37,7 @@ io.on('connection', socket => {
 
     socket.on('chatSend', data => {
         io.emit('chatSend', data)
-    } )
+    })
 })
 
 app.use('/', indexRoutes)

@@ -279,8 +279,10 @@ router.post('/c/s/p', (req, res) => {
                     clinicAddress: [auth.cAddress],
                     clinicContact: [auth.cContact],
                     prc: auth.prc,
+                    profile: 'dadb69977493f06e0fd31a023cb0c632',
                     messages: [0],
                     notifs: [0],
+                    specialty: [0],
                     complete: true,
                     verified: false
                 }, err => {
@@ -308,6 +310,7 @@ router.post('/c/s/p', (req, res) => {
             gender: auth.gender,
             contact: auth.contact,
             address: auth.address,
+            profile: 'dadb69977493f06e0fd31a023cb0c632',
             messages: [0],
             notifs: [0],
             complete: true

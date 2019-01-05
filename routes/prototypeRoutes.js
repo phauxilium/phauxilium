@@ -161,7 +161,7 @@ route.get('/t/:uname', (req, res) => {
     else if(uname === 'atena') data = person.person5
     else res.send('Invalid URL!')
 
-    res.render('profile/timeline', {
+    res.render('prototype/timeline', {
         data,
         doctors: doctors,
         'weeks': weeks,

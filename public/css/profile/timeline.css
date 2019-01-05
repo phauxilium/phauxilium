@@ -26,14 +26,31 @@
     border-radius: 150px;
 }
 
-.details {
+.camera-icon {
+    padding: 8px;
+    border: 1px solid lightgray;
+    border-radius: 150px;
+    cursor: pointer;
+    background-color: rgba(211, 211, 211, 0.5);
+}
+
+.upload-container {
+    position: absolute;
+    width: 170px;
+    margin-top: 150px;
+}
+
+.upload-form {
     display: none;
 }
 
+/* .details {
+    display: none;
+} */
+
 .details-div {
-    margin-top: 15px;
+    margin-top: 25px;
     font-family: Arial;
-    cursor: pointer;
     overflow: hidden;
     height: 100%;
     padding-bottom: 10px;    
@@ -101,7 +118,73 @@
     overflow: hidden;
 }
 
+.add-specialty-btn, .add-bio-btn {
+    border: none;
+    color: #1da1f2;
+    padding: 5px;
+    background-color: transparent;
+    cursor: pointer;
+}
+    
+.add-specialty-text, .add-bio-text {
+    float: left;
+    padding-top: 5px;
+}
+.add-icon {
+    margin-top: 3px;
+    float: left;
+    font-size: 20px;
+}
 
+.inputs-container {
+    padding: 15px;
+}
+
+.inputs {
+    padding: 5px;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #1da1f2;
+}
+
+.inputs-textarea {
+    font-family: Arial, Helvetica, sans-serif;
+    resize: none;
+    overflow: auto;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid lightgray;
+    height: 100px;
+}
+
+.save-cancel-div {
+    padding-top: 0 !important;
+}
+.save-cancel-btn {
+    border: none;
+    width: 80px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 100px;
+    color: white;
+    margin-bottom: 5px;
+}
+
+.save {
+    background-color: #1da1f2;
+}
+
+.cancel {
+    background-color: #dd5347;
+}
+
+.helper {
+    width: 100%;
+    float: left;
+    font-size: 12px;
+    color: red;
+    text-align: left;
+}
 
 /*  ----------- TIMELINE --------------- */
 
@@ -476,6 +559,11 @@
     .img-content-div {
         width: 130px;
         height: 130px;
+    }
+
+    .upload-container {
+        margin-top: 100px;
+        width: 120px;
     }
 
     .access-btn {

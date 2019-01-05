@@ -1,0 +1,399 @@
+<!-- ===================== TODO ================== -->
+<!-- FINISH UI AND AJAX PROCESS -->
+
+<%- include('../index/header') %>
+
+    <link rel="stylesheet" href="/static/css/profile/timeline.css">
+    <%- include('styles') %>
+
+</head>
+
+    <div class="main col-12">
+        <!-- ------------------ Profile ------------------  -->
+        <div class="col-3 inner-div profile-div">
+            <div class="inner-profile-div">
+                <div class="image-div">
+                    <center>
+                        <div class="img-content-div">
+                            <div class="upload-container">
+                                <label for="upload-btn" class="material-icons camera-icon" title="Change profile picture">
+                                    camera_alt
+                                </label>
+                            </div>
+
+                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/<%= docs.uType %>/<%= docs.profile %>" class="image">
+                        </div>
+                    </center>
+
+                    <form class="upload-form" method="POST" enctype="multipart/form-data">
+                        <input type="file" id="upload-btn">
+                    </form>
+
+                    <div class="details-div">
+                        <div class="name">
+                            <% if(docs.uType === 'doctor') { %>
+                                Dr.
+                            <% } %>
+                           <%= docs.fname %> <%= docs.mname %> <%= docs.lname %>
+                        </div>
+
+                        <% if(docs.uType === 'doctor') { %>
+                                <div class="specialty">
+                                    
+                                    <div class="specialty-content">
+                                        <% 
+                                            let objLen = Object.keys(docs.specialty).length
+                                            let count = 0
+
+                                            for(data in docs.specialty) {
+                                                count++ 
+                                        %>
+                                                <% if(docs.specialty[data] !== 0) { %>
+                                                    <%= 
+                                                        docs.specialty[data].specialization
+                                                    %>
+                                                    <% if(objLen !== count) { %>
+                                                        /
+                                        <% 
+                                                        }
+                                                    }
+                                                } 
+                                        %> 
+                                    </div>
+
+                                    <div class="add-specialty-div">
+                                        <button class="add-specialty-btn">
+                                            <i class="material-icons add-icon">add</i>
+                                            <span class="add-specialty-text">Add specialization</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="since">
+                                </div>
+                        <% } %>
+                            <!-- <button class="access-btn setAppointment ">Set an Appointment</button>
+                            <button class="access-btn sendMessage">Send Message</button>
+
+                            <div class="specialty">
+                            </div>
+
+                            <button class="access-btn addMedicalRecords">Add Medical Records</button>
+                            <button class="access-btn sendMessage ">Send Message</button> -->
+                        
+                            <div class="add-bio-div">
+                                <div class="bio-content">
+                                    <form class="save-form">
+                                        <div class="inputs-container col-12">
+                                            <textarea cols="30" rows="10" placeholder="Tell more about yourself" class="inputs-textarea"></textarea>
+                                            <span class="helper specialization-helper"></span>
+                                        </div>
+                                
+                                        <div class="save-cancel-div col-12">
+                                            <button class="save-cancel-btn save">Save</button>
+                                
+                                            <button type="button" class="save-cancel-btn cancel">Cancel</button>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- <button class="add-bio-btn">
+                                    <i class="material-icons add-icon">add</i>
+                                    <span class="add-bio-text">Add bio</span>
+                                </button> -->
+                            </div>
+
+                            <div class="contents">
+                            </div>
+                                <!-- 
+                            
+                            <h4 class="titles">Clinic Information</h4>
+                            <div class="contents"> -->
+                                <!-- <div class="clinic-name">
+                                </div>
+                                <div class="clinic-loc">
+                                </div>
+                                <div class="clinic-phone">
+                                </div> -->
+
+                                <!-- <h4 class="view-sched">
+                                    View clinic schedule
+                                </h4>
+
+                                <div class="sched-content">
+                                    <h4 class="titles">Schedules</h4>
+                                    <table class="sched-tbl">
+                                        <th>Day</th>
+                                        <th>Hours</th>
+                                                <tr>
+                                                    <td class="my-sched-td"></td>
+                                                    <td class="my-sched-td"></td>
+                                                </tr>
+                                    </table>
+
+
+                                    <div class="hide-sched">
+                                        Hide schedules
+                                    </div>
+                                </div>
+                                    -->
+                                <!-- <h4 class="titles view-less">View Less</h4>
+
+                            </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- ---------------- Center Div ------------------ -->
+        <div class="col-6 inner-div center-div">
+
+            <!-- ---------------- Timeline ---------------- -->
+            <div class="center-inner-div timeline-div active-center-div">
+
+            <!-- ------------ Timeline Navigation Bar ------------ -->
+                <div class="col-12 inner-bar">
+                    <div class="today-sched-div">
+                            <div class="col-4 bar-btns-div">
+                                <button class="active bar-btn">
+                                    Today's Schedule
+                                </button>
+                            </div>
+                            <div class="col-4 bar-btns-div">
+                                <button class="bar-btn">
+                                    Upcoming Schedules
+                                </button>
+                            </div>
+        
+                            <div class="col-3 bar-btns-div">
+                                <button class="active bar-btn">
+                                    Today's Schedule
+                                </button>
+                            </div>
+                            <div class="col-3 bar-btns-div">
+                                <button class="bar-btn">
+                                    Upcoming Schedules
+                                </button>
+                            </div>
+                    </div>
+                </div>
+    
+    
+                <!-- ------------ Today's schedules Div --------- -->
+                
+                <div class="col-12 inner-timeline-div active-div todays-div">
+                    <p class="date-now">
+                    </p>
+    
+                    <table class="today-tbl">
+                        <th>Time</th>
+                        <th>Name</th>
+                        <th></th>
+                    
+                            
+                            <tr>
+                                <td class="sched-td-today">
+                                </td>
+                                <td class="sched-td-today">
+                                </td>
+                                <td class="sched-td-today">
+                                    <!-- <button class="today-re-sched">Reschedule</button> -->
+                                    <button class="today-cancel">Cancel</button>
+                                </td>
+                            </tr>     
+                    </table>
+                </div>
+    
+                <!-- --------------- Upcoming Schedules ----------- -->
+                <div class="col-12 inner-timeline-div upcoming-div">Nothing to show</div>
+    
+    
+                    <div class="inner-timeline-div outer-medical-records-div">
+    
+                            <!-- --------- Medical Records ----------- -->
+    
+                                <div class="col-12 medical-records-div">
+                                    <p class="doc-name">
+                                    </p>
+                                        <p>
+                                        </p>
+                                            Findings:
+                                            <a href="">
+                                            </a>
+                                </div>
+    
+    
+                            <div class="col-12 medical-records-div">
+                                Nothing to show
+                            </div>
+    
+                    </div>
+            
+    
+    
+    
+                <!-- ---------------- Posts -------------- -->
+                <div class="col-12 inner-timeline-div post-div">
+                    Nothing to show
+                </div>
+    
+            </div>
+
+
+            <!-- --------------- Chat Div ---------- -->
+            <div class="col-12 center-inner-div chat-div">
+                <div class="col-12 chat-header">
+                    <div class="col-5 inner-chat-header chat-header-left">
+                        <img src="" class="chat-image">
+                    </div>
+
+                    <div class="col-7 inner-chat-header chat-header-right chat-name">
+                    </div>
+                </div>
+
+                <span class="col-12 chat-body">
+                </span>
+
+                <div class="col-12 chat-input-div">
+                    <form class="col-12 chat-form">
+                        <input type="hidden" name="name" value="" class="chat-input-name">
+                        <input type="hidden" name="img" value="" class="chat-input-img">
+                        <div class="col-10 chat-textarea-div">
+                            <textarea name="chatInput" cols="30" rows="10" class="chat-input" 
+                            placeholder="Enter some text..."></textarea>
+                        </div>
+
+                        <div class="col-2 chat-btn-div">
+                            <button class="send-chat-btn">
+                                Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+    
+        </div>
+
+
+       
+
+
+
+        <!-- -------------- Advertisements ------------------ -->
+        
+        <div class="col-3 inner-div ads-div">
+            <p class="ads-title">Ads</p>
+
+            <div class="inner-ads">
+                <center>
+                    <div class="ads-img-div">
+                        <img src="/static/images/ads/wh.png" class="ads-img">
+                    </div>
+                    
+                    <a href="http://startupproject.ph" class="ads-links">Start Up Project PH</a>
+
+                    <p class="ads-content">
+                        We create a divers and collaborative space that is responsive to the 
+                        productivity needs and stylistic preferences of today’s creative work force.
+                    </p>
+
+                </center>
+            </div>
+
+            <div class="inner-ads">
+                <center>
+                    <div class="ads-img-div">
+                        <img src="/static/images/ads/occa.png" class="ads-img">
+                    </div>
+                    
+                    <a href="http://startupproject.ph" class="ads-links">Occashop</a>
+
+                    <p class="ads-content">
+                        We create a divers and collaborative space that is responsive to the productivity 
+                        needs and stylistic preferences of today’s creative work force.
+                    </p>
+
+                </center>
+            </div>
+        </div>
+    </div>
+
+    <%- include('nav') %>
+
+    <!-- ----------------- Modals --------------- -->
+    <div class="outer-modal-trick"></div>
+
+    <div class="outer-modal">
+        <center>
+            <div class="close-modal-div">
+                <i class="material-icons close-modal-icon">close</i>
+            </div>
+
+            <!--  Appoinment Modal -->
+            <div class="appointment-modal">
+                <div class="message">
+                </div>
+
+                <p class="date-now">
+                </p>
+                <table class="sched-tbl">
+                    <th>Day</th>
+                    <th>Hours</th>
+                
+
+                            <tr>
+                                <td class="my-sched-td">
+                                </td>
+                                <td class="my-sched-td">
+                                </td>
+                            </tr>
+
+                </table>
+
+                <form class="appointment-form">
+                    <input type="time" name="setAppointmentTime" class="setSched-inputs time">
+                    <input type="date" name="setAppointmentDate" class="setSched-inputs date">
+                    <button class="setSched-inputs setSched-btn"></button>
+                </form>
+            </div>
+
+            <!-- Cancel Modal -->
+            <div class="cancel-modal">
+                <div class="cancel-message">
+                    Canceled Successfully
+                </div>
+                <form class="cancel-form">
+                    <textarea name="textarea" class="cancel-textarea" cols="30" rows="10" placeholder="Reason for canceling the appointment"></textarea>
+                    <button class="cancel-sched-btn">
+                        Cancel Appoinment
+                    </button>
+                </form>
+            </div>
+
+
+            <!-- Add Medical Records Modal -->
+            <div class="add-medical-modal">
+                <div class="add-medical-message">
+                    Added Successfully
+                </div>
+                <form class="add-medical-form">
+                    <textarea name="textarea" class="add-medical-textarea" cols="30" rows="10" placeholder="Add medical records"></textarea>
+                    <button class="add-medical-sched-btn">
+                        Add Medical Records
+                    </button>
+                </form>
+            </div>
+        </center>
+    </div>
+
+    <input type="hidden" class="channel" value="<%= channel %>">
+
+    <%- include('../index/footer') %>
+
+    <%- include('scripts') %>
+
+<body>
+    
+</body>
+</html>

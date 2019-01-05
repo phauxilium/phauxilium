@@ -1,4 +1,3 @@
-//  WHEN PASSWORD IS INCORRECT IT IS RETURNING IN LANDING PAGE ------------- FIX THIS -------------------
 class Signin {
     constructor() {
                 this.state = {
@@ -88,8 +87,7 @@ class Signin {
                                 let signForm = document.querySelector('.sign-form')
                                 RenderDOM.render(ChooseSign.main(), signForm)
 
-                            } else
-                                window.location = '/u/t/'
+                            } else window.location = '/u/t'
                         }
                     }
                 }
