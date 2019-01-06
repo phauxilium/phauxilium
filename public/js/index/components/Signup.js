@@ -46,8 +46,6 @@ class Signup extends Signin{
 
                     RenderDOM.render(EmailVerify.main(), signForm)
 
-                    document.querySelector('.sign-inner').style.height = "400px"
-
                     document.querySelector('.email-content').textContent = data.email
                 }
             } catch (err) {

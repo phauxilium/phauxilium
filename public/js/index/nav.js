@@ -58,7 +58,6 @@ document.body.addEventListener('click', (e) => {
         // ------------- Mobile Show modal
         if(classList.contains('sign-modal')) {
             signOuter.style.display = "block"
-            signInner.style.height = '460px'
             renderSignin()
 
             document.querySelector('.email').focus()
@@ -77,7 +76,6 @@ document.body.addEventListener('click', (e) => {
 
         //  ----------------- Showing Sign up Form
         if(classList.contains('sign-up-link')) {
-            signInner.style.height = '500px'
 
             let SignUp = new Signup()
             let RenderDOM = new Render()
@@ -89,7 +87,6 @@ document.body.addEventListener('click', (e) => {
 
         //  -------------- Showing Sign in Form
         if(classList.contains('sign-in-link')) {
-            signInner.style.height = '460px'
             renderSignin()
 
             document.querySelector('.email').focus()

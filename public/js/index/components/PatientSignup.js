@@ -57,11 +57,6 @@ class PatientSignup{
                 }
                 nextCont[this.state.elementIndex].classList.add('active-cont')
 
-                if (nextCont.length - 2 === this.state.elementIndex)
-                    this.state.signInner.style.height = '500px'
-                else
-                    this.state.signInner.style.height = '480px'
-
                 if(nextCont.length - 1 === this.state.elementIndex)
                     this.state.nextBtn[0].textContent = 'Submit'
                 else
@@ -72,8 +67,6 @@ class PatientSignup{
             let ChooseSign = new ChooseSignup()
             let RenderDOM = new Render()
             RenderDOM.render(ChooseSign.main(), this.state.signForm)
-
-            this.state.signInner.style.height = '460px'
         }
     }
 
@@ -121,13 +114,9 @@ class PatientSignup{
                                 })
                                 nextCont[this.state.elementIndex].classList.add('active-cont')
 
-                                if (nextCont.length - 1 === this.state.elementIndex) {
+                                if (nextCont.length - 1 === this.state.elementIndex)
                                     this.state.nextBtn[0].textContent = 'Submit'
-                                    this.state.signInner.style.height = '570px'
-                                }
-                                else 
-                                    this.state.nextBtn[0].textContent = 'Next'
-                            
+                                else this.state.nextBtn[0].textContent = 'Next'
                                 } else {
                                 this.state.elementIndex = nextCont.length - 1
                             }
@@ -164,8 +153,6 @@ class PatientSignup{
                         let signupMessage = document.querySelector('.signup-message')
 
                         if(!datas.error && !datas.agreementErr) {
-                            this.state.signInner.style.height = '580px'
-
                             this.state.elementIndex = 0
                             this.appendLoading()
 
@@ -179,9 +166,6 @@ class PatientSignup{
                                 let SignIn = new Signin()
                                 let RenderDOM = new Render()
                                 RenderDOM.render(SignIn.main(), this.state.signForm)
-
-                                this.state.signInner.style.height = '460px'
-
                                 document.querySelector('.email').focus()
                             }, 3000)
                         } else if(datas.fireError) {
@@ -219,13 +203,13 @@ class PatientSignup{
                             </div>
                         
                             <div class="next-cont">
-                                <div class="input-container col-6">
+                                <div class="input-container  dob-input">
                                     <label class="label"><label class="asterisk">*</label> Birthdate</label>
                                     <input type="date" name="dob" class="inputs">
                                     <span class="helper dob-helper"></span>
                                 </div>
                         
-                                <div class="input-container col-6 gender-cont">
+                                <div class="input-container col-6 gender-input">
                                     <label class="label"><label class="asterisk">*</label> Gender</label>
                                     <select name="gender" class="inputs select">
                                         <option value="Male">Male</option>
@@ -235,7 +219,7 @@ class PatientSignup{
                                     <span class="helper gender-helper"></span>
                                 </div>
                         
-                                <div class="input-container col-12">
+                                <div class="input-container">
                                     <label class="label"><label class="asterisk">*</label> Contact Number</label>
                                     <input type="text" name="contact" class="inputs" placeholder="Contact Number">
                                     <span class="helper contact-helper"></span>
@@ -247,7 +231,7 @@ class PatientSignup{
                                     <span class="helper address-helper"></span>
                                 </div>
 
-                                <div class="input-container">
+                                <div class="input-container agreement-input">
                                     <label class="container-check"><span class="agreement">I accept the Terms and Condition</span>
                                         <input type="checkbox" name="agreement">
                                         <span class="checkmark-check"></span>

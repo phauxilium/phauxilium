@@ -20,15 +20,9 @@ class DoctorSignup extends PatientSignup {
             })
             nextCont[this.state.elementIndex].classList.add('active-cont')
         
-            if (nextCont.length - 1 === this.state.elementIndex) {
+            if (nextCont.length - 1 === this.state.elementIndex)
                 this.state.nextBtn[0].textContent = 'Submit'
-                this.state.signInner.style.height = '520px' 
-            } else if (nextCont.length - 2 === this.state.elementIndex)
-                this.state.signInner.style.height = '520px'
-            else {
-                this.state.nextBtn[0].textContent = 'Next'
-                this.state.signInner.style.height = '480px'
-            }
+            else this.state.nextBtn[0].textContent = 'Next'
         }
     }
     
@@ -45,6 +39,7 @@ class DoctorSignup extends PatientSignup {
                 gender: e.target.elements.gender.value,
                 contact: e.target.elements.contact.value,
                 address: e.target.elements.address.value,
+                cName: e.target.elements.cName.value,
                 cAddress: e.target.elements.cAddress.value,
                 cContact: e.target.elements.cContact.value,
                 prc: e.target.elements.prc.value,
@@ -113,7 +108,7 @@ class DoctorSignup extends PatientSignup {
             this.disableInputs()
             
             const Ajax = new AjaxAPI()
-            Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&cAddress=${auth.cAddress}&cContact=${auth.cContact}&prc=${auth.prc}&agreement=${auth.agreement}`)
+            Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}&cName=${auth.cName}&cAddress=${auth.cAddress}&cContact=${auth.cContact}&prc=${auth.prc}&agreement=${auth.agreement}`)
 
             Ajax.xhr.onreadystatechange = () => {
                 try {
@@ -122,8 +117,10 @@ class DoctorSignup extends PatientSignup {
                         this.appendRemoveEl()
                         this.enableInputs()
                         let datas = JSON.parse(Ajax.xhr.responseText)
+                        
+                        document.querySelector('.c-name-helper').textContent = datas.cNameErr ? datas.cNameErr : ''
 
-                       document.querySelector('.c-address-helper').textContent = datas.cAddressErr ? datas.cAddressErr : ''
+                        document.querySelector('.c-address-helper').textContent = datas.cAddressErr ? datas.cAddressErr : ''
 
                         document.querySelector('.c-contact-helper').textContent = datas.cContactErr ? datas.cContactErr : ''
 
@@ -134,12 +131,9 @@ class DoctorSignup extends PatientSignup {
                         let signupMessage = document.querySelector('.signup-message')
             
                         if(!datas.prcErr) {
-                            if (!datas.cAddressErr && !datas.cContactErr && !datas.prcErr && !datas.agreementErr) {
+                            if (!datas.cNameErr && !datas.cAddressErr && !datas.cContactErr && !datas.prcErr && !datas.agreementErr) {
                                 this.appendLoading()
                                 this.state.elementIndex = 0
-
-                                this.state.signInner.style.height = '550px'
-
                                 signupMessage.style.display = 'block'
                                 signupMessage.style.backgroundColor = '#1976d2'
                                 signupMessage.textContent = 'Signup complete'
@@ -150,8 +144,6 @@ class DoctorSignup extends PatientSignup {
                                     let SignIn = new Signin()
                                     let RenderDOM = new Render()
                                     RenderDOM.render(SignIn.main(), this.state.signForm)
-
-                                    this.state.signInner.style.height = '460px'
 
                                     document.querySelector('.email').focus()
                                 }, 3000)
@@ -195,13 +187,13 @@ class DoctorSignup extends PatientSignup {
                             
                             <!-- Second Index Container -->
                             <div class="next-cont">
-                                <div class="input-container col-6">
+                                <div class="input-container dob-input">
                                     <label class="label"><label class="asterisk">*</label> Birthdate</label>
                                     <input type="date" name="dob" class="inputs">
                                     <span class="helper dob-helper"></span>
                                 </div>
                         
-                                <div class="input-container col-6 gender-cont">
+                                <div class="input-container col-6 gender-input">
                                     <label class="label"><label class="asterisk">*</label> Gender</label>
                                     <select name="gender" class="inputs select">
                                         <option value="Male">Male</option>
@@ -211,7 +203,7 @@ class DoctorSignup extends PatientSignup {
                                     <span class="helper gender-helper"></span>
                                 </div>
                         
-                                <div class="input-container col-12">
+                                <div class="input-container">
                                     <label class="label"><label class="asterisk">*</label> Contact Number</label>
                                     <input type="text" name="contact" class="inputs" placeholder="Contact Number">
                                     <span class="helper contact-helper"></span>
@@ -228,24 +220,30 @@ class DoctorSignup extends PatientSignup {
                             <!-- Thir Index Container  -->
                             <div class="next-cont">
                                 <div class="input-container">
+                                    <label class="label"><label class="asterisk">*</label> Clinic name</label>
+                                    <input type="text" name="cName" class="inputs" placeholder="Clinic name">
+                                    <span class="helper c-name-helper"></span>
+                                </div>
+
+                                <div class="input-container">
                                     <label class="label"><label class="asterisk">*</label> Clinic address</label>
                                     <input type="text" name="cAddress" class="inputs" placeholder="Clinic address">
                                     <span class="helper c-address-helper"></span>
                                 </div>
 
-                                <div class="input-container">
+                                <div class="input-container cContact-input">
                                     <label class="label"><label class="asterisk">*</label> Clinic contact number</label>
                                     <input type="text" name="cContact" class="inputs" placeholder="Clinic contact number">
                                     <span class="helper c-contact-helper"></span>
                                 </div>
                             
-                                <div class="input-container">
+                                <div class="input-container prc-input">
                                     <label class="label"><label class="asterisk">*</label> PRC License number</label>
                                     <input type="text" name="prc" class="inputs" placeholder="PRC License number">
                                     <span class="helper prc-helper"></span>
                                 </div>
 
-                                <div class="input-container">
+                                <div class="input-container agreement-input">
                                     <label class="container-check"><span class="agreement">I accept the Terms and Condition</span>
                                         <input type="checkbox" name="agreement">
                                         <span class="checkmark-check"></span>

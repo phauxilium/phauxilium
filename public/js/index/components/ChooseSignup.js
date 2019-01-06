@@ -3,8 +3,6 @@ class ChooseSignup {
     completeSignup(obj) {
         let RenderDOM = new Render()
         RenderDOM.render(obj.main(), signForm)
-        signInner.style.height = '500px'
-
         document.querySelector('.fname').focus()
         
         // ------------ Go back Event Listener -----------

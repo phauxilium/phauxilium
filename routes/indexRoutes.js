@@ -1,3 +1,8 @@
+// ==================== TODO =================
+// Change Signin, Signup and Complete Signup Process
+// Make Database Organized
+
+
 const express = require('express')
 const validator  = require('validator')
 const FireAdmin = require('../my_modules/FireAdmin')
@@ -12,11 +17,11 @@ router.get('/about', (req, res) => res.render('index/about'))
 
 router.get('/contact', (req, res) => res.render('index/contact'))
 
-//  --------------- Initializing FireAdmin
 
 // ----------------------- Sign in ------------------
 router.post('/signin', (req, res) => {
     let auth = {
+        key: '',
         email: req.body.email,
         password: req.body.password,
         err: {
@@ -38,31 +43,42 @@ router.post('/signin', (req, res) => {
         const fire = new FireAdmin()
         const db = fire.firebase.database()
         const ref = db.ref('users')
-        const encryptEmail = crypto.encrypt(auth.email)
-        ref.orderByKey().equalTo(encryptEmail).once('value', snapshots => {
+
+        auth.key = auth.email.indexOf('@') !== -1 ? auth.email.split('@')[0] : auth.email
+
+        const encryptKey = crypto.encrypt(auth.key.toLowerCase())
+        const encryptEmail = crypto.encrypt(auth.email.toLowerCase())
+        ref.orderByKey().equalTo(encryptKey).once('value', snapshots => {
             let datas = snapshots.val()
             if (datas === null) {
                 auth.err.emailErr = 'Invalid email'
                 res.send(auth.err)
             } else {
-              if (crypto.encrypt(auth.password) !== datas[encryptEmail].password) {
-                  auth.err.passwordErr = 'Invalid password'
-                  res.send(auth.err)
-              }else {
-                  auth.email = crypto.encrypt(auth.email)
-                  req.session.ussID = auth.email
-                  if(datas[encryptEmail].complete === false) {
-                      auth.err.completeErr = true
-                      res.send(auth.err)
-                  } else {
-                      res.send(auth.err)
-                  }
-              }
+                if(
+                    (encryptEmail !== datas[encryptKey].origEmail) && 
+                    (encryptEmail !== datas[encryptKey].lCaseEmail &&
+                    (encryptKey !== datas[encryptKey].key))) {
+                    auth.err.emailErr = 'Invalid email'
+                    res.send(auth.err)  
+                } else {
+                    if (crypto.encrypt(auth.password) !== datas[encryptKey].password) {
+                        auth.err.passwordErr = 'Invalid password'
+                        res.send(auth.err)
+                    } else {
+                        auth.email = crypto.encrypt(auth.email)
+                        req.session.ussID = auth.email
+                        if (datas[encryptKey].complete === false) {
+                            auth.err.completeErr = true
+                            res.send(auth.err)
+                        } else {
+                            res.send(auth.err)
+                        }
+                    }
+                }
             }
         })
     }
 })
-
 
 
 //  --------------------- Signup ----------------------
@@ -71,12 +87,7 @@ router.post('/signup', (req, res) => {
         email: req.body.email,
         password: req.body.password,
         cpassword: req.body.cpassword,
-        err: {
-            emailErr: '',
-            passwordErr: '',
-            cpasswordErr: '',
-            sendFailed: ''
-        }
+        err: {}
     }
 
     if (!validator.isEmail(auth.email)) {
@@ -94,37 +105,32 @@ router.post('/signup', (req, res) => {
         const fire = new FireAdmin()
         const db = fire.firebase.database()
         const ref = db.ref('users')
-        ref.orderByKey().equalTo(crypto.encrypt(auth.email)).once('value', snapshots => {
+        ref.orderByKey().equalTo(crypto.encrypt(auth.email.toLowerCase())).once('value', snapshots => {
             if(snapshots.val() === null) {
+                let random1 = Math.ceil(Math.random() * 1000 + 500)
+                let random2 = Math.floor(Math.random() * 2000 + 300)
 
-                if (!auth.err.emailErr && !auth.err.passwordErr && !auth.err.cpasswordErr) {
-                    let random1 = Math.ceil(Math.random() * 1000 + 500)
-                    let random2 = Math.floor(Math.random() * 2000 + 300)
+                req.session.evcode = `${random1}${random2}`
+                req.session.evemail = auth.email
+                req.session.evpassword = auth.password
 
-                    req.session.evcode = `${random1}${random2}`
-                    req.session.evemail = auth.email
-                    req.session.evpassword = auth.password
+                // ---------- Send grid API ------------
+                let mail = new SendGrid()
+                mail.getApi()
+                mail.setMail(
+                    auth.email,
+                    `<p>You're verification code is <u style="color:blue; font-weight:bold;">${req.session.evcode}</u></p>`
+                )
 
-                    // ---------- Send grid API ------------
-                    let mail = new SendGrid()
-                    mail.getApi()
-                    mail.setMail(
-                        auth.email,
-                        `<p>You're verification code is <u style="color:blue; font-weight:bold;">${req.session.evcode}</u></p>`
-                    )
-
-                    let message = mail.getMail()
-                    mail.sendMail(message, err => {
-                        if(err) {
-                            auth.err.sendFailed = 'An error occur'
-                            res.send(auth.err)
-                        } else {
-                            res.send(auth)
-                        }
-                    })
-                } else {
-                    res.send(auth.err)
-                }
+                let message = mail.getMail()
+                mail.sendMail(message, err => {
+                    if(err) {
+                        auth.err.sendFailed = 'An error occur'
+                        res.send(auth.err)
+                    } else {
+                        res.send(auth)
+                    }
+                })
             } else {
                 auth.err.emailErr = 'Email already exist'
                 res.send(auth.err)
@@ -151,7 +157,9 @@ router.post('/e/v', (req, res) => {
         res.send(codeAuth.err)
     } else {
         const auth = {
-            email: crypto.encrypt(req.session.evemail),
+            key: crypto.encrypt(req.session.evemail.split('@')[0].toLowerCase()),
+            lCaseEmail: crypto.encrypt(req.session.evemail.toLowerCase()),
+            origEmail: crypto.encrypt(req.session.evemail),
             password: crypto.encrypt(req.session.evpassword)
         }
 
@@ -159,10 +167,15 @@ router.post('/e/v', (req, res) => {
         const db = fire.firebase.database()
         const ref = db.ref('users')
 
-        const userRef = ref.child(auth.email)
+        const userRef = ref.child(auth.key)
         userRef.set({
+            lCaseEmail: auth.lCaseEmail,
+            key: auth.key,
+            origEmail: auth.origEmail,
             password: auth.password,
-            complete: false
+            status: {
+                profileComplete: false
+            }
         }, err => {
             if(err) {
                 codeAuth.err.insertFailed = 'An error occur'
@@ -186,26 +199,12 @@ router.post('/c/s/p', (req, res) => {
         gender: req.body.gender,
         contact: req.body.contact,
         address: req.body.address,
+        cName: req.body.cName,
         cAddress: req.body.cAddress,
         cContact: req.body.cContact,
         prc: req.body.prc,
         agreement: req.body.agreement,
-
-        err : {
-            uTypeErr: '',
-            fnameErr: '',
-            mnameErr: '',
-            lnameErr: '',
-            dobErr: '',
-            genderErr: '',
-            contactErr: '',
-            addressErr: '',
-            cAddress: '',
-            cContact: '',
-            prc: '',
-            agreementErr: '',
-            error: ''
-        }
+        err : {}
     }
 
     // ============== FOR EMPTY INPUTS
@@ -233,7 +232,9 @@ router.post('/c/s/p', (req, res) => {
         res.send(auth.err)
 
     // ============== FOR DOCTOR EMPTY INPUTS
-    } else if ((auth.uType === 'doctor') && (!auth.cAddress || !auth.cContact || !auth.prc)) {
+    } else if ((auth.uType === 'doctor') && (!auth.cName || !auth.cAddress || !auth.cContact || !auth.prc)) {
+        auth.err.cNameErr = !auth.cName ? 'This field is required' : ''
+
         auth.err.cAddressErr = !auth.cAddress ? 'This field is required' : ''
 
         auth.err.cContactErr = !auth.cContact ? 'This field is required' : ''
@@ -268,23 +269,36 @@ router.post('/c/s/p', (req, res) => {
             } else {
                 const userRef = ref.child(req.session.ussID)
                 userRef.update({
-                    uType: auth.uType,
-                    fname: auth.fname,
-                    mname: auth.mname,
-                    lname: auth.lname,
-                    dob: auth.dob,
-                    gender: auth.gender,
-                    contact: auth.contact,
-                    address: auth.address,
-                    clinicAddress: [auth.cAddress],
-                    clinicContact: [auth.cContact],
+                    basicInfo: {
+                        fname: auth.fname,
+                        mname: auth.mname,
+                        lname: auth.lname,
+                        dob: auth.dob,
+                        gender: auth.gender,
+                        contact: auth.contact,
+                        address: auth.address,
+                        profile: 'dadb69977493f06e0fd31a023cb0c632',
+                        bio: '',
+                    },
+                    clinics: {
+                        0: {
+                            name: auth.cName,
+                            address: auth.cAddress,
+                            contact: auth.cContact,
+                            assisstantName: '',
+                        }
+                    },
                     prc: auth.prc,
-                    profile: 'dadb69977493f06e0fd31a023cb0c632',
+                    patientFiles: [0],
+                    specialty: [0],
+                    schedules: [0], // Includes date, time and location
                     messages: [0],
                     notifs: [0],
-                    specialty: [0],
+                    uType: auth.uType,
                     complete: true,
-                    verified: false
+                    status: {
+                       adminVerified: false
+                    }
                 }, err => {
                     if (!err)
                         res.send(auth.err)
@@ -302,17 +316,20 @@ router.post('/c/s/p', (req, res) => {
         const ref = db.ref('users')
         const userRef = ref.child(req.session.ussID)
         userRef.update({
-            uType: auth.uType,
-            fname: auth.fname,
-            mname: auth.mname,
-            lname: auth.lname,
-            dob: auth.dob,
-            gender: auth.gender,
-            contact: auth.contact,
-            address: auth.address,
-            profile: 'dadb69977493f06e0fd31a023cb0c632',
+            basicInfo: {
+                fname: auth.fname,
+                mname: auth.mname,
+                lname: auth.lname,
+                dob: auth.dob,
+                gender: auth.gender,
+                contact: auth.contact,
+                address: auth.address,
+                profile: 'dadb69977493f06e0fd31a023cb0c632',
+                bio: '',
+            },
             messages: [0],
             notifs: [0],
+            uType: auth.uType,
             complete: true
         }, err => {
             if (!err)

@@ -548,6 +548,12 @@
 }
 
 
+@media only screen and (max-width: 1366px) {
+    .main {
+        width: 1366px !important;
+    }
+}
+
 @media only screen and (max-width: 950px) {
     .send-chat-btn {
         font-size: 12px;

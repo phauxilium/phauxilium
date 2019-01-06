@@ -60,13 +60,16 @@ body{
     display: none;
 }
 
+.sign-inner-cont {
+    width: 450px;
+    height: 100%;
+    margin-top: 7%;
+}
 .sign-inner {
-    margin-top: 8%;
     border-radius: 15px;
     background-color: white;
     padding: 15px;
-    width: 450px;
-    height: 460px;
+    float: left;
 }
 
 .sign-form {
@@ -95,6 +98,8 @@ body{
 
 .input-container {
     padding: 15px;
+    float: left;
+    width: 100%;
 }
 
 .inputs {
@@ -104,6 +109,10 @@ body{
     padding: 10px;
     font-size: 15px;
     transition: 0.3s;
+}
+
+.dob-input, .gender-input, .cContact-input, .prc-input {
+    width: 50%;
 }
 
 .inputs:focus {
@@ -206,6 +215,10 @@ body{
     float: left;
     padding: 10px;
     margin-bottom: 5px;
+}
+
+.agreement-input {
+    padding: 0;
 }
 
 .agreement-helper {
@@ -321,8 +334,15 @@ i {
 }
 
 @media only screen and (max-width: 500px) {
-    .sign-inner {
+    .sign-inner-cont {
         width: 100%;
         border-radius: 0;
+        margin-top: 0;
+    }
+
+    .sign-inner {
+        border-radius: 0;
+        position: fixed;
+        height: 100%;
     }
 }
