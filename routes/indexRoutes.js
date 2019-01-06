@@ -2,7 +2,6 @@
 // Change Signin, Signup and Complete Signup Process
 // Make Database Organized
 
-
 const express = require('express')
 const validator  = require('validator')
 const FireAdmin = require('../my_modules/FireAdmin')
@@ -45,29 +44,32 @@ router.post('/signin', (req, res) => {
         const ref = db.ref('users')
 
         auth.key = auth.email.indexOf('@') !== -1 ? auth.email.split('@')[0] : auth.email
-
+        
         const encryptKey = crypto.encrypt(auth.key.toLowerCase())
         const encryptEmail = crypto.encrypt(auth.email.toLowerCase())
-        ref.orderByKey().equalTo(encryptKey).once('value', snapshots => {
+        const childRef = ref.child(encryptKey)
+
+        childRef.once('value', snapshots => {
             let datas = snapshots.val()
             if (datas === null) {
-                auth.err.emailErr = 'Invalid email'
+                auth.err.emailErr = 'Invalid email address.'
                 res.send(auth.err)
             } else {
-                if(
-                    (encryptEmail !== datas[encryptKey].origEmail) && 
-                    (encryptEmail !== datas[encryptKey].lCaseEmail &&
-                    (encryptKey !== datas[encryptKey].key))) {
-                    auth.err.emailErr = 'Invalid email'
-                    res.send(auth.err)  
-                } else {
-                    if (crypto.encrypt(auth.password) !== datas[encryptKey].password) {
-                        auth.err.passwordErr = 'Invalid password'
-                        res.send(auth.err)
+                if(auth.email.indexOf('@') !== -1) 
+                    if ((encryptEmail !== datas.auth.origEmail) && (encryptEmail !== datas.auth.lCaseEmail))
+                        auth.err.emailErr = 'Invalid email address.'
+                    else
+                        auth.err.emailErr = ''
+
+                if(auth.err.emailErr) {
+                    res.send(auth.err)
+                } else {   
+                    if (crypto.encrypt(auth.password) !== datas.auth.password) {
+                    auth.err.passwordErr = 'Invalid password.'
+                    res.send(auth.err)
                     } else {
-                        auth.email = crypto.encrypt(auth.email)
-                        req.session.ussID = auth.email
-                        if (datas[encryptKey].complete === false) {
+                        req.session.ussID = encryptKey
+                        if (datas.status.profileComplete === false) {
                             auth.err.completeErr = true
                             res.send(auth.err)
                         } else {
@@ -169,10 +171,11 @@ router.post('/e/v', (req, res) => {
 
         const userRef = ref.child(auth.key)
         userRef.set({
-            lCaseEmail: auth.lCaseEmail,
-            key: auth.key,
-            origEmail: auth.origEmail,
-            password: auth.password,
+            auth: {
+                lCaseEmail: auth.lCaseEmail,
+                origEmail: auth.origEmail,
+                password: auth.password,
+            },
             status: {
                 profileComplete: false
             }
@@ -186,7 +189,6 @@ router.post('/e/v', (req, res) => {
         }) 
     }
 })
-
 
 // ---------------- Patient Complete Signup
 router.post('/c/s/p', (req, res) => {
@@ -232,8 +234,7 @@ router.post('/c/s/p', (req, res) => {
         res.send(auth.err)
 
     // ============== FOR DOCTOR EMPTY INPUTS
-    } else if ((auth.uType === 'doctor') && (!auth.cName || !auth.cAddress || !auth.cContact || !auth.prc)) {
-        auth.err.cNameErr = !auth.cName ? 'This field is required' : ''
+    } else if ((auth.uType === 'doctor') && (!auth.cAddress || !auth.cContact || !auth.prc)) {
 
         auth.err.cAddressErr = !auth.cAddress ? 'This field is required' : ''
 
@@ -257,9 +258,14 @@ router.post('/c/s/p', (req, res) => {
         ref.once('value', snapshots => {
             let datas = snapshots.val()
 
+
             for (data in datas) {
-                if ((datas[data].uType === 'doctor') && (datas[data].prc === auth.prc)) {
-                    auth.err.prcErr = 'PRC License already exist'
+                if (datas[data].uType === 'doctor') {
+                    for (key in datas[data]) {
+                        if (datas[data][key].prc === crypto.encrypt(auth.prc)) {
+                            auth.err.prcErr = 'PRC License already exist'
+                        }
+                    }
                 }
             }
 
@@ -279,6 +285,7 @@ router.post('/c/s/p', (req, res) => {
                         address: auth.address,
                         profile: 'dadb69977493f06e0fd31a023cb0c632',
                         bio: '',
+                        prc: crypto.encrypt(auth.prc),
                     },
                     clinics: {
                         0: {
@@ -288,16 +295,15 @@ router.post('/c/s/p', (req, res) => {
                             assisstantName: '',
                         }
                     },
-                    prc: auth.prc,
                     patientFiles: [0],
                     specialty: [0],
                     schedules: [0], // Includes date, time and location
                     messages: [0],
                     notifs: [0],
                     uType: auth.uType,
-                    complete: true,
                     status: {
-                       adminVerified: false
+                        profileComplete: true,
+                        adminVerified: false
                     }
                 }, err => {
                     if (!err)

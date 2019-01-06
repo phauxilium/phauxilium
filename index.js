@@ -12,7 +12,7 @@ firebase.fireConnect()
 const Session = require('./my_modules/ExpressSession')
 const Cloudinary = require('./my_modules/Cloudinary')
 const indexRoutes = require('./routes/indexRoutes')
-const profileRoutes = require('./routes/profileRoutes')
+const profileRoutes = require('./routes/profileRoutes')(io)
 const prototypeRoutes = require('./routes/prototypeRoutes')
 const addSpecialization = require('./sockets/AddSpecialization')(io)
 const PORT = process.env.PORT || 3000
@@ -45,5 +45,6 @@ app.use('/u', profileRoutes)
 app.use('/profile', prototypeRoutes)
 app.get('*', (req, res) => res.send('Invalid URL!'))
 app.post('*', (req, res) => res.send('Invalid URL!'))
+
 
 http.listen(PORT)

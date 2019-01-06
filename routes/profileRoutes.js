@@ -4,10 +4,12 @@ const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
 const FireAdmin = require('../my_modules/FireAdmin')
 const fire = new FireAdmin()
-
+let room = ''
 // ------------- Profile route --------------
 route.get('/t/', (req, res) => {
     let sessionID = req.session.ussID
+    room = sessionID
+
     if(sessionID === undefined) {
         res.redirect('/')
     } else {
@@ -16,7 +18,6 @@ route.get('/t/', (req, res) => {
         const childRef = ref.child(sessionID)
         childRef.once('value', snapshots => {
             let datas = snapshots.val()
-
             res.render('profile/profile', { docs: datas, channel: req.session.ussID })
         })
     }
@@ -65,4 +66,20 @@ route.get('/s/o', (req, res) => {
     } else res.redirect('/')
 })
 
-module.exports = route
+module.exports = (io) => {
+    if(room === undefined) {
+        console.log(undefined)
+    } else {
+        io.on('connection', socket => {
+            socket.join(room, () => {
+                const fire = new FireAdmin()
+                const db = fire.firebase.database()
+                const ref = db.ref(`users/${room}`)
+                ref.on('value', snapshots => {
+                    io.on('connected', snapshots.val())
+                })
+            })
+        })
+    }
+    return route
+}

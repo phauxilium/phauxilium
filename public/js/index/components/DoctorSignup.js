@@ -220,7 +220,7 @@ class DoctorSignup extends PatientSignup {
                             <!-- Thir Index Container  -->
                             <div class="next-cont">
                                 <div class="input-container">
-                                    <label class="label"><label class="asterisk">*</label> Clinic name</label>
+                                    <label class="label">Clinic name</label>
                                     <input type="text" name="cName" class="inputs" placeholder="Clinic name">
                                     <span class="helper c-name-helper"></span>
                                 </div>
