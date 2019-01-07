@@ -13,7 +13,7 @@ module.exports = class Config {
     setSession(env) {
         if (env === 'production') {
             app.set('trust proxy', 1)
-            sess.state.session.cookie.secure = true
+            this.state.session.cookie.secure = true
         }
     }
     
