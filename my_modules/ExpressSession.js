@@ -10,9 +10,9 @@ module.exports = class Config {
         }
     }
 
-    setSession(env) {
+    setSession(env, param) {
         if (env === 'production') {
-            app.set('trust proxy', 1)
+            param.set('trust proxy', 1)
             this.state.session.cookie.secure = true
         }
     }

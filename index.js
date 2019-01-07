@@ -14,7 +14,6 @@ const Cloudinary = require('./my_modules/Cloudinary')
 const indexRoutes = require('./routes/indexRoutes')
 const profileRoutes = require('./routes/profileRoutes')(io)
 const prototypeRoutes = require('./routes/prototypeRoutes')
-const addSpecialization = require('./sockets/AddSpecialization')(io)
 const PORT = process.env.PORT || 3000
 
 const cloud = new Cloudinary()
@@ -27,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.set('view engine', 'ejs')
 
 const sess = new Session()
-sess.setSession(app.get('env'))
+sess.setSession(app.get('env'), app)
 app.use(session(sess.getSession()))
 
 io.on('connection', socket => {
