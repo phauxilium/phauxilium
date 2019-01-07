@@ -4,12 +4,10 @@ const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
 const FireAdmin = require('../my_modules/FireAdmin')
 const fire = new FireAdmin()
-let room = ''
 
 // ------------- Profile route --------------
 route.get('/t/', (req, res) => {
-    let sessionID = req.session.ussID
-    room = sessionID
+    const sessionID = req.session.ussID
     if(sessionID === undefined) {
         res.redirect('/')
     } else {
@@ -18,7 +16,7 @@ route.get('/t/', (req, res) => {
         const childRef = ref.child(sessionID)
         childRef.once('value', snapshots => {
             let datas = snapshots.val()
-            res.render('profile/profile', datas)
+            res.render('profile/profile', {docs: datas, channel: sessionID})
         })
     }
 })
@@ -65,19 +63,28 @@ route.get('/s/o', (req, res) => {
 
 module.exports = (io) => {
     io.on('connection', socket => {
-        if(room) {
-            // console.log(room)
+        socket.on('signed in', room => {
             const fire = new FireAdmin()
             const db = fire.firebase.database()
-            const ref = db.ref(`users/${room}/notifs`)
-            // Displaying data when signed in
-            ref.on('value', snapshots => {
-                socket.join(room)
-                io.to(room).emit('notif updates', snapshots.val())
-                // console.log(room)
-            })
-        }
-    })
+            socket.join(room, () => {
+                // Notifs
+                let ref = db.ref(`users/${room}/notifs`)                
+                ref.on('value', snapshots => {
+                    io.to(room).emit('notif updates', snapshots.val())
+                })
 
+                // Messages
+                ref = db.ref(`users/${room}/messages`)
+                ref.on('value', snapshots => {
+                    io.to(room).emit('chat updates', snapshots.val())
+                })
+
+                ref = db.ref(`users/${room}/specialty`)
+                ref.on('value', snapshots => {
+                    io.to(room).emit('specialty updates', snapshots.val())
+                })
+            })
+        })
+    })
     return route
 }

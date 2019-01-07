@@ -21,7 +21,7 @@
                                 </label>
                             </div>
 
-                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/<%= uType %>/<%= basicInfo.profile %>" class="image">
+                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/<%= docs.uType %>/<%= docs.basicInfo.profile %>" class="image">
                         </div>
                     </center>
 
@@ -31,26 +31,26 @@
 
                     <div class="details-div">
                         <div class="name">
-                            <% if(uType === 'doctor') { %>
+                            <% if(docs.uType === 'doctor') { %>
                                 Dr.
                             <% } %>
-                           <%= basicInfo.fname %> <%= basicInfo.mname %> <%= basicInfo.lname %>
+                           <%= docs.basicInfo.fname %> <%= docs.basicInfo.mname %> <%= docs.basicInfo.lname %>
                         </div>
 
-                        <% if(uType === 'doctor') { %>
+                        <% if(docs.uType === 'doctor') { %>
                                 <div class="specialty">
                                     
                                     <div class="specialty-content">
                                         <% 
-                                            let objLen = Object.keys(specialty).length
+                                            let objLen = Object.keys(docs.specialty).length
                                             let count = 0
 
-                                            for(data in specialty) {
+                                            for(data in docs.specialty) {
                                                 count++ 
                                         %>
-                                                <% if(specialty[data] !== 0) { %>
+                                                <% if(docs.specialty[data] !== 0) { %>
                                                     <%= 
-                                                        specialty[data].specialization
+                                                        docs.specialty[data].specialization
                                                     %>
                                                     <% if(objLen !== count) { %>
                                                         /
@@ -390,7 +390,7 @@
             </div>
         </center>
     </div>
-    
+    <input type="hidden" class="channel" value="<%= channel %>">
     <%- include('../index/footer') %>
 
     <%- include('scripts') %>

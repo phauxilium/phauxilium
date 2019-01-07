@@ -45,5 +45,4 @@ app.use('/profile', prototypeRoutes)
 app.get('*', (req, res) => res.send('Invalid URL!'))
 app.post('*', (req, res) => res.send('Invalid URL!'))
 
-
 http.listen(PORT)

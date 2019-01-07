@@ -66,9 +66,7 @@ router.post('/signin', (req, res) => {
                         if (datas.status.profileComplete === false) {
                             auth.err.completeErr = true
                             res.send(auth.err)
-                        } else {
-                            res.send(auth.err)
-                        }
+                        } else res.send(auth.err)
                     }
                 }
             }

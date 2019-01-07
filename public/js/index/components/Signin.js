@@ -80,14 +80,16 @@ class Signin {
                         passwordHelper.textContent = data.passwordErr
 
                         if (!data.emailErr && !data.passwordErr) {   
-                            if(data.completeErr) {
+                            if(data.completeErr === true) {
                                 let ChooseSign = new ChooseSignup()
                                 let RenderDOM = new Render()
 
                                 let signForm = document.querySelector('.sign-form')
                                 RenderDOM.render(ChooseSign.main(), signForm)
 
-                            } else window.location = '/u/t'
+                            } else {
+                                window.location = `/u/t/`
+                            }
                         }
                     }
                 }

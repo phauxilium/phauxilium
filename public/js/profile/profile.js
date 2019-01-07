@@ -1,15 +1,14 @@
 const socket = io()
 let specialtyDiv = document.querySelector('.add-specialty-div')
 let bioDiv = document.querySelector('.add-bio-div')
-document.body.addEventListener('click', e => {
 
+document.body.addEventListener('click', e => {
     e.stopPropagation()
     let target = e.target.classList
     if(target.contains('add-specialty-btn') || 
         target.contains('add-specialty-text')) {
         const AddSpecialty = new AddSpecialization()
         const RenderDOM = new Render()
-
         RenderDOM.render(AddSpecialty.main(), specialtyDiv)
         document.querySelector('.inputs').focus()
     } else if (
@@ -17,7 +16,6 @@ document.body.addEventListener('click', e => {
         target.contains('add-bio-text')) {
         const BioAdd = new AddBio()
         const RenderDOM = new Render()
-
         RenderDOM.render(BioAdd.main(), bioDiv)
         document.querySelector('.inputs').focus()
     }
@@ -37,3 +35,7 @@ document.body.addEventListener('click', e => {
         RenderDOM.render(AddSpecialty.main(), specialtyDiv)
     }
 })
+
+
+//  Signed in event emit
+socket.emit('signed in', document.querySelector('.channel').value)
