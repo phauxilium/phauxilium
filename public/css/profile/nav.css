@@ -1,3 +1,9 @@
+@media only screen and (max-width: 1366px) {
+    .inner-nav-cont {
+        width: 1366px;
+    }
+}
+
 body {
     background-color: whitesmoke;
 }
@@ -7,6 +13,10 @@ body {
     height: 50px;
     box-shadow: 0 2px 2px 0 lightgray;
     position: fixed;
+    width: 100%;
+}
+
+.inner-nav-cont {
     width: 100%;
 }
 
@@ -114,6 +124,18 @@ body {
     color: #1da1f2;
 }
 
+.counts {
+    display: none;
+    font-family: 'Courier New', Courier, monospace;
+    border-radius: 150px;
+    padding: 3px 6px 1px 6px;
+    background-color: red;
+    color: white;
+    position: absolute;
+    font-size: 12px;
+    margin-left: 18px;
+}
+
 .dropdown-div {
     margin-top: 30px;
     margin-left: 30px;
@@ -148,9 +170,12 @@ body {
         box-shadow: 0 0 0 0;        
     }
 
+    .inner-left {
+        box-shadow: 0 1px 1px lightgrey;
+    }
+
     .inner-left, .inner-right {
         width: 100%;
-        box-shadow: 0 1px 1px lightgrey;
     }
 
     .search-div {

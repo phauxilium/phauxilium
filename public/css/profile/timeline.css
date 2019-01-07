@@ -4,6 +4,16 @@
 
 /*  --------------- PROFILE -------------- */
 
+@media only screen and (max-width: 1366px) {
+    .main {
+        width: 1366px;
+    }
+}
+
+.main {
+    width: 100%;
+}
+
 .inner-profile-div {
     background-color: white;
     text-align: center;
@@ -545,13 +555,6 @@
 
 .add-medical-message, .add-medical-sched-btn {
     background-color: #1da1f2;
-}
-
-
-@media only screen and (max-width: 1366px) {
-    .main {
-        width: 1366px !important;
-    }
 }
 
 @media only screen and (max-width: 950px) {

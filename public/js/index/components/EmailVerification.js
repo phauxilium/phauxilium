@@ -38,8 +38,6 @@ class EmailVerification extends Signin {
                             let SignIn = new Signin()
                             let RenderDOM = new Render()
                             RenderDOM.render(SignIn.main(), signForm)
-
-                            document.querySelector('.sign-inner').style.height = '460px'
                         }, 3000)
                     }
                 }

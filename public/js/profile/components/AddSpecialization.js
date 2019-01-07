@@ -52,10 +52,6 @@ class AddSpecialization {
                     if(!datas.specializationEr) {
                         let channel = document.querySelector('.channel').value                     
 
-                        socket.emit('join', channel)
-
-                        socket.emit('specializationUpdate', channel)
-
                         this.saving()
                         this.state.saveDiv.style.color = "green"
                         this.state.saveDiv.textContent = "Saved successfully"

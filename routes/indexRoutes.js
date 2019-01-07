@@ -1,7 +1,3 @@
-// ==================== TODO =================
-// Change Signin, Signup and Complete Signup Process
-// Make Database Organized
-
 const express = require('express')
 const validator  = require('validator')
 const FireAdmin = require('../my_modules/FireAdmin')
@@ -23,10 +19,7 @@ router.post('/signin', (req, res) => {
         key: '',
         email: req.body.email,
         password: req.body.password,
-        err: {
-            emailErr: '',
-            passwordErr: ''
-        }
+        err: {}
     }
 
     if(auth.email === '' || auth.password === '') {
@@ -46,7 +39,7 @@ router.post('/signin', (req, res) => {
         auth.key = auth.email.indexOf('@') !== -1 ? auth.email.split('@')[0] : auth.email
         
         const encryptKey = crypto.encrypt(auth.key.toLowerCase())
-        const encryptEmail = crypto.encrypt(auth.email.toLowerCase())
+        
         const childRef = ref.child(encryptKey)
 
         childRef.once('value', snapshots => {
@@ -55,8 +48,9 @@ router.post('/signin', (req, res) => {
                 auth.err.emailErr = 'Invalid email address.'
                 res.send(auth.err)
             } else {
+                let email = crypto.decrypt(datas.auth.email, (err, data) => data)
                 if(auth.email.indexOf('@') !== -1) 
-                    if ((encryptEmail !== datas.auth.origEmail) && (encryptEmail !== datas.auth.lCaseEmail))
+                    if (auth.email.toLowerCase() !== email.toLowerCase())
                         auth.err.emailErr = 'Invalid email address.'
                     else
                         auth.err.emailErr = ''
@@ -160,8 +154,7 @@ router.post('/e/v', (req, res) => {
     } else {
         const auth = {
             key: crypto.encrypt(req.session.evemail.split('@')[0].toLowerCase()),
-            lCaseEmail: crypto.encrypt(req.session.evemail.toLowerCase()),
-            origEmail: crypto.encrypt(req.session.evemail),
+            email: crypto.encrypt(req.session.evemail),
             password: crypto.encrypt(req.session.evpassword)
         }
 
@@ -172,8 +165,7 @@ router.post('/e/v', (req, res) => {
         const userRef = ref.child(auth.key)
         userRef.set({
             auth: {
-                lCaseEmail: auth.lCaseEmail,
-                origEmail: auth.origEmail,
+                email: auth.email,
                 password: auth.password,
             },
             status: {
@@ -246,7 +238,7 @@ router.post('/c/s/p', (req, res) => {
 
     // ============== FOR NOT TERMS AND CONDITON NOT AGREED
     } else if (auth.agreement === 'false') {
-        auth.err.agreementErr = auth.agreement === 'false' ? 'You need to agree in our Terms and Condition' : ''
+        auth.err.agreementErr = auth.agreement === 'false' ? 'You need to agree  our Terms and Condition' : ''
         res.send(auth.err)
     
     // ============== FOR THE SAME PRC LICENSE NUMBER 
@@ -336,7 +328,9 @@ router.post('/c/s/p', (req, res) => {
             messages: [0],
             notifs: [0],
             uType: auth.uType,
-            complete: true
+            status: {
+                complete: true
+            }
         }, err => {
             if (!err)
                 res.send(auth.err)
