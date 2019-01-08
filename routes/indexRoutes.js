@@ -99,7 +99,8 @@ router.post('/signup', (req, res) => {
         const fire = new FireAdmin()
         const db = fire.firebase.database()
         const ref = db.ref('users')
-        ref.orderByKey().equalTo(crypto.encrypt(auth.email.toLowerCase())).once('value', snapshots => {
+        let key = crypto.encrypt(auth.email.split('@')[0].toLowerCase())
+        ref.orderByKey().equalTo(key).once('value', snapshots => {
             if(snapshots.val() === null) {
                 let random1 = Math.ceil(Math.random() * 1000 + 500)
                 let random2 = Math.floor(Math.random() * 2000 + 300)
@@ -107,6 +108,7 @@ router.post('/signup', (req, res) => {
                 req.session.evcode = `${random1}${random2}`
                 req.session.evemail = auth.email
                 req.session.evpassword = auth.password
+                console.log(req.session.evcode)
 
                 // ---------- Send grid API ------------
                 let mail = new SendGrid()
@@ -252,7 +254,7 @@ router.post('/c/s/p', (req, res) => {
             for (data in datas) {
                 if (datas[data].uType === 'doctor') {
                     for (key in datas[data]) {
-                        if (datas[data][key].prc === crypto.encrypt(auth.prc)) {
+                        if ((datas[data][key].prc === crypto.encrypt(auth.prc)) && (datas[data][key].verified === false)) {
                             auth.err.prcErr = 'PRC License already exist'
                         }
                     }
@@ -285,11 +287,20 @@ router.post('/c/s/p', (req, res) => {
                             assisstantName: '',
                         }
                     },
+                    appointments: [0],
                     patientFiles: [0],
                     specialty: [0],
                     schedules: [0], // Includes date, time and location
                     messages: [0],
-                    notifs: [0],
+                    notifs: [0,
+                        {
+                            from: 'Auxilium Team',
+                            message: 'We are still verifying your account. Some features of Auxilium wiil not be accessible until we fuck ya!',
+                            date: new Date(),
+                            type: 'message',
+                            status: 'new'
+                        }
+                    ],
                     uType: auth.uType,
                     status: {
                         profileComplete: true,
@@ -323,6 +334,7 @@ router.post('/c/s/p', (req, res) => {
                 profile: 'dadb69977493f06e0fd31a023cb0c632',
                 bio: '',
             },
+            appointments: [0],
             messages: [0],
             notifs: [0],
             uType: auth.uType,

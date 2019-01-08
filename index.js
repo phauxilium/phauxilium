@@ -39,6 +39,10 @@ io.on('connection', socket => {
     })
 })
 
+app.use((req, res, next) => {
+    res.set('Cache-Control', 'no cache, no-store, must-revalidate')
+    next()
+})
 app.use('/', indexRoutes)
 app.use('/u', profileRoutes)
 app.use('/profile', prototypeRoutes)

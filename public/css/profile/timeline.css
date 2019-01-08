@@ -282,6 +282,64 @@
 }
 
 
+
+/* -------------- Notification Div -------------- */
+
+.notif-div {
+    text-align: left;
+    background-color: white;
+    border: 1px solid lightgray;
+}
+
+.notif-title {
+    padding: 15px;
+    border-bottom: 1px solid lightgray;
+}
+
+.notif-content {
+    padding: 15px;
+    cursor: pointer;
+    background-color: #edf2fa;
+}
+
+.notif-span {
+    width: 100%;
+    float: left;
+}
+
+.notif-img {
+    border: 1px solid lightgray;
+    border-radius: 150px;
+    text-align: center;
+    height: 50px;
+    width: 50px;
+}
+
+.notif-img-src {
+    height: 100%;
+    border-radius: 150px;    
+}
+
+.notif-from {
+    width: 70%;
+    padding: 15px;
+    padding-left: 10px;
+    font-weight: bolder;
+    font-size: 18px;   
+}
+
+.notif-message {
+    font-size: 15px;
+    padding-left: 60px;
+    font-weight: bold;
+}
+
+.notif-date {
+    font-size: 13px;
+    padding-left: 60px;
+}
+
+
 /* -------------- Chat Div ----------- */
 .chat-div {
     font-family: Arial, Helvetica, sans-serif;
@@ -442,7 +500,7 @@
 
 /* ------------- Modals ------------ */
 
-.outer-modal-trick {
+.outer-modal-bg {
     background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
@@ -456,8 +514,8 @@
     width: 100%;
     height: 100%;
     background-color: transparent;
-    display: none;
 }
+
 
 /*  ------------ Appoinment ----------- */
 .appointment-modal, .cancel-modal, .add-medical-modal  {
@@ -598,7 +656,10 @@
         display: none;
     }
     
-    .profile-div, .center-div {
+    .profile-div {
+        display: none;
+    } 
+    .center-div {
         width: 100%;
     }
 }

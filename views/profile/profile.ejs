@@ -153,28 +153,54 @@
         <!-- ---------------- Center Div ------------------ -->
         <div class="col-6 inner-div center-div">
 
-            <!-- ---------------- Timeline ---------------- -->
-            <div class="center-inner-div timeline-div active-center-div">
+            <div class="notif-div col-12">
+                <span class="notif-title col-12">Notifications</span>
+                <% for(notif in docs.notifs) { %>
+                    <% if(notif !== '0') { %>
+                        <div class="notif-content col-12" onclick="Notif.viewNotif(this)" data-notif-id="<%= notif %>" data-notif-type="<%= docs.notifs[notif].type %>">
+                            <% let img %>
+                            <% let msg = docs.notifs[notif].message %>
+                            <% let date = new Date(docs.notifs[notif].date) %>
+                            <% let dateStr = date.toString().split(' ') %>
+                            <% dateStr = `${dateStr[0]}, ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${dateStr[4]}` %>
 
-            <!-- ------------ Timeline Navigation Bar ------------ -->
-                <div class="col-12 inner-bar">
+                            <% if(docs.notifs[notif].from === 'Auxilium Team') { %>
+                                <% img = '/static/images/black.png' %>
+                            <% } %>
+                            <% if(msg.length > 80) { %>
+                                <% msg = msg.substring(0, 70) + '...' %>
+                            <% } %>
+                                <div class="notif-header">
+                                    <span class="notif-span notif-img">
+                                        <img class="notif-img-src" src="<%= img %>" alt="Could'nt load image">
+                                    </span>
+                                    <span class="notif-span notif-from">
+                                        <%= docs.notifs[notif].from %>
+                                    </span>
+                                </div>
+                                <span class="notif-span notif-message">
+                                    <%= msg %>
+                                </span>
+                                <span class="notif-span notif-date">
+                                    <%= dateStr %>
+                                </span>
+                            </div>
+                        <% } %>
+                <% } %>
+            </div>
+
+            <!-- ---------------- Timeline ---------------- -->
+            <!-- <div class="center-inner-div timeline-div active-center-div"> -->
+
+                <!-- ------------ Timeline Navigation Bar ------------ -->
+                <!-- <div class="col-12 inner-bar">
                     <div class="today-sched-div">
                             <div class="col-4 bar-btns-div">
                                 <button class="active bar-btn">
                                     Today's Schedule
                                 </button>
                             </div>
-                            <div class="col-4 bar-btns-div">
-                                <button class="bar-btn">
-                                    Upcoming Schedules
-                                </button>
-                            </div>
         
-                            <div class="col-3 bar-btns-div">
-                                <button class="active bar-btn">
-                                    Today's Schedule
-                                </button>
-                            </div>
                             <div class="col-3 bar-btns-div">
                                 <button class="bar-btn">
                                     Upcoming Schedules
@@ -182,11 +208,11 @@
                             </div>
                     </div>
                 </div>
-    
+     -->
     
                 <!-- ------------ Today's schedules Div --------- -->
                 
-                <div class="col-12 inner-timeline-div active-div todays-div">
+                <!-- <div class="col-12 inner-timeline-div active-div todays-div">
                     <p class="date-now">
                     </p>
     
@@ -201,22 +227,22 @@
                                 </td>
                                 <td class="sched-td-today">
                                 </td>
-                                <td class="sched-td-today">
+                                <td class="sched-td-today"> -->
                                     <!-- <button class="today-re-sched">Reschedule</button> -->
-                                    <button class="today-cancel">Cancel</button>
+                                    <!-- <button class="today-cancel">Cancel</button>
                                 </td>
                             </tr>     
                     </table>
                 </div>
-    
+     -->
                 <!-- --------------- Upcoming Schedules ----------- -->
-                <div class="col-12 inner-timeline-div upcoming-div">Nothing to show</div>
+                <!-- <div class="col-12 inner-timeline-div upcoming-div">Nothing to show</div>
     
     
                     <div class="inner-timeline-div outer-medical-records-div">
-    
+     -->
                             <!-- --------- Medical Records ----------- -->
-    
+<!--     
                                 <div class="col-12 medical-records-div">
                                     <p class="doc-name">
                                     </p>
@@ -235,18 +261,18 @@
                     </div>
             
     
-    
+     -->
     
                 <!-- ---------------- Posts -------------- -->
-                <div class="col-12 inner-timeline-div post-div">
+                <!-- <div class="col-12 inner-timeline-div post-div">
                     Nothing to show
                 </div>
     
             </div>
-
+ -->
 
             <!-- --------------- Chat Div ---------- -->
-            <div class="col-12 center-inner-div chat-div">
+            <!-- <div class="col-12 center-inner-div chat-div">
                 <div class="col-12 chat-header">
                     <div class="col-5 inner-chat-header chat-header-left">
                         <img src="" class="chat-image">
@@ -275,7 +301,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </div> -->
     
         </div>
 
@@ -326,70 +352,13 @@
     <%- include('nav') %>
 
     <!-- ----------------- Modals --------------- -->
-    <div class="outer-modal-trick"></div>
 
-    <div class="outer-modal">
-        <center>
-            <div class="close-modal-div">
-                <i class="material-icons close-modal-icon">close</i>
-            </div>
+    <div class="outer-modal-bg">
+        <div class="outer-modal">
 
-            <!--  Appoinment Modal -->
-            <div class="appointment-modal">
-                <div class="message">
-                </div>
-
-                <p class="date-now">
-                </p>
-                <table class="sched-tbl">
-                    <th>Day</th>
-                    <th>Hours</th>
-                
-
-                            <tr>
-                                <td class="my-sched-td">
-                                </td>
-                                <td class="my-sched-td">
-                                </td>
-                            </tr>
-
-                </table>
-
-                <form class="appointment-form">
-                    <input type="time" name="setAppointmentTime" class="setSched-inputs time">
-                    <input type="date" name="setAppointmentDate" class="setSched-inputs date">
-                    <button class="setSched-inputs setSched-btn"></button>
-                </form>
-            </div>
-
-            <!-- Cancel Modal -->
-            <div class="cancel-modal">
-                <div class="cancel-message">
-                    Canceled Successfully
-                </div>
-                <form class="cancel-form">
-                    <textarea name="textarea" class="cancel-textarea" cols="30" rows="10" placeholder="Reason for canceling the appointment"></textarea>
-                    <button class="cancel-sched-btn">
-                        Cancel Appoinment
-                    </button>
-                </form>
-            </div>
-
-
-            <!-- Add Medical Records Modal -->
-            <div class="add-medical-modal">
-                <div class="add-medical-message">
-                    Added Successfully
-                </div>
-                <form class="add-medical-form">
-                    <textarea name="textarea" class="add-medical-textarea" cols="30" rows="10" placeholder="Add medical records"></textarea>
-                    <button class="add-medical-sched-btn">
-                        Add Medical Records
-                    </button>
-                </form>
-            </div>
-        </center>
+        </div>
     </div>
+    
     <input type="hidden" class="channel" value="<%= channel %>">
     <%- include('../index/footer') %>
 

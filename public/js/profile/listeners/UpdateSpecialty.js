@@ -4,7 +4,6 @@ socket.on('specialty updates', datas => {
     let count = 0
     specialtyDiv.innerHTML = ''
 
-    console.log(datas)
     for(data in datas) {
         count++
         if (datas[data] !== 0)  {

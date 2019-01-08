@@ -4,6 +4,9 @@ const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
 const FireAdmin = require('../my_modules/FireAdmin')
 const fire = new FireAdmin()
+const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+let uType = ''
 
 // ------------- Profile route --------------
 route.get('/t/', (req, res) => {
@@ -16,6 +19,16 @@ route.get('/t/', (req, res) => {
         const childRef = ref.child(sessionID)
         childRef.once('value', snapshots => {
             let datas = snapshots.val()
+            uType = datas.uType
+
+            // let date = new Date(datas.notifs[1].date)
+            // let dateNow = new Date(datas.notifs[1].date)
+            // let dateStr = date.toString()
+            // let dateNowStr = dateNow.toString()
+            // console.log(dateStr === dateNowStr)
+            // console.log(date)
+            // console.log(dateNow)
+
             res.render('profile/profile', {docs: datas, channel: sessionID})
         })
     }
@@ -52,14 +65,29 @@ route.post('/d/add', (req, res) => {
     }
 })
 
+
+
+// -------------- View Notification -----------------
+route.post('/view/notif', (req, res) => {
+    let notifID = req.body.notifID
+    let uid = req.session.ussID
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${uid}/notifs/${notifID}`)
+    ref.once('value', snapshots => {
+        console.log(snapshots.val())
+    })
+})
+
 // ------------- Signout --------------
 route.get('/s/o', (req, res) => {
     if(req.session.ussID) {
         req.session.destroy(err => {
-            if(!err) res.send('Destroyed')
+            if(!err) res.redirect('/')
         })
     } else res.redirect('/')
 })
+
 
 module.exports = (io) => {
     io.on('connection', socket => {
@@ -70,19 +98,29 @@ module.exports = (io) => {
                 // Notifs
                 let ref = db.ref(`users/${room}/notifs`)                
                 ref.on('value', snapshots => {
-                    io.to(room).emit('notif updates', snapshots.val())
+                    let notifs = snapshots.val()
+                    let count = 0
+                    for(notif in notifs) {
+                        if(notifs[notif] !== 0) {
+                            if(notifs[notif].status === 'new') count++
+                        }
+                    }
+
+                    io.to(room).emit('notif updates', count)
                 })
 
                 // Messages
                 ref = db.ref(`users/${room}/messages`)
                 ref.on('value', snapshots => {
-                    io.to(room).emit('chat updates', snapshots.val())
+                    io.to(room).emit('chat updates', snapshots.numChildren())
                 })
 
-                ref = db.ref(`users/${room}/specialty`)
-                ref.on('value', snapshots => {
-                    io.to(room).emit('specialty updates', snapshots.val())
-                })
+                if(uType === 'doctor') {
+                    ref = db.ref(`users/${room}/specialty`)
+                    ref.on('value', snapshots => {
+                        io.to(room).emit('specialty updates', snapshots.val())
+                    })
+                }
             })
         })
     })

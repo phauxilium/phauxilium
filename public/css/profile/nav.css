@@ -118,10 +118,15 @@ body {
     cursor: pointer;
     transition: 0.3s;
     outline: none;
+    color: gray;
 }
 
 .nav-icons:hover, .nav-icons:active {
-    color: #1da1f2;
+    color: black;
+}
+
+.active-icon {
+    color: black;
 }
 
 .counts {
