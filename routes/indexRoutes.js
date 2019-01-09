@@ -108,7 +108,6 @@ router.post('/signup', (req, res) => {
                 req.session.evcode = `${random1}${random2}`
                 req.session.evemail = auth.email
                 req.session.evpassword = auth.password
-                console.log(req.session.evcode)
 
                 // ---------- Send grid API ------------
                 let mail = new SendGrid()
@@ -295,7 +294,7 @@ router.post('/c/s/p', (req, res) => {
                     notifs: [0,
                         {
                             from: 'Auxilium Team',
-                            message: 'We are still verifying your account. Some features of Auxilium wiil not be accessible until we fuck ya!',
+                            message: 'We are still verifying your account. Some features of Auxilium will not be accessible until we fuck ya!',
                             date: new Date(),
                             type: 'message',
                             status: 'new'

@@ -285,10 +285,24 @@
 
 /* -------------- Notification Div -------------- */
 
+.loader {
+    width: 40px;
+    margin: 15px;
+}
+
+.n-content {
+    text-align: center;
+}
+
 .notif-div {
     text-align: left;
     background-color: white;
     border: 1px solid lightgray;
+    float: left;
+}
+
+.new {
+    background-color: #edf2fa;
 }
 
 .notif-title {
@@ -297,48 +311,53 @@
 }
 
 .notif-content {
-    padding: 15px;
     cursor: pointer;
-    background-color: #edf2fa;
+    padding-top: 10px;
+    padding-bottom: 10px; 
+    float: left;
 }
 
 .notif-span {
     width: 100%;
     float: left;
+    text-align: left;
 }
 
 .notif-img {
-    border: 1px solid lightgray;
-    border-radius: 150px;
+    padding-top: 10px;
     text-align: center;
-    height: 50px;
-    width: 50px;
+    height: 100px;
+    width: 100px;
 }
 
 .notif-img-src {
-    height: 100%;
-    border-radius: 150px;    
+    width: 60px;
+    border-radius: 150px;
+    border: 2px solid white;
+    box-shadow: 0 3px 3px 0 lightgray;    
 }
 
 .notif-from {
     width: 70%;
-    padding: 15px;
-    padding-left: 10px;
+    padding-top: 5px;
     font-weight: bolder;
-    font-size: 18px;   
+    font-size: 17px;   
 }
 
 .notif-message {
+    width: 70%;
     font-size: 15px;
-    padding-left: 60px;
     font-weight: bold;
 }
 
 .notif-date {
+    width: 70%;
     font-size: 13px;
-    padding-left: 60px;
 }
 
+.old-msg, .old-date {
+    color: gray;
+}
 
 /* -------------- Chat Div ----------- */
 .chat-div {
@@ -516,6 +535,63 @@
     background-color: transparent;
 }
 
+.inner-cont-modal {
+    width: 500px;
+}
+
+.inner-modal {
+    font-family: 'Roboto', sans-serif;
+    margin-top: 7%;
+    float: left;
+    padding: 15px;
+    border: 1px solid lightgray;
+    width: 100%;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.modal-notif-span {
+    float: left;
+    text-align: left;
+}
+
+.span-close {
+    width: 100%;
+    text-align: right;
+}
+
+.modal-img-notif {
+    width: 100px;
+}
+
+.modal-img-src {
+    width: 100%;
+    border-radius: 150px;
+    border: 2px solid white;
+    box-shadow: 0 3px 3px 0 lightgray;
+}
+
+.modal-title-notif {
+    width: 70%;
+    font-size: 18px;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-top: 35px;
+}
+
+.modal-msg-notif {
+    width: 100%;
+    padding: 15px;
+}
+
+.modal-date-notif {
+    font-size: 13px;
+    padding-left: 15px;
+}
+
+.close-icon {
+    cursor: pointer;
+}
 
 /*  ------------ Appoinment ----------- */
 .appointment-modal, .cancel-modal, .add-medical-modal  {
@@ -726,6 +802,31 @@
     .sched-td, .sched-td-today {
         font-size: 12px;
         padding: 5px;
+    }
+
+    .notif-title {
+        font-size: 15px;
+    }
+
+    .notif-from {
+        font-size: 15px;
+    }
+
+    .notif-img {
+        width: 70px;
+    }
+
+    .notif-img-src {
+        width: 40px;
+    }
+
+    .notif-message {
+        width: 60%;
+        font-size: 13px;
+    }
+
+    .notif-date {
+        font-size: 12px;
     }
 
     .titles {

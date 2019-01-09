@@ -1,6 +1,5 @@
 const Notif = new Notification()    
 
-
 let searchInput = document.querySelector('.search-input')
 let searchBtn = document.querySelector('.search-btn')
 let searchIcon = document.querySelector('.search-icon')
@@ -53,10 +52,27 @@ document.body.addEventListener('click', (e) => {
         })
         _classList.add('active-icon')
 
+        let centerDiv = document.querySelector('.center-div')
+
         if(_classList.contains('sched-icon')) {
             alert('sched')
         } else if(_classList.contains('notif-icon')) {
-            alert('notif')
+            const RenderDOM = new Render()
+            RenderDOM.render(Notif.main(), centerDiv)
+
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/notifs', '')
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        Notif.appendData(datas)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+            
         } else if(_classList.contains('mail-icon')) {
             alert('mail')
         }
@@ -71,6 +87,9 @@ document.body.addEventListener('click', (e) => {
     if(_classList.contains('sign-out')) {
         window.location = '/u/s/o'
     }
+
+    if(_classList.contains('close-icon'))
+        document.querySelector('.outer-modal-bg').style.display = "none"
 })
 
 

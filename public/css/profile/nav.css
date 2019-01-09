@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
 @media only screen and (max-width: 1366px) {
     .inner-nav-cont {
         width: 1366px;
@@ -133,12 +135,14 @@ body {
     display: none;
     font-family: 'Courier New', Courier, monospace;
     border-radius: 150px;
-    padding: 3px 6px 1px 6px;
+    padding: 2px 5px 2px 5px;
     background-color: red;
     color: white;
     position: absolute;
-    font-size: 12px;
-    margin-left: 18px;
+    font-size: 10px;
+    margin-left: 15px;
+    border: 2px solid white;
+    box-shadow: 0 1px 2px 0 lightgray;
 }
 
 .dropdown-div {

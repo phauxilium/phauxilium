@@ -1,3 +1,6 @@
+//  -------------------- TODOS ----------------------
+//  MAKE NOTIFICATIONS REALTIME
+
 const express = require('express')
 const route = express.Router()
 const Cryptos = require('../my_modules/Cryptos')
@@ -66,8 +69,19 @@ route.post('/d/add', (req, res) => {
 })
 
 
+// ----------- View All Notifications ----------------
+route.post('/view/notifs', (req, res) => {
+    let ussID = req.session.ussID
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${ussID}/notifs`)
+    ref.once('value', snapshots => {
+        res.send(snapshots.val())
+    }) 
+})
 
-// -------------- View Notification -----------------
+
+// -------------- View Individual Notification -----------------
 route.post('/view/notif', (req, res) => {
     let notifID = req.body.notifID
     let uid = req.session.ussID
@@ -75,7 +89,13 @@ route.post('/view/notif', (req, res) => {
     const db = fire.firebase.database()
     const ref = db.ref(`users/${uid}/notifs/${notifID}`)
     ref.once('value', snapshots => {
-        console.log(snapshots.val())
+        let datas = snapshots.val()
+        res.send(datas)
+        if(datas.status === 'new') {
+            ref.update({
+                status: 'old'
+            })
+        }
     })
 })
 
@@ -105,7 +125,6 @@ module.exports = (io) => {
                             if(notifs[notif].status === 'new') count++
                         }
                     }
-
                     io.to(room).emit('notif updates', count)
                 })
 

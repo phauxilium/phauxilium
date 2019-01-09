@@ -1,6 +1,3 @@
-<!-- ===================== TODO ================== -->
-<!-- FINISH UI AND AJAX PROCESS -->
-
 <%- include('../index/header') %>
 
     <link rel="stylesheet" href="/static/css/profile/timeline.css">
@@ -152,43 +149,6 @@
 
         <!-- ---------------- Center Div ------------------ -->
         <div class="col-6 inner-div center-div">
-
-            <div class="notif-div col-12">
-                <span class="notif-title col-12">Notifications</span>
-                <% for(notif in docs.notifs) { %>
-                    <% if(notif !== '0') { %>
-                        <div class="notif-content col-12" onclick="Notif.viewNotif(this)" data-notif-id="<%= notif %>" data-notif-type="<%= docs.notifs[notif].type %>">
-                            <% let img %>
-                            <% let msg = docs.notifs[notif].message %>
-                            <% let date = new Date(docs.notifs[notif].date) %>
-                            <% let dateStr = date.toString().split(' ') %>
-                            <% dateStr = `${dateStr[0]}, ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${dateStr[4]}` %>
-
-                            <% if(docs.notifs[notif].from === 'Auxilium Team') { %>
-                                <% img = '/static/images/black.png' %>
-                            <% } %>
-                            <% if(msg.length > 80) { %>
-                                <% msg = msg.substring(0, 70) + '...' %>
-                            <% } %>
-                                <div class="notif-header">
-                                    <span class="notif-span notif-img">
-                                        <img class="notif-img-src" src="<%= img %>" alt="Could'nt load image">
-                                    </span>
-                                    <span class="notif-span notif-from">
-                                        <%= docs.notifs[notif].from %>
-                                    </span>
-                                </div>
-                                <span class="notif-span notif-message">
-                                    <%= msg %>
-                                </span>
-                                <span class="notif-span notif-date">
-                                    <%= dateStr %>
-                                </span>
-                            </div>
-                        <% } %>
-                <% } %>
-            </div>
-
             <!-- ---------------- Timeline ---------------- -->
             <!-- <div class="center-inner-div timeline-div active-center-div"> -->
 
@@ -355,7 +315,10 @@
 
     <div class="outer-modal-bg">
         <div class="outer-modal">
-
+            <center>
+                <div class="inner-cont-modal">
+                </div>
+            </center>
         </div>
     </div>
     
