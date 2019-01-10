@@ -720,27 +720,41 @@
     .ads-img-div {
         margin: 0;
     }
-
 }
 
 @media only screen and (max-width: 768px) {
     .inner-div {
-        padding-bottom: 5px;
+        padding: 0;
+        padding-top: 10px;
     }
 
     .ads-div {
         display: none;
     }
-    
-    .profile-div {
-        display: none;
-    } 
-    .center-div {
+
+    .center-div, .profile-div {
         width: 100%;
     }
 }
 
 @media only screen and (max-width: 550px) {
+
+    /* Notif modal */
+
+    .outer-modal {
+        padding: 0;
+    }
+
+    .inner-cont-modal {
+        width: 100%;
+    }
+
+    .inner-modal {
+        margin: 0;
+        border-radius: 0;
+    }
+
+
     .date-now {
         font-size: 15px;
         margin: 3px;
@@ -799,6 +813,20 @@
 }
 
 @media only screen and (max-width: 500px) {
+
+    /* Notification */
+    .modal-img-notif {
+        width: 70px;
+    }
+    .modal-img-src {
+        width: 70px;
+    }
+
+    .modal-title-notif {
+        padding-top: 25px;
+        width: 60%;
+    }
+
     .sched-td, .sched-td-today {
         font-size: 12px;
         padding: 5px;

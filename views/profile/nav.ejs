@@ -26,25 +26,46 @@
         </div>
         <div class="col-4 inner-nav inner-right">
             <div class="icons-div">
-                <div class="col-3">
-                    <div class="material-icons nav-icons sched-icon active-icon">today</div>
-                </div>
-                <div class="col-3">
-                    <span class="counts notif-count">
-                    </span>
-                    <div class="material-icons nav-icons notif-icon">notifications_none</div>
-                </div>
-                <div class="col-3">
-                    <span class="counts notif-count">
-                    </span>
-                    <div class="material-icons nav-icons mail-icon">mail_outline</div>
-                </div>
-                <div class="col-3">
-                    <div class="material-icons nav-icons arrow-icon">arrow_drop_down</div>
-                </div>
-        
+                <% if(docs.uType === 'doctor') { %>
+                    <div class="col-20">
+                        <div class="material-icons nav-icons sched-icon active-icon">today</div>
+                    </div>
+                    <div class="col-20">
+                        <div class="material-icons nav-icons patient-icon">assignment</div>
+                    </div>
+                    <div class="col-20">
+                        <span class="counts notif-count">
+                        </span>
+                        <div class="material-icons nav-icons notif-icon">notifications_none</div>
+                    </div>
+                    <div class="col-20">
+                        <span class="counts notif-count">
+                        </span>
+                        <div class="material-icons nav-icons mail-icon">mail_outline</div>
+                    </div>
+                    <div class="col-20">
+                        <div class="material-icons nav-icons arrow-icon">arrow_drop_down</div>
+                    </div>
+                <% } else { %>
+                    <div class="col-3">
+                        <div class="material-icons nav-icons sched-icon active-icon">today</div>
+                    </div>
+                    <div class="col-3">
+                        <span class="counts notif-count">
+                        </span>
+                        <div class="material-icons nav-icons notif-icon">notifications_none</div>
+                    </div>
+                    <div class="col-3">
+                        <span class="counts notif-count">
+                        </span>
+                        <div class="material-icons nav-icons mail-icon">mail_outline</div>
+                    </div>
+                    <div class="col-3">
+                        <div class="material-icons nav-icons arrow-icon">arrow_drop_down</div>
+                    </div>
+                <% } %>
                 <div class="dropdown-div">
-                    <span class="drop-contents">Profile</span>
+                    <span class="drop-contents profile-link">Profile</span>
                     <span class="drop-contents">Account settings</span>
                     <span class="drop-contents">Terms and Condition</span>
                     <span class="drop-contents sign-out">Sign-out</span>

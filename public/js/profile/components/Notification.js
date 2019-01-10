@@ -1,9 +1,21 @@
 class Notification {
 
     notifModalView(datas) {
-        let img = datas.from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.img}`
-        let innerContModal = document.querySelector('.inner-cont-modal')
-        innerContModal.innerHTML = `
+        if(!datas) {
+            nContent.innerHTML = `
+            <img src="/static/images/loader.svg" alt="Loading..." class="loader">
+            `
+        } else {
+            let dateObj = new Date(datas.date)
+            let dateStr = dateObj.toString().split(' ')
+            let time = dateStr[4].split(':')
+            let hours = time[0] > 12 ? time[0] - 12 : time
+            let meridiem = time[0] > 12 ? 'pm' : 'am'
+            let finTime = `${hours}:${time[1]} ${meridiem}`
+            let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
+            let img = datas.from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.img}`
+            let innerContModal = document.querySelector('.inner-cont-modal')
+            innerContModal.innerHTML = `
                     <div class="inner-modal">
                         <span class="modal-notif-span span-close">
                             <i class="material-icons close-icon">close</i>
@@ -13,9 +25,10 @@ class Notification {
                         </span>
                         <span class="modal-notif-span modal-title-notif">${datas.from}</span>
                         <span class="modal-notif-span modal-msg-notif">${datas.message}</span>
-                        <span class="modal-notif-span modal-date-notif">${datas.date}</span>
+                        <span class="modal-notif-span modal-date-notif">${finalDate}</span>
                     </div>
-        `
+            `
+        }
     }
 
     viewNotifs(param) {
@@ -45,7 +58,7 @@ class Notification {
             <img src="/static/images/loader.svg" alt="Loading..." class="loader">
             `
         } else {
-            for (data in datas) {
+            for (let data = datas.length - 1; data >= 0; data--) {
                 if (datas[data] !== 0) {
                     let msg = datas[data].message
                     let dateObj = new Date(datas[data].date)
@@ -79,7 +92,7 @@ class Notification {
 
                     nContent.innerHTML += notifs
                 }
-            }   
+            }
         }
     }
 

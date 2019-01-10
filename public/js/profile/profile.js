@@ -1,8 +1,9 @@
 const socket = io()
-let specialtyDiv = document.querySelector('.add-specialty-div')
-let bioDiv = document.querySelector('.add-bio-div')
 
 document.body.addEventListener('click', e => {
+    let specialtyDiv = document.querySelector('.add-specialty-div')
+    let bioDiv = document.querySelector('.add-bio-div')
+    
     e.stopPropagation()
     let target = e.target.classList
     if(target.contains('add-specialty-btn') || 
@@ -32,7 +33,7 @@ document.body.addEventListener('click', e => {
     } else if (target.contains('cancel')) {
         const AddSpecialty = new AddSpecialization()
         const RenderDOM = new Render()
-        RenderDOM.render(AddSpecialty.main(), specialtyDiv)
+        RenderDOM.render(AddSpecialty.addSpecializationBtn(), specialtyDiv)
     }
 })
 

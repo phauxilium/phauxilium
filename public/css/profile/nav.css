@@ -120,15 +120,15 @@ body {
     cursor: pointer;
     transition: 0.3s;
     outline: none;
-    color: gray;
+    color: black;
 }
 
-.nav-icons:hover, .nav-icons:active {
-    color: black;
+.nav-icons:hover, .nav-icons:active {   
+    color: #1da1f2;
 }
 
 .active-icon {
-    color: black;
+    color: #1da1f2;
 }
 
 .counts {
@@ -176,7 +176,6 @@ body {
 @media only screen and (max-width: 768px) {
     .outer-nav {
         height: 100px;
-        box-shadow: 0 0 0 0;        
     }
 
     .inner-left {
