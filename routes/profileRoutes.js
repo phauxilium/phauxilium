@@ -22,8 +22,10 @@ route.get('/t/', (req, res) => {
         const childRef = ref.child(sessionID)
         childRef.once('value', snapshots => {
             let datas = snapshots.val()
+            let email = crypto.decrypt(datas.auth.email, (err, data) => data)
+            let prc = crypto.decrypt(datas.basicInfo.prc, (err, data) =>data)
             uType = datas.uType
-            res.render('profile/profile', {docs: datas, channel: sessionID})
+            res.render('profile/profile', {docs: datas, channel: sessionID, email: email, prc: prc})
         })
     }
 })
@@ -35,7 +37,9 @@ route.post('/my/profile', (req, res) => {
     const ref = db.ref(`users/${req.session.ussID}`)
     ref.once('value', snapshots => {
         let datas = snapshots.val()
-        res.send(datas)
+        let email = crypto.decrypt(datas.auth.email, (err, data) => data)
+        let prc = crypto.decrypt(datas.basicInfo.prc, (err, data) => data)
+        res.send({datas: datas, email: email, prc: prc})
     })   
 })
 
@@ -104,8 +108,127 @@ route.post('/view/notif', (req, res) => {
     })
 })
 
+
+// Doctor Add Schedule
+route.post('/add/schedules', (req, res) => {
+    let err = {}
+
+    let bodyNotNull = []
+    for(let key in req.body){
+        if(req.body[key] !== '')
+            bodyNotNull.push(true)
+    }
+
+    err.fromErr0 = !req.body.from0 && req.body.to0 ? 'Invalid time' : ''
+    err.toErr0 = req.body.from0 && !req.body.to0 ? 'Invalid time' : ''
+
+    err.fromErr1 = !req.body.from1 && req.body.to1 ? 'Invalid time' : ''
+    err.toErr1 = req.body.from1 && !req.body.to1 ? 'Invalid time' : ''
+
+    err.fromErr2 = !req.body.from2 && req.body.to2 ? 'Invalid time' : ''
+    err.toErr2 = req.body.from2 && !req.body.to2 ? 'Invalid time' : ''
+
+    err.fromErr3 = !req.body.from3 && req.body.to3 ? 'Invalid time' : ''
+    err.toErr3 = req.body.from3 && !req.body.to3 ? 'Invalid time' : ''
+
+    err.fromErr4 = !req.body.from4 && req.body.to4 ? 'Invalid time' : ''
+    err.toErr4 = req.body.from4 && !req.body.to4 ? 'Invalid time' : ''
+
+    err.fromErr5 = !req.body.from5 && req.body.to5 ? 'Invalid time' : ''
+    err.toErr5 = req.body.from5 && !req.body.to5 ? 'Invalid time' : ''
+
+    err.fromErr6 = !req.body.from6 && req.body.to6 ? 'Invalid time' : ''
+    err.toErr6 = req.body.from6 && !req.body.to6 ? 'Invalid time' : ''
+
+    let containsErr = []
+    for(let key in err) {
+        if(err[key] === 'Invalid time') {
+            containsErr.push(true)
+            err.nullErr = 'Invalid input.'
+        }
+    }
+
+    if(bodyNotNull.indexOf(true) !== -1 && containsErr.indexOf(true) === -1) {
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref(`users/${req.session.ussID}/clinics/${req.body.cID}/`)
+        ref.update({
+            schedules: {
+                from: {
+                    0: req.body.from0,
+                    1: req.body.from1,
+                    2: req.body.from2,
+                    3: req.body.from3,
+                    4: req.body.from4,
+                    5: req.body.from5,
+                    6: req.body.from6,
+                },
+                to: {
+                    0: req.body.to0,
+                    1: req.body.to1,
+                    2: req.body.to2,
+                    3: req.body.to3,
+                    4: req.body.to4,
+                    5: req.body.to5,
+                    6: req.body.to6,
+                }
+            }
+        }, (err) => {
+                if(!err) res.send({ time: req.body, err })
+        })
+    } else {
+        res.send({ time: req.body, err })
+    }
+})
+
+
+// -------------- Search ---------------------
+route.post('/search/', (req, res) => {
+    if(req.session.ussID === undefined || req.session.ussID === '') {
+        res.redirect('/')
+    } else {
+        let id = req.body.id.toLowerCase()
+        let results = {}
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref('users')
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            for (let key in datas) {
+                for (k in datas[key].basicInfo) {
+                    if (datas[key].basicInfo[k].toLowerCase().indexOf(id) !== -1)
+                        results[key] = datas[key]
+                }
+            }
+            res.send(results)
+        })
+    }
+})
+
+
+// --------------- View Searched Profile ----------------
+route.get('/s/:id', (req, res) => {
+    if(req.session.ussID === '' || req.session.ussID === undefined) {
+        res.redirect('/')
+    } else {
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref('users')
+        ref.orderByKey().equalTo(req.params.id).once('value', snapshots => {
+            let datas = snapshots.val()
+            let email = crypto.decrypt(datas[req.params.id].auth.email, (err, data) => data)
+            if (datas === null) {
+                res.sendStatus(404)
+            } else {
+                res.render('profile/search', {docs: datas, email: email, key: req.params.id})
+            }
+        })
+    }
+})
+
+
 // ------------- Signout --------------
-route.get('/s/o', (req, res) => {
+route.get('/sign/o', (req, res) => {
     if(req.session.ussID) {
         req.session.destroy(err => {
             if(!err) res.redirect('/')

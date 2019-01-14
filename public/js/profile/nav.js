@@ -1,10 +1,13 @@
 const Notif = new Notification()    
 
+// For Nav Icons
+let icons = document.querySelectorAll('.nav-icons')
+let dropdownDiv = document.querySelector('.dropdown-div')
 
 // ---------------- For Searching ------------------
-// let searchInput = document.querySelector('.search-input')
-// let searchBtn = document.querySelector('.search-btn')
-// let searchIcon = document.querySelector('.search-icon')
+let searchInput = document.querySelector('.search-input')
+let searchBtn = document.querySelector('.search-btn')
+let searchIcon = document.querySelector('.search-icon')
 
 // let searchOutputDiv = document.querySelector('.search-output-div')
 // searchInput.addEventListener('keyup', (e) => {
@@ -16,38 +19,114 @@ const Notif = new Notification()
 //     }
 // })
 
-// searchInput.addEventListener('focus', () => {
-//     searchInput.style.border = "1px solid #1da1f2"
-//     searchInput.style.borderRight = "none"
-//     searchIcon.style.color = "#1da1f2"
 
-//     searchBtn.style.border = "1px solid #1da1f2"
-//     searchBtn.style.borderLeft = "none" 
-// })
+//  Searching
+searchInput.addEventListener('focus', () => {
+    searchInput.style.border = "1px solid #1da1f2"
+    searchInput.style.borderRight = "none"
+    searchIcon.style.color = "#1da1f2"
 
-// searchInput.addEventListener('focusout', (e) => {
-//     searchInput.style.border = "1px solid lightgray"
-//     searchInput.style.borderRight = "none"
-//     searchIcon.style.color = "black"
+    searchBtn.style.border = "1px solid #1da1f2"
+    searchBtn.style.borderLeft = "none" 
+})
 
-//     searchBtn.style.border = "1px solid lightgray"
-//     searchBtn.style.borderLeft = "none"
-// })
+searchInput.addEventListener('focusout', (e) => {
+    searchInput.style.border = "1px solid lightgray"
+    searchInput.style.borderRight = "none"
+    searchIcon.style.color = "black"
+
+    searchBtn.style.border = "1px solid lightgray"
+    searchBtn.style.borderLeft = "none"
+})
 
 
-let icons = document.querySelectorAll('.nav-icons')
-let dropdownDiv = document.querySelector('.dropdown-div')
+// Submit Search Input
+document.querySelector('.search-form').addEventListener('submit', e => {
+    e.preventDefault()
+    searchInput.blur()
+
+    if(window.innerWidth <= 768) {
+        document.querySelector('.profile-div').style.display = "none"
+    }
+
+    searchInput.value = searchInput.value.trim()
+    if(searchInput.value !== '') {
+        icons.forEach(value => {
+            value.classList.remove('active-icon')
+        })
+
+        let centerDiv = document.querySelector('.center-div')
+        centerDiv.innerHTML = `
+            <div class="search-res-div">
+                <div class="false-result">
+                    <img src="/static/images/loader.svg" class="loader">
+                </div>
+            </div>
+        `
+        
+        const Ajax = new AjaxAPI()
+        Ajax.post('/u/search', `id=${searchInput.value}`)
+
+        Ajax.xhr.onreadystatechange = () => {
+            try {
+                let results = ''
+                if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                    let datas = JSON.parse(Ajax.xhr.responseText)
+                    let str = JSON.stringify(datas)
+                    if(str === '{}') {
+                        centerDiv.innerHTML = `
+                            <div class="search-res-div">
+                                <div class="false-result">No result found</div>
+                            </div>
+                        `
+                    } else {
+                        for(let data in datas) {
+                            let name = `${datas[data].basicInfo.fname} ${datas[data].basicInfo.mname} ${datas[data].basicInfo.lname}`
+                            let abb = datas[data].uType === 'doctor' ? 'Dr.' : ''
+                            results += `
+                            <div class="search-res-div" data-uid="${data}">
+                                <div class=" true-results">
+                                    <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].basicInfo.profile}" class="search-img">
+                                    <span class="search-name">${abb} ${name}</span>
+                                    <span class="search-loc">${datas[data].basicInfo.address}</span>
+                                </div>
+                            </div>
+                        `
+                        }
+
+                        centerDiv.innerHTML = results
+                    }
+                }
+            } catch(err) {
+                console.log(err)
+            }
+        }
+    }
+
+})
+
+
 
 document.body.addEventListener('click', (e) => {
     let _classList = e.target.classList
-    
-    //  --------------- For Searching ---------------------
-    // if(
-    //     !_classList.contains('search-outputs') &&
-    //     !_classList.contains('search-output-name') &&
-    //     !_classList.contains('search-output-img')
-    //     )
-    //         searchOutputDiv.style.display = "none"
+
+    if(_classList.contains('search-loc') ||
+        _classList.contains('search-img') ||
+        _classList.contains('search-name') ||
+        _classList.contains('true-results') ||
+        _classList.contains('search-res-div')) {
+            let uid = ''
+            if(_classList.contains('search-loc') ||
+                _classList.contains('search-img') ||
+                _classList.contains('search-name')) {
+                    uid = e.target.parentElement.parentElement.getAttribute('data-uid')
+                } else if(_classList.contains('true-results')) {
+                    uid = e.target.parentElement.getAttribute('data-uid')
+                } else if(_classList.contains('search-res-div')) {
+                    uid = e.target.parentElement.getAttribute('data-uid')
+                }
+                window.location = `/u/s/${uid}`
+        }
 
     if(_classList.contains('nav-icons') && !_classList.contains('arrow-icon')) {
         icons.forEach(value => {
@@ -60,9 +139,17 @@ document.body.addEventListener('click', (e) => {
         if(_classList.contains('sched-icon')) {
             alert('sched')
         } else if(_classList.contains('notif-icon')) {
+            if(window.innerWidth <= 768) {
+                document.querySelector('.profile-div').style.display = "none"
+            }
+            document.querySelector('.center-div').innerHTML = `
+            <div class="inner-profile-div">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>
+        `
             const RenderDOM = new Render()
             RenderDOM.render(Notif.main(), centerDiv)
-
+        
             const Ajax = new AjaxAPI()
             Ajax.post('/u/view/notifs', '')
             Ajax.xhr.onreadystatechange = () => {
@@ -94,16 +181,20 @@ document.body.addEventListener('click', (e) => {
     }
 
     if(_classList.contains('sign-out')) {
-        window.location = '/u/s/o'
+        window.location = '/u/sign/o'
     }
-
-    if(_classList.contains('close-icon'))
-        document.querySelector('.outer-modal-bg').style.display = "none"
     
     if(_classList.contains('profile-link')) {
         const profileDiv = document.querySelector('.profile-div')
         profileDiv.style.display = "block"
         profileDiv.innerHTML = `
+            <div class="inner-profile-div">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>
+        `
+
+        const centerDiv = document.querySelector('.center-div')
+        centerDiv.innerHTML = `
             <div class="inner-profile-div">
                 <img src="/static/images/loader.svg" class="loader">
             </div>
@@ -116,6 +207,7 @@ document.body.addEventListener('click', (e) => {
                     let datas = JSON.parse(Ajax.xhr.responseText)
                     const Prof = new Profile(datas, profileDiv)
                     Prof.profile()
+                    Prof.profDetails()
                 }
             } catch(err) {
                 console.log(err)

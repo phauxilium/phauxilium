@@ -1,39 +1,37 @@
 class Notification {
 
     notifModalView(datas) {
-        if(!datas) {
-            nContent.innerHTML = `
-            <img src="/static/images/loader.svg" alt="Loading..." class="loader">
-            `
-        } else {
-            let dateObj = new Date(datas.date)
-            let dateStr = dateObj.toString().split(' ')
-            let time = dateStr[4].split(':')
-            let hours = time[0] > 12 ? time[0] - 12 : time
-            let meridiem = time[0] > 12 ? 'pm' : 'am'
-            let finTime = `${hours}:${time[1]} ${meridiem}`
-            let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
-            let img = datas.from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.img}`
-            let innerContModal = document.querySelector('.inner-cont-modal')
-            innerContModal.innerHTML = `
-                    <div class="inner-modal">
-                        <span class="modal-notif-span span-close">
-                            <i class="material-icons close-icon">close</i>
-                        </span>
-                        <span class="modal-notif-span modal-img-notif">
-                            <img src="${img}" alt="Could'nt load" class="modal-img-src">
-                        </span>
-                        <span class="modal-notif-span modal-title-notif">${datas.from}</span>
-                        <span class="modal-notif-span modal-msg-notif">${datas.message}</span>
-                        <span class="modal-notif-span modal-date-notif">${finalDate}</span>
-                    </div>
-            `
-        }
+        let dateObj = new Date(datas.date)
+        let dateStr = dateObj.toString().split(' ')
+        let time = dateStr[4].split(':')
+        let hours = time[0] > 12 ? time[0] - 12 : time[0]
+        let meridiem = time[0] > 12 ? 'pm' : 'am'
+        let finTime = `${hours}:${time[1]} ${meridiem}`
+        let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
+        let img = datas.from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.img}`
+        let innerContModal = document.querySelector('.inner-cont-modal')
+        innerContModal.innerHTML = `
+                <div class="inner-modal">
+                    <span class="modal-notif-span span-close">
+                        <i class="material-icons close-icon">close</i>
+                    </span>
+                    <span class="modal-notif-span modal-img-notif">
+                        <img src="${img}" alt="Could'nt load" class="modal-img-src">
+                    </span>
+                    <span class="modal-notif-span modal-title-notif">${datas.from}</span>
+                    <span class="modal-notif-span modal-msg-notif">${datas.message}</span>
+                    <span class="modal-notif-span modal-date-notif">${finalDate}</span>
+                </div>
+        `
     }
 
     viewNotifs(param) {
         let notifID = param.getAttribute('data-notif-id')
         let notifType = param.getAttribute('data-notif-type')
+        document.querySelector('.inner-cont-modal').innerHTML = `
+        <img src="/static/images/loader.svg" alt="Loading..." class="loader">
+        `
+
         if (notifType === 'message') {
             document.querySelector('.outer-modal-bg').style.display = "block"
             const Ajax = new AjaxAPI()
@@ -53,10 +51,11 @@ class Notification {
 
     appendData(datas) {
         let nContent = document.querySelector('.n-content')
-        if(!datas) {
+        if(datas.length === 1) {
             nContent.innerHTML = `
-            <img src="/static/images/loader.svg" alt="Loading..." class="loader">
-            `
+                <div class="notif-content col-12">
+                    <span class="notif-span notif-none">Nothing to show</span>
+                </div>`
         } else {
             for (let data = datas.length - 1; data >= 0; data--) {
                 if (datas[data] !== 0) {
@@ -64,7 +63,7 @@ class Notification {
                     let dateObj = new Date(datas[data].date)
                     let dateStr = dateObj.toString().split(' ')
                     let time = dateStr[4].split(':')
-                    let hours = time[0] > 12 ? time[0] - 12 : time
+                    let hours = time[0] > 12 ? time[0] - 12 : time[0]
                     let meridiem = time[0] > 12 ? 'pm' : 'am'
                     let finTime = `${hours}:${time[1]} ${meridiem}`
                     let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
@@ -100,7 +99,7 @@ class Notification {
         return `
         <div class="notif-div col-12">
             <span class="notif-title col-12">Notifications</span>
-            <div class="n-content">
+            <div class="n-content"></div>
         </div>`
     }
 }

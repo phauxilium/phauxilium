@@ -54,10 +54,6 @@
     display: none;
 }
 
-/* .details {
-    display: none;
-} */
-
 .details-div {
     margin-top: 25px;
     font-family: Arial;
@@ -72,6 +68,128 @@
 }
 
 .specialty {
+    font-size: 15px;
+}
+
+/* Profile Title */
+.profile-title, .clinic-title {
+    float: left;
+    width: 100%;
+    padding: 15px;
+    text-align: left;
+    background-color: white;
+    border: 1px solid lightgray;
+    border-bottom: 0;
+    color: #1da1f2;
+    font-weight: bold;
+}
+
+/* Basic Info Content */
+.basic-info-content, .clinic-info-content {
+    border: 1px solid lightgray;
+    float: left;
+    width: 100%;
+    background-color: white;
+    padding: 10px;
+    box-shadow: 0 1px 2px 0 lightgray;
+}
+
+.basic-contents, .clinic-contents, .clinic-contact {
+    text-align: left;
+    padding: 5px;
+}
+
+.basic-label, .clinic-label {
+    color: gray;
+    padding-right: 10px;
+}
+
+.input-data {
+    padding-right: 10px;
+}
+
+.edit-info {
+    font-size: 17px;
+    color: #1da1f2;
+    cursor: pointer;
+    float: left;
+    padding-right: 3px;
+}
+
+.saving-edited {
+    width: 100%;
+    float: left;
+    text-align: center;
+}
+
+.edited-save {
+    margin-top: 5px;
+    border: none;
+    border-radius: 150px;
+    width: 80px;
+    height: 30px;
+    color: white;
+    background-color: #1da1f2;
+    cursor: pointer;
+}
+
+.edited-cancel {
+    cursor: pointer;
+    color: #dd5347;
+    border: none;
+    background-color: white;
+}
+
+
+/* Clinic Title */
+.clinic-title {
+    margin-top: 10px;
+}
+
+.edit-info, .add-clinic, .add-sched, .edit-clinic-info {
+    float: right;
+    font-weight: lighter;
+}
+
+.edit-clinic-info {
+    margin-left: 10px;
+}
+
+.edit-info-icon, .add-clinic-icon, .add-sched-icon, .edit-clinic-icon {
+    font-size: 18px;
+    float: left;
+    cursor: pointer;
+}
+
+.edit-info-text, .add-clinic-text, .add-sched-text, .edit-clinic-text {
+    font-size: 15px;
+    float: left;
+    cursor: pointer;
+}
+
+/* Schedules */
+.schedule-title {
+    color:#1da1f2;
+    font-weight: bold;
+    text-align: left;
+    padding-top: 15px;
+}
+.add-contact {
+    text-align: center !important;
+    color: #1da1f2;
+    cursor: pointer;
+}
+
+.add-contact-icon {
+    cursor: pointer;
+    float: left;
+    font-size: 18px;
+}
+
+.add-contact-text {
+    cursor: pointer;
+    margin-top: 5px;
+    float: right;
     font-size: 15px;
 }
 
@@ -170,7 +288,7 @@
 .save-cancel-div {
     padding-top: 0 !important;
 }
-.save-cancel-btn {
+.save-cancel-btn, .save-sched-btn {
     border: none;
     width: 80px;
     height: 30px;
@@ -180,12 +298,14 @@
     margin-bottom: 5px;
 }
 
-.save {
+.save, .save-sched-btn {
     background-color: #1da1f2;
 }
 
 .cancel {
-    background-color: #dd5347;
+    color: black;
+    background-color: white;
+    color: #dd5347;;
 }
 
 .helper {
@@ -201,6 +321,7 @@
 .center-div {
     text-align: center;
     font-family: Arial, Helvetica, sans-serif;
+    margin-bottom: 20px;
 }
 
 .inner-timeline-div, .center-inner-div {
@@ -282,6 +403,25 @@
 }
 
 
+/* ------------- Timeline Div ----------------- */
+
+.timeline-nav {
+    padding: 15px;
+    background-color: white;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+}
+
+.timeline-btns {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.active-timeline {
+    color: #1da1f2 !important;
+    border-bottom: 1px solid #1da1f2;
+}
+
 
 /* -------------- Notification Div -------------- */
 
@@ -303,6 +443,10 @@
 
 .new {
     background-color: #edf2fa;
+}
+
+.new-msg {
+    font-weight: bold;
 }
 
 .notif-title {
@@ -347,7 +491,6 @@
 .notif-message {
     width: 70%;
     font-size: 15px;
-    font-weight: bold;
 }
 
 .notif-date {
@@ -355,8 +498,77 @@
     font-size: 13px;
 }
 
+.notif-none {
+    text-align: center;
+}
+
 .old-msg, .old-date {
     color: gray;
+}
+
+/* Search */
+
+
+.true-results, .false-result {
+    border: 1px solid lightgray;
+    padding: 15px;
+    background-color: white;
+    float: left;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.false-result {
+    text-align: center;
+    border-radius: 0;
+}
+
+.true-results:hover {
+    box-shadow: 0 2px 2px lightgray;
+}
+
+.search-img {
+    float: left;
+    width: 60px;
+    border-radius: 150px;
+    border: 2px solid white;
+    box-shadow: 0 2px 2px 0 lightgray;
+}
+
+.search-name {
+    float: left;
+    font-weight: bold;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+
+.search-loc {
+    float: left;
+    font-size: 13px;
+    width: 80%;
+    padding-left: 10px;
+    color: gray;
+}
+
+/* Set Appointment */
+.connect-div {
+    padding-top: 15px;
+    cursor: pointer;
+}
+
+.icon-cont {
+    padding: 8px;
+    border-radius: 150px;
+    background-color: whitesmoke;
+}
+
+.appointment-text {
+    font-size: 14px;
+    padding-top: 10px;
 }
 
 /* -------------- Chat Div ----------- */
@@ -528,8 +740,9 @@
 }
 
 .outer-modal {
+    overflow: auto;
     padding: 10px;
-    position: fixed;
+    position: absolute;
     width: 100%;
     height: 100%;
     background-color: transparent;
@@ -548,6 +761,7 @@
     width: 100%;
     background-color: white;
     border-radius: 5px;
+    margin-bottom: 7%;
 }
 
 .modal-notif-span {
@@ -591,6 +805,49 @@
 
 .close-icon {
     cursor: pointer;
+}
+
+/* Doctor Set Schedule */
+
+.sched-div {
+    width: 700px;
+}
+.labels {
+    margin-bottom: 10px;
+    float: left;
+    width: 100%;
+    text-align: left;
+    color: gray;
+    height: 15px;
+    font-size: 13px;
+}
+
+.sched-title {
+    color: #1da1f2;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+
+.sched-cont {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+
+.inner-sched-cont {
+    height: 80px;
+}
+
+.days-cont {
+    padding-top: 20px;
+}
+
+.sched-btn-div {
+    margin-top: 10px;
+}
+
+.inputs {
+    width: 100%;
 }
 
 /*  ------------ Appoinment ----------- */
@@ -637,6 +894,8 @@
     border: 1px solid lightgray;
     background-color: transparent;
 }
+
+
 
 .setSched-btn {
     border: none;
@@ -695,6 +954,10 @@
     .send-chat-btn {
         font-size: 12px;
     }
+
+    .basic-contents, .clinic-contents {
+        width: 100%;
+    }
 }
 
 
@@ -732,12 +995,32 @@
         display: none;
     }
 
-    .center-div, .profile-div {
+    .basic-contents, .clinic-contents {
+        width: 50%;
+    }
+
+    .center-div, .profile-div{
+        width: 100%;
+    }
+
+    /* Search Result Div */
+    .search-res-div {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .sched-div {
         width: 100%;
     }
 }
 
 @media only screen and (max-width: 550px) {
+
+    .basic-contents, .clinic-contents {
+        width: 100%;
+    }
 
     /* Notif modal */
 
@@ -754,6 +1037,37 @@
         border-radius: 0;
     }
 
+    /* Schedule modal */
+
+    .inner-sched-text {
+        font-size: 14px;   
+    }
+
+    .sched-cont {
+        padding: 3px;
+    }
+
+    .set-sched-input{
+        font-size: 13px;
+    }
+
+    .days-cont {
+        font-size: 13px;
+    }
+
+    /* Search Result */
+
+    .true-results {
+        padding: 10px;
+    }
+
+    .search-img {
+        width: 50px;
+    }
+
+    .search-name {
+        font-size: 14px;
+    }
 
     .date-now {
         font-size: 15px;

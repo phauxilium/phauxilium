@@ -1,0 +1,317 @@
+<%- include('../index/header') %>
+
+<link rel="stylesheet" href="/static/css/profile/timeline.css">
+<%- include('styles') %>
+
+</head>
+
+<div class="main col-12">
+    <!-- ------------------ Profile ------------------  -->
+        <div class="col-3 inner-div profile-div">
+            <div class="inner-profile-div">
+                <div class="image-div">
+                    <center>
+                        <div class="img-content-div">
+                            <% for(let key in docs) { %>
+                                <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/<%= docs[key].uType %>/<%= docs[key].basicInfo.profile %>"
+                                class="image">
+                            <% } %>
+                        </div>
+                    </center>
+                </div>
+
+                <form class="upload-form" method="POST" enctype="multipart/form-data">
+                    <input type="file" id="upload-btn">
+                </form>
+
+                <div class="details-div">
+                    <% for(let key in docs) { %>
+                        <div class="name">
+                            <% if(docs[key].uType === 'doctor') { %>
+                            Dr.
+                            <% } %>
+                            <%= docs[key].basicInfo.fname %>
+                            <%= docs[key].basicInfo.mname %>
+                            <%= docs[key].basicInfo.lname %>
+                        </div>
+                    <% } %>
+                    
+                    <% for(let key in docs) { %>
+                        <% if(docs[key].uType === 'doctor') { %>
+                            <div class="specialty">  
+                                <div class="specialty-content">
+                                    <% let objLen = Object.keys(docs[key].specialty).length %>
+                                    <% let count = 0 %>
+                                    <%   for(data in docs[key].specialty) { %>
+                                                    <% count++ %> 
+                                        <% if(docs[key].specialty[data] !== 0) { %>
+                                        <%= docs[key].specialty[data].specialization %>
+                                        <% if(objLen !== count) { %> / <% } %>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
+                            <div class="connect-div">
+                                <div class="col-6">
+                                    <i class="material-icons col-12">
+                                        <span class="icon-cont">
+                                            today
+                                        </span>
+                                    </i>
+                                    <span class="appointment-text col-12">
+                                        Set Appointment
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <i class="material-icons col-12">
+                                        <span class="icon-cont">
+                                            email
+                                        </span>
+                                    </i>
+                                    <span class="appointment-text col-12">
+                                        Message
+                                    </span>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+
+    <!-- ---------------- Center Div ------------------ -->
+        <div class="col-6 inner-div center-div">
+            <% for(let key in docs) { %>
+                <% let dob = new Date(docs[key].basicInfo.dob).toString().split(' ') %>
+
+                <div class="profile-title">
+                    Basic Information
+                </div>
+                
+                <div class="basic-info-content">
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Firstname:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.fname %>
+                        </span>
+                        <span class="saving-edited"></span>
+                    </div>
+                
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Middle name:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.mname %>
+                        </span>
+                        <span class="saving-edited"></span>
+                    </div>
+                
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Lastname:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.lname %>
+                        </span>
+                        <span class="saving-edited"></span>
+                    </div>
+                
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Gender:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.gender %>
+                        </span>
+                        <span class="saving-edited"></span>
+                    </div>
+                
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Date of Birth:
+                        </span>
+                        <span class="input-data">
+                            <%= dob[1] %> <%= dob[2] %>, <%= dob[3] %>
+                        </span>
+                    </div>
+                
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Address:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.address %>
+                        </span>
+                    </div>
+
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Contact number:
+                        </span>
+                        <span class="input-data">
+                            <%= docs[key].basicInfo.contact %>
+                        </span>
+                    </div>
+                    
+                    <div class="col-6 basic-contents">
+                        <span class="basic-label">
+                            Email:
+                        </span>
+                        <span class="input-data">
+                            <%= email %>
+                        </span>
+                    </div>
+                </div>
+
+                    <% if(docs[key].uType === 'doctor') { %>
+                    <div class="outer-clinic-content">
+                        <div class="clinic-title">
+                            Clinic Information
+                        </div>
+                    
+                        <div class="clinic-info-content">
+                            <div class="col-6 clinic-contents">
+                                <span class="clinic-label">
+                                    Clinic's name:
+                                </span>
+                                <span class="input-data">
+                                    <%= docs[key].clinics[0].name %>
+                                </span>
+                            </div>
+                    
+                            <div class="col-6 clinic-contents">
+                                <span class="clinic-label">
+                                    Location:
+                                </span>
+                                <span class="input-data">
+                                    <%= docs[key].clinics[0].address %>
+                                </span>
+                            </div>
+                    
+                            <div class="col-9 clinic-contact">
+                                <span class="clinic-label">
+                                    Clinic's contact number:
+                                </span>
+                                <span class="input-data">
+                                    <%= docs[key].clinics[0].contact[0] %>
+                                </span>
+                            </div>
+                            <div class="col-12 sched-title">
+                                <div class="schedule-title">
+                                    Clinic's Schedule
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="col-4 inner-sched-text">
+                                    <% let weekSched = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
+                                    <% weekSched.forEach(value => { %>
+                                                    <%= value %> <br />
+                                    <% }) %>
+                                </div>
+                                <div class="col-4 inner-sched-text">
+                                    <% let from = docs[key].clinics[0].schedules.from %>
+                                        <% for(let key in from) { %>
+                                            <% if(from[key] === '') { %>
+                                                    --:-- -- <br />
+                                            <% } else { %>
+                                                <% let timeFrom = '' %>
+                                                <% timeFrom = from[key].split(':') %>
+                                                <% if(timeFrom[0] > 12) { %>
+                                                    <%= timeFrom[0] - 12 %>:
+                                                    <%= timeFrom[1] %> PM <br />
+                                                <% } else { %>
+                                                    <%= timeFrom[0]%>:
+                                                    <%= timeFrom[1]%> AM <br />
+                                                <% } %>
+                                            <% } %>
+                                        <% } %>
+                                </div>
+                                <div class="col-4 inner-sched-text">
+                                    <% let to = docs[key].clinics[0].schedules.to %>
+                                        <% for(let key in to) { %>
+                                            <% if(to[key] === '') { %>
+                                                        --:-- -- <br />
+                                            <% } else { %>
+                                                <% let timeFrom = '' %>
+                                                <% timeFrom = to[key].split(':') %>
+                                                <% if(timeFrom[0] > 12) { %>
+                                                    <%= timeFrom[0] - 12 %>:
+                                                    <%= timeFrom[1] %> PM <br />
+                                                <% } else { %>
+                                                    <%= timeFrom[0]%>:
+                                                    <%= timeFrom[1]%> AM <br />
+                                                <% } %>
+                                        <% } %>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+
+
+    <!-- -------------- Advertisements ------------------ -->
+
+    <div class="col-3 inner-div ads-div">
+        <p class="ads-title">Ads</p>
+
+        <div class="inner-ads">
+            <center>
+                <div class="ads-img-div">
+                    <img src="/static/images/ads/wh.png" class="ads-img">
+                </div>
+
+                <a href="http://startupproject.ph" class="ads-links">Start Up Project PH</a>
+
+                <p class="ads-content">
+                    We create a divers and collaborative space that is responsive to the
+                    productivity needs and stylistic preferences of today’s creative work force.
+                </p>
+
+            </center>
+        </div>
+
+        <div class="inner-ads">
+            <center>
+                <div class="ads-img-div">
+                    <img src="/static/images/ads/occa.png" class="ads-img">
+                </div>
+
+                <a href="http://startupproject.ph" class="ads-links">Occashop</a>
+
+                <p class="ads-content">
+                    We create a divers and collaborative space that is responsive to the productivity
+                    needs and stylistic preferences of today’s creative work force.
+                </p>
+
+            </center>
+        </div>
+    </div>
+</div>
+
+<%- include('nav') %>
+
+<!-- ----------------- Modals --------------- -->
+
+<div class="outer-modal-bg">
+    <div class="outer-modal">
+        <center>
+            <div class="inner-cont-modal">
+            </div>
+        </center>
+    </div>
+</div>
+
+<input type="hidden" class="channel" value="<%= key %>">
+
+<%- include('scripts') %>
+
+</body>
+
+</html>

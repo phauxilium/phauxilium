@@ -282,19 +282,38 @@ router.post('/c/s/p', (req, res) => {
                         0: {
                             name: auth.cName,
                             address: auth.cAddress,
-                            contact: auth.cContact,
+                            contact: [auth.cContact],
                             assisstantName: '',
+                            schedules: {
+                                from: {
+                                    0: '',
+                                    1: '',
+                                    2: '',
+                                    3: '',
+                                    4: '',
+                                    5: '',
+                                    6: ''
+                                }, 
+                                to: {
+                                    0: '',
+                                    1: '',
+                                    2: '',
+                                    3: '',
+                                    4: '',
+                                    5: '',
+                                    6: ''
+                                }
+                            }
                         }
                     },
                     appointments: [0],
                     patientFiles: [0],
                     specialty: [0],
-                    schedules: [0], // Includes date, time and location
                     messages: [0],
                     notifs: [0,
                         {
                             from: 'Auxilium Team',
-                            message: 'We are still verifying your account. Some features of Auxilium will not be accessible until we fuck ya!',
+                            message: 'We are still verifying your account. Some features of Auxilium is restricted until we fuck ya!',
                             date: new Date(),
                             type: 'message',
                             status: 'new'
