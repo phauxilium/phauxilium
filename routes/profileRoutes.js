@@ -183,6 +183,7 @@ route.post('/add/schedules', (req, res) => {
 
 
 // -------------- Search ---------------------
+// Search Results
 route.post('/search/', (req, res) => {
     if(req.session.ussID === undefined || req.session.ussID === '') {
         res.redirect('/')
@@ -209,21 +210,17 @@ route.post('/search/', (req, res) => {
 
 
 // --------------- View Searched Profile ----------------
-route.get('/s/:id', (req, res) => {
+route.post('/i/search', (req, res) => {
     if(req.session.ussID === '' || req.session.ussID === undefined) {
         res.redirect('/')
     } else {
         const fire = new FireAdmin()
         const db = fire.firebase.database()
-        const ref = db.ref('users')
-        ref.orderByKey().equalTo(req.params.id).once('value', snapshots => {
-            let datas = snapshots.val()
-            if (datas === null) {
-                res.sendStatus(404)
-            } else {
-                let email = crypto.decrypt(datas[req.params.id].auth.email, (err, data) => data)
-                res.render('profile/search', { docs: datas, email: email, key: req.params.id })
-            }
+        const ref = db.ref(`users/${req.body.id}`)
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()        
+            let email = crypto.decrypt(datas.auth.email, (err, data) => data)
+            res.send({ datas: datas, email: email })
         })
     }
 })

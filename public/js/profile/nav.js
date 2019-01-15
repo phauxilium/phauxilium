@@ -114,12 +114,14 @@ document.querySelector('.search-form').addEventListener('submit', e => {
 document.body.addEventListener('click', (e) => {
     let _classList = e.target.classList
 
+    //  Search Results
     if(_classList.contains('search-loc') ||
         _classList.contains('search-img') ||
         _classList.contains('search-name') ||
         _classList.contains('true-results') ||
         _classList.contains('search-res-div')) {
             let uid = ''
+
             if(_classList.contains('search-loc') ||
                 _classList.contains('search-img') ||
                 _classList.contains('search-name')) {
@@ -129,7 +131,38 @@ document.body.addEventListener('click', (e) => {
                 } else if(_classList.contains('search-res-div')) {
                     uid = e.target.parentElement.getAttribute('data-uid')
                 }
-                window.location = `/u/s/${uid}`
+
+                const profileDiv = document.querySelector('.profile-div')
+                profileDiv.classList.add('search-profile-div')
+                profileDiv.classList.remove('view-my-profile')
+                profileDiv.style.display = "block"
+                profileDiv.innerHTML = `
+                    <div class="inner-profile-div">
+                        <img src="/static/images/loader.svg" class="loader">
+                    </div>
+                `
+
+                const centerDiv = document.querySelector('.center-div')
+                
+                centerDiv.innerHTML = `
+                    <div class="inner-profile-div">
+                        <img src="/static/images/loader.svg" class="loader">
+                    </div>`
+                const Ajax = new AjaxAPI()
+                Ajax.post('/u/i/search/', `id=${uid}`)
+                Ajax.xhr.onreadystatechange = () => {
+                    try {
+                        if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {                            
+                            let datas = JSON.parse(Ajax.xhr.responseText)
+                            const Prof = new Profile(datas, profileDiv, true)
+                            Prof.profile()
+                            Prof.profDetails()
+                            document.querySelector('.key').value = uid
+                        }
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
         }
 
     if(_classList.contains('nav-icons') && !_classList.contains('arrow-icon')) {
@@ -198,6 +231,7 @@ document.body.addEventListener('click', (e) => {
         try {
             const profileDiv = document.querySelector('.profile-div')
             profileDiv.classList.remove('search-profile-div')
+            profileDiv.classList.add('view-my-profile')
             profileDiv.style.display = "block"
             profileDiv.innerHTML = `
             <div class="inner-profile-div">
@@ -233,21 +267,52 @@ document.body.addEventListener('click', (e) => {
 
     let profileDiv = document.querySelector('.profile-div')
    try {
-       if (window.innerWidth <= 768 && !profileDiv.classList.contains('search-profile-div')) {
-           document.querySelector('.profile-div').style.display = "none"
-       } else {
-           document.querySelector('.profile-div').style.display = "block"
-           document.querySelectorAll('.nav-icons').forEach(value => {
-               value.classList.remove('active-icon')
+       if (window.innerWidth <= 768) {
+           if (!profileDiv.classList.contains('search-profile-div') &&
+               !profileDiv.classList.contains('view-my-profile')) {
+                document.querySelector('.profile-div').style.display = "none"
+            } else {
+               document.querySelector('.profile-div').style.display = "block"
+               document.querySelectorAll('.nav-icons').forEach(value => {
+                   value.classList.remove('active-icon')
+               })
+            }
+
+           window.addEventListener('scroll', () => {
+               if (window.pageYOffset > 50) {
+                   document.querySelector('.inner-left').style.height = "0px"
+                   document.querySelector('.search-div').style.display = "none"
+                   document.querySelector('.outer-nav').style.height = "50px"
+               } else {
+                   document.querySelector('.inner-left').style.height = "50px"
+                   document.querySelector('.search-div').style.display = "block"
+                   document.querySelector('.outer-nav').style.height = "100px"
+               }
            })
        }
 
        window.addEventListener('resize', () => {
-           if (window.innerWidth <= 768 && !profileDiv.classList.contains('search-profile-div')) {
-               document.querySelector('.profile-div').style.display = "none"
-           } else {
-               document.querySelector('.profile-div').style.display = "block"
-           }
+           if (window.innerWidth <= 768) {
+               if (!profileDiv.classList.contains('search-profile-div') &&
+                   !profileDiv.classList.contains('view-my-profile')
+               ) {
+                   document.querySelector('.profile-div').style.display = "none"
+               } else {
+                   document.querySelector('.profile-div').style.display = "block"
+               }
+
+               window.addEventListener('scroll', () => {
+                   if (window.pageYOffset > 50) {
+                       document.querySelector('.inner-left').style.height = "0px"
+                       document.querySelector('.search-div').style.display = "none"
+                       document.querySelector('.outer-nav').style.height = "100%c"
+                   } else {
+                       document.querySelector('.inner-left').style.height = "50px"
+                       document.querySelector('.search-div').style.display = "block"
+                       document.querySelector('.outer-nav').style.height = "100%"
+                   }
+               })
+           } 
        })
    } catch (err) {
        console.log('')

@@ -16,6 +16,7 @@ body {
     box-shadow: 0 2px 2px 0 lightgray;
     position: fixed;
     width: 100%;
+    transition: 0.2s;
 }
 
 .inner-nav-cont {
@@ -24,6 +25,7 @@ body {
 
 .inner-nav {
     height: 50%;
+    transition: 0.2s;
 }
 
 .nav-logo {

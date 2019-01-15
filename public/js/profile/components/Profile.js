@@ -1,7 +1,8 @@
 class Profile {
-    constructor(datas, renderDiv) {
+    constructor(datas, renderDiv, search) {
         this.datas = datas
         this.renderDiv = renderDiv
+        this.search = search
         this.centerDiv = document.querySelector('.center-div'),
         this.week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     }
@@ -73,7 +74,7 @@ class Profile {
                 timeTo += `${to[key] || line}<br/>`
             }
 
-            if (docs.datas.uType === 'doctor') {
+            if(docs.datas.uType === 'doctor' && !this.search) {
                 prc = `
                 <div class="col-6 basic-contents">
                     <span class="basic-label">
@@ -85,6 +86,21 @@ class Profile {
                     <span class="saving-edited"></span>
                 </div>
                 `
+            }
+
+            if (docs.datas.uType === 'doctor') {
+                let searchBtn = ''
+
+                if(!this.search) {
+                    searchBtn = `
+                    <i class="material-icons add-sched-icon" data-cID="0">
+                        edit
+                    </i>
+                    <span class="add-sched-text" data-cID="0">
+                        Edit schedule
+                    </span>
+                    `
+                }
 
                 clinicInfo = `
                 <div class="outer-clinic-content">
@@ -148,12 +164,7 @@ class Profile {
                             <div class="schedule-title">
                                 Clinic's Schedule
                                 <span class="add-sched">
-                                    <i class="material-icons add-sched-icon" data-cID="0">
-                                        edit
-                                    </i>
-                                    <span class="add-sched-text" data-cID="0">
-                                        Edit schedule
-                                    </span>
+                                    ${searchBtn}
                                 </span>
                             </div>
                         </div>
@@ -285,13 +296,10 @@ class Profile {
         let name = `${docs.datas.basicInfo.fname} ${docs.datas.basicInfo.mname} ${docs.datas.basicInfo.lname}`
         let specialty = ''
 
-        if(docs.datas.uType === 'doctor') {
+        if(docs.datas.uType === 'doctor' && !this.search) {
             name = `Dr. ${name}`
 
             specialty = `
-                        <div class="specialty-content">
-                        </div>
-
                         <div class="add-specialty-div">
                             <button class="add-specialty-btn">
                                 <i class="material-icons add-icon">add</i>
@@ -301,17 +309,67 @@ class Profile {
 
         }
         
+        let imgBtn = ''
+
+        if(!this.search) {
+            imgBtn = `
+                <div class="upload-container">
+                        <label for="upload-btn" class="material-icons camera-icon" title="Change profile picture">
+                            camera_alt
+                        </label>
+                    </div>
+                `
+        }
+
+
+        let connect = ''
+        if(this.search && docs.datas.uType === 'doctor') {
+            connect = `
+                        <div class="connect-div">
+                                <div class="col-6">
+                                    <i class="material-icons col-12">
+                                        <span class="icon-cont appointment-icon-cont">
+                                            today
+                                        </span>
+                                    </i>
+                                    <span class="appointment-text col-12">
+                                        Set Appointment
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    <i class="material-icons col-12">
+                                        <span class="icon-cont message-icon-cont">
+                                            email
+                                        </span>
+                                    </i>
+                                    <span class="message-text col-12">
+                                        Message
+                                    </span>
+                                </div>
+                            </div>`
+        } else if(this.search) {
+            connect = `
+                            <div class="connect-div">
+                                <div class="col-12 patient-msg-div">
+                                    <i class="material-icons col-12 message-icon-cont">
+                                        <span class="icon-cont message-icon-cont">
+                                            email
+                                        </span>
+                                    </i>
+                                    <span class="message-text col-12">
+                                        Message
+                                    </span>
+                                </div>
+                            </div>`
+        }
+
+
         this.renderDiv.innerHTML = `
             <div class="inner-profile-div">
                 <div class="image-div">
-                    <center>
+                   <center>
                         <div class="img-content-div">
-                            <div class="upload-container">
-                                <label for="upload-btn" class="material-icons camera-icon" title="Change profile picture">
-                                    camera_alt
-                                </label>
-                            </div>
-
+                            ${imgBtn}
                             <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${docs.datas.uType}/${docs.datas.basicInfo.profile}" class="image">
                         </div>
                     </center>
@@ -326,9 +384,11 @@ class Profile {
                         </div>
 
                         <div class="specialty">
+                            <div class="specialty-content">
+                            </div>
                             ${specialty}
                         </div>
-
+                        ${connect}
                         <div class="add-bio-div">
 
                             <!-- <button class="add-bio-btn">
