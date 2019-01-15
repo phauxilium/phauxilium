@@ -195,9 +195,11 @@ route.post('/search/', (req, res) => {
         ref.once('value', snapshots => {
             let datas = snapshots.val()
             for (let key in datas) {
-                for (k in datas[key].basicInfo) {
-                    if (datas[key].basicInfo[k].toLowerCase().indexOf(id) !== -1)
-                        results[key] = datas[key]
+                if(key !== req.session.ussID) {
+                    for (k in datas[key].basicInfo) {
+                        if (datas[key].basicInfo[k].toLowerCase().indexOf(id) !== -1)
+                            results[key] = datas[key]
+                    }
                 }
             }
             res.send(results)
@@ -216,13 +218,91 @@ route.get('/s/:id', (req, res) => {
         const ref = db.ref('users')
         ref.orderByKey().equalTo(req.params.id).once('value', snapshots => {
             let datas = snapshots.val()
-            let email = crypto.decrypt(datas[req.params.id].auth.email, (err, data) => data)
             if (datas === null) {
                 res.sendStatus(404)
             } else {
-                res.render('profile/search', {docs: datas, email: email, key: req.params.id})
+                let email = crypto.decrypt(datas[req.params.id].auth.email, (err, data) => data)
+                res.render('profile/search', { docs: datas, email: email, key: req.params.id })
             }
         })
+    }
+})
+
+
+// ------------------- View Searched Doctor Schedules -----------------
+route.post('/view/sched', (req, res) => {
+    let key = req.body.key
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${key}/clinics/0/schedules`)
+    ref.once('value', snapshots => {
+        res.send(snapshots.val())
+    })
+})
+
+// ---------------- Set Appointment ------------------
+route.post('/set/appointment', (req, res) => {
+    let dateNow = new Date()
+    let sched = {
+        date: new Date(req.body.date),
+        time: req.body.time,
+        key: req.body.key,
+        err: {}
+    }
+
+    if(sched.date.toString() === 'Invalid Date') sched.err.errDate = 'Date cannot be empty.'
+    else if(sched.date < dateNow) sched.err.errDate = 'Invalid date.'
+    else sched.err.errDate = ''
+    sched.err.errTime = !sched.time ? 'Time cannot be empty' : ''
+    sched.err.errKey = !sched.key ? 'An error occur' : ''
+    
+    if(!sched.err.errDate && !sched.err.errTime && !sched.err.errKey) {
+        let dateStr =sched.date.toString().split(' ')
+        let time = dateStr[4].split(':')
+        let hours = time[0] > 12 ? time[0] - 12 : time[0]
+        let meridiem = time[0] > 12 ? 'pm' : 'am'
+        let finTime = `${hours}:${time[1]} ${meridiem}`
+        let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
+
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref(`users/${sched.key}`)
+
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
+
+            let childRef = ref.child('appointments')
+            childRef.once('value', count => {
+                childRef = ref.child(`appointments/${count.numChildren()}`)
+                childRef.update({
+                    date: sched.date,
+                    time: sched.time,
+                    name: name,
+                    img: datas.basicInfo.profile,
+                    status: 'pending'
+                })
+            })
+
+            childRef = ref.child('notifs')
+            childRef.once('value', count => {
+                childRef = ref.child(`notifs/${count.numChildren()}`)
+                childRef.update({
+                    date: new Date(),
+                    message: `${name} wants to set an appointment with you at ${finalDate}`,
+                    from: name,
+                    key: sched.key,
+                    img: datas.basicInfo.profile,
+                    uType: datas.uType,
+                    type: 'pending',
+                    status: 'new'
+                }, err => {
+                    if (!err) res.send(sched.err)
+                })
+            })
+        })
+    } else {
+        res.send(sched.err)
     }
 })
 

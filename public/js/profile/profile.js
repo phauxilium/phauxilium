@@ -55,8 +55,179 @@ document.body.addEventListener('click', e => {
         const DoctorSched = new DoctorSchedule(cid, innerContModal)
         DoctorSched.main()
     }
+
+
+    if(_classList.contains('appointment-icon-cont') ||
+        _classList.contains('appointment-text')) {
+            let key = document.querySelector('.key').value
+            document.querySelector('.outer-modal-bg').style.display = "block"
+            let innerModal = document.querySelector('.inner-cont-modal')
+            innerModal.innerHTML = `
+            <div class="inner-modal col-12">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>
+            `
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/sched', `key=${key}`)
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        let line = '--:-- --'
+                        let week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+                        let from = {
+                            0: datas.from[0],
+                            1: datas.from[1],
+                            2: datas.from[2],
+                            3: datas.from[3],
+                            4: datas.from[4],
+                            5: datas.from[5],
+                            6: datas.from[6]
+                        }
+
+                        let to = {
+                            0: datas.to[0],
+                            1: datas.to[1],
+                            2: datas.to[2],
+                            3: datas.to[3],
+                            4: datas.to[4],
+                            5: datas.to[5],
+                            6: datas.to[6]
+                        }
+
+
+                        for (let key in from) {
+                            let splitTime = from[key].split(':')
+                            if (splitTime[0] > 12) {
+                                splitTime = `${splitTime[0] - 12}:${splitTime[1]} PM`
+                            } else {
+                                splitTime = `${splitTime[0]}:${splitTime[1]} AM`
+                            }
+
+                            if (splitTime.split(':')[0] !== '')
+                                from[key] = splitTime
+                        }
+
+                        for (let key in to) {
+                            let splitTime = to[key].split(':')
+                            if (splitTime[0] > 12) {
+                                splitTime = `${splitTime[0] - 12}:${splitTime[1]} PM`
+                            } else {
+                                splitTime = `${splitTime[0]}:${splitTime[1]} AM`
+                            }
+
+                            if (splitTime.split(':')[0] !== '')
+                                to[key] = splitTime
+                        }
+
+                        let weekSched = ''
+                        week.forEach(value => {
+                            weekSched += `${value}<br/>`
+                        })
+
+                        let timeFrom = ''
+                        for (let key in from) {
+                            timeFrom += `${from[key] || line}<br/>`
+                        }
+
+                        let timeTo = ''
+                        for (let key in to) {
+                            timeTo += `${to[key] || line}<br/>`
+                        }
+
+                        innerModal.innerHTML = `
+                            <div class="inner-modal col-12">
+                                <span class="modal-notif-span span-close">
+                                    <i class="material-icons close-icon">close</i>
+                                </span>
+                                <div class="col-12">
+                                    <div class="col-4 inner-sched-text">
+                                        ${weekSched}
+                                    </div>
+                                    <div class="col-4 inner-sched-text">
+                                        ${timeFrom}
+                                    </div>
+                                    <div class="col-4 inner-sched-text">
+                                        ${timeTo}
+                                    </div>
+                                </div>
+                                <form class="set-appointment-form">
+                                    <div class="col-4  set-sched-input">
+                                        <label class="labels">Date</label>
+                                        <input type="date" class="inputs" name="schedDateInput">
+                                        <span class="helper set-date-helper"></span>
+                                    </div>
+                                    <div class="col-4 set-sched-input">
+                                        <label class="labels">Time</label>
+                                        <input type="time" class="inputs" name="schedTimeInput">
+                                        <span class="helper set-time-helper"></span>
+                                    </div>
+                                    <div class="col-4 set-sched-input">
+                                        <label class="labels"></label>
+                                        <button class="set-sched-save">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        `
+
+                        document.querySelector('.set-appointment-form').addEventListener('submit', e => {
+                            e.preventDefault()
+
+                            let saveBtn = document.querySelector('.set-sched-save')
+                            saveBtn.textContent = 'Saving...'
+                            let date = e.target.elements.schedDateInput.value
+                            let time = e.target.elements.schedTimeInput.value
+                            let key = document.querySelector('.key').value
+
+                            Ajax.post('/u/set/appointment', `date=${date}&time=${time}&key=${key}`)
+                            Ajax.xhr.onreadystatechange = () => {
+                                try {
+                                    if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                                        let datas = JSON.parse(Ajax.xhr.responseText)
+                                        document.querySelector('.set-date-helper').textContent = datas.errDate
+                                        document.querySelector('.set-time-helper').textContent = datas.errTime
+
+                                        datas.errKey ? alert(datas.errKey) : ''
+
+                                        saveBtn.textContent = 'Save'
+                                        if(!datas.errDate && !datas.errTime && !datas.errDate) {
+                                            saveBtn.textContent = 'Saved'
+                                            setTimeout(() => {
+                                                document.querySelector('.outer-modal-bg').style.display = "none"
+                                            }, 2000)
+                                        }
+                                    }
+                                } catch(err) {
+                                    console.log(err)
+                                }
+                            }
+                        })
+                    }
+                } catch(err) {
+                    console.log(err)
+                }
+            }
+        } else if(_classList.contains('message-icon-cont') ||
+        _classList.contains('message-text')) {
+            alert('message')
+        }
+
+        // Appointments
+        if(_classList.contains('timeline-btns')) {
+            let timelineBtns = document.querySelectorAll('.timeline-btns')
+            timelineBtns.forEach(value => {
+                value.classList.remove('active-timeline')
+            })
+
+            e.target.classList.add('active-timeline')
+        }
+
 })
 
 // Signed In listener
 // Don't Remove!!!
-socket.emit('signed in', document.querySelector('.channel').value)
+try {
+    socket.emit('signed in', document.querySelector('.channel').value)
+} catch {
+    console.log('')
+}

@@ -7,7 +7,7 @@
 
 <div class="main col-12">
     <!-- ------------------ Profile ------------------  -->
-        <div class="col-3 inner-div profile-div">
+        <div class="col-3 inner-div profile-div search-profile-div">
             <div class="inner-profile-div">
                 <div class="image-div">
                     <center>
@@ -54,7 +54,7 @@
                             <div class="connect-div">
                                 <div class="col-6">
                                     <i class="material-icons col-12">
-                                        <span class="icon-cont">
+                                        <span class="icon-cont appointment-icon-cont">
                                             today
                                         </span>
                                     </i>
@@ -64,11 +64,24 @@
                                 </div>
                                 <div class="col-6">
                                     <i class="material-icons col-12">
-                                        <span class="icon-cont">
+                                        <span class="icon-cont message-icon-cont">
                                             email
                                         </span>
                                     </i>
-                                    <span class="appointment-text col-12">
+                                    <span class="message-text col-12">
+                                        Message
+                                    </span>
+                                </div>
+                            </div>
+                        <% } else { %>
+                            <div class="connect-div">
+                                <div class="col-12 patient-msg-div">
+                                    <i class="material-icons col-12 message-icon-cont">
+                                        <span class="icon-cont message-icon-cont">
+                                            email
+                                        </span>
+                                    </i>
+                                    <span class="message-text col-12">
                                         Message
                                     </span>
                                 </div>
@@ -308,7 +321,7 @@
     </div>
 </div>
 
-<input type="hidden" class="channel" value="<%= key %>">
+<input type="hidden" class="key" value="<%= key %>">
 
 <%- include('scripts') %>
 

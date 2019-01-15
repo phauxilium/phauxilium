@@ -415,11 +415,24 @@
 .timeline-btns {
     padding: 5px;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .active-timeline {
     color: #1da1f2 !important;
     border-bottom: 1px solid #1da1f2;
+}
+
+/* Timeline Contents */
+.timeline-contents {
+    border: 1px solid red;
+    float: left;
+    width: 100%;
+    margin-top: 5px;
+    background-color: white;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+    padding: 15px;
 }
 
 
@@ -566,9 +579,13 @@
     background-color: whitesmoke;
 }
 
-.appointment-text {
+.appointment-text , .message-text{
     font-size: 14px;
     padding-top: 10px;
+}
+
+.set-sched-input {
+    padding: 10px;
 }
 
 /* -------------- Chat Div ----------- */
@@ -846,6 +863,16 @@
     margin-top: 10px;
 }
 
+.set-sched-save {
+    border: none;
+    background-color: #1da1f2;
+    color: white;
+    padding: 10px;
+    width: 100px;
+    border-radius: 150px;
+    cursor: pointer;
+}
+
 .inputs {
     width: 100%;
 }
@@ -999,7 +1026,7 @@
         width: 50%;
     }
 
-    .center-div, .profile-div{
+    .center-div, .profile-div, .search-profile-div{
         width: 100%;
     }
 
@@ -1068,6 +1095,13 @@
     .search-name {
         font-size: 14px;
     }
+
+
+    /* Set Appointment */
+    .set-sched-input {
+        width: 100%;
+    }
+
 
     .date-now {
         font-size: 15px;

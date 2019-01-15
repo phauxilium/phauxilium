@@ -45,8 +45,12 @@ document.querySelector('.search-form').addEventListener('submit', e => {
     e.preventDefault()
     searchInput.blur()
 
-    if(window.innerWidth <= 768) {
-        document.querySelector('.profile-div').style.display = "none"
+    try {
+        if (window.innerWidth <= 768) {
+            document.querySelector('.profile-div').style.display = "none"
+        }
+    } catch(err) {
+        console.log('')
     }
 
     searchInput.value = searchInput.value.trim()
@@ -140,7 +144,13 @@ document.body.addEventListener('click', (e) => {
             alert('sched')
         } else if(_classList.contains('notif-icon')) {
             if(window.innerWidth <= 768) {
-                document.querySelector('.profile-div').style.display = "none"
+                try {
+                    let profileDiv = document.querySelector('.profile-div')
+                    profileDiv.style.display = "none"
+                    profileDiv.classList.remove('search-profile-div')                    
+                } catch(err) {
+                    console.log('')
+                }
             }
             document.querySelector('.center-div').innerHTML = `
             <div class="inner-profile-div">
@@ -185,43 +195,62 @@ document.body.addEventListener('click', (e) => {
     }
     
     if(_classList.contains('profile-link')) {
-        const profileDiv = document.querySelector('.profile-div')
-        profileDiv.style.display = "block"
-        profileDiv.innerHTML = `
+        try {
+            const profileDiv = document.querySelector('.profile-div')
+            profileDiv.classList.remove('search-profile-div')
+            profileDiv.style.display = "block"
+            profileDiv.innerHTML = `
             <div class="inner-profile-div">
                 <img src="/static/images/loader.svg" class="loader">
             </div>
         `
 
-        const centerDiv = document.querySelector('.center-div')
-        centerDiv.innerHTML = `
+            const centerDiv = document.querySelector('.center-div')
+            centerDiv.innerHTML = `
             <div class="inner-profile-div">
                 <img src="/static/images/loader.svg" class="loader">
             </div>
         `
-        const Ajax = new AjaxAPI()
-        Ajax.post('/u/my/profile')
-        Ajax.xhr.onreadystatechange = () => {
-            try {
-                if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
-                    let datas = JSON.parse(Ajax.xhr.responseText)
-                    const Prof = new Profile(datas, profileDiv)
-                    Prof.profile()
-                    Prof.profDetails()
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/my/profile')
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        const Prof = new Profile(datas, profileDiv)
+                        Prof.profile()
+                        Prof.profDetails()
+                    }
+                } catch (err) {
+                    console.log(err)
                 }
-            } catch(err) {
-                console.log(err)
             }
+        } catch(err) {
+            console.log()
         }
     }
 })
 
-window.addEventListener('resize', () => {
-    if(window.innerWidth <= 768) {
-        document.querySelector('.profile-div').style.display = "none"
-    } else {
-        document.querySelector('.profile-div').style.display = "block"
-    }
-})
+    let profileDiv = document.querySelector('.profile-div')
+   try {
+       if (window.innerWidth <= 768 && !profileDiv.classList.contains('search-profile-div')) {
+           document.querySelector('.profile-div').style.display = "none"
+       } else {
+           document.querySelector('.profile-div').style.display = "block"
+           document.querySelectorAll('.nav-icons').forEach(value => {
+               value.classList.remove('active-icon')
+           })
+       }
+
+       window.addEventListener('resize', () => {
+           if (window.innerWidth <= 768 && !profileDiv.classList.contains('search-profile-div')) {
+               document.querySelector('.profile-div').style.display = "none"
+           } else {
+               document.querySelector('.profile-div').style.display = "block"
+           }
+       })
+   } catch (err) {
+       console.log('')
+   }
 
 
