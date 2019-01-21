@@ -1,5 +1,3 @@
 /node_modules/
 /package-lock.json/
-/my_modules/
-/config/
 .snyk
