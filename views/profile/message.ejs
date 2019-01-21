@@ -1,0 +1,57 @@
+<%- include('../index/header') %>
+
+    <link rel="stylesheet" href="/static/css/profile/message.css">
+    <%- include('styles') %>
+
+</head>
+<body>
+    <div class="main-div col-12">
+        <div class="col-3 messages">
+            <div class="messages-content col-12">
+            </div>
+        </div>
+        <div class="col-6 chat-div">
+            <div class="chat-header col-12">
+                <center>
+                    <div class="header-content">
+                        <div class="image-content col-3">
+                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/<%= from.uType %>/<%= from.basicInfo.profile %>" class="main-image">
+                        </div>
+                        <div class="name-content col-9">
+                            <% if(from.uType === 'doctor') { %>
+                            Dr.
+                            <% } %>
+                            <%= from.basicInfo.fname %>
+                            <%= from.basicInfo.mname %>
+                            <%= from.basicInfo.lname %>
+                        </div>
+                    </div>
+                </center>
+            </div>
+            <div class="chat-content col-12">
+
+            </div>
+            <div class="chat-input col-12">
+                <form class="chat-form col-12">
+                    <div class="textarea-div  col-9">
+                        <textarea class="chat-textarea" placeholder="Enter some text..."></textarea>
+                    </div>
+                    <div class="chat-btn-div col-3">
+                        <button class="chat-btn">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-3 ads"></div>
+    </div>
+
+
+    <input type="hidden" class="key" value="<%= key %>">
+    <input type="hidden" class="channel" value="<%= channel %>">
+
+    <%- include('global_socket') %>
+    <script src="/static/js/AjaxAPI.js"></script>
+    <script src="/static/js/profile/message.js"></script>
+
+</body>
+</html>

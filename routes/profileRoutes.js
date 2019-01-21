@@ -1,15 +1,23 @@
-//  -------------------- TODOS ----------------------
-//  MAKE NOTIFICATIONS REALTIME
 
 const express = require('express')
 const route = express.Router()
+const fs = require('fs')
+const validator = require('validator')
+const multer = require('multer')
+const upload = multer({
+    dest: './uploads'
+})
 const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
 const FireAdmin = require('../my_modules/FireAdmin')
-const fire = new FireAdmin()
-const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+const Cloudinary = require('../my_modules/Cloudinary')
+const cloudinary = new Cloudinary()
+// const MONTH = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+// const WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 let uType = ''
+
+
+cloudinary.getConfig()
 
 // ------------- Profile route --------------
 route.get('/t/', (req, res) => {
@@ -17,6 +25,7 @@ route.get('/t/', (req, res) => {
     if(sessionID === undefined) {
         res.redirect('/')
     } else {
+        const fire = new FireAdmin()
         const db = fire.firebase.database()
         const ref = db.ref('users')
         const childRef = ref.child(sessionID)
@@ -182,27 +191,211 @@ route.post('/add/schedules', (req, res) => {
 })
 
 
+// Retrieve all patient files
+route.post('/view/all/patient-files', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/patientFiles`)
+    ref.once('value', snapshots => {
+        let datas = snapshots.val()
+        res.send(datas)
+    })
+})
+
+
+// Delete a specific patient profile
+route.post('/del/patient-profile', (req, res) => {
+    let key = req.body.key
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/patientFiles`)
+    const childRef = ref.child(key)
+    childRef.remove(err => {
+        ref.once('value', snapshots => {
+            res.send(snapshots.val())
+        })
+    })
+})
+
+// View a specific patient profile
+route.post('/view/individual/patient-profile', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/patientFiles/${req.body.key}`)
+    ref.once('value', snapshots => {
+        res.send(snapshots.val())
+    })
+})
+
+// Add Medical Records
+route.post('/add/med-records', upload.single('attach'), (req, res, next) => {
+    let error = {}
+   if(req.file === undefined && !req.body.complains && !req.body.findings) {
+       error.fileErr = 'Please provide some data.'
+       res.send(error)
+   } else if(!req.body.key) {
+       error.fileErr = 'An error occur'
+       res.send(error)
+   } else {
+       if(req.file === undefined) {
+           const fire = new FireAdmin()
+           const db = fire.firebase.database()
+           const ref = db.ref(`users/${req.session.ussID}/patientFiles/${req.body.key}/medRecords`)
+           ref.once('value', snapshots => {
+               let childRef = ref.child(snapshots.numChildren())
+               childRef.update({
+                   complains: req.body.complains,
+                   findings: req.body.findings,
+                   filename: '',
+                   attached: '',
+                   date: new Date().toString()
+               }, err => {
+                   if (!err) res.send(error)
+               })
+           })
+       } else {
+           mimetype = req.file.mimetype
+           originalname = req.file.originalname
+           filename = req.file.filename
+           if (mimetype.split('/')[0] === 'image' || mimetype.split('/')[1] === 'pdf') {
+                  cloudinary.getCloud().v2.uploader.upload(req.file.path, {
+                      public_id: `ax-images/doctor/assets/${req.file.filename}`
+                  }, err => {
+                          if (!err) {
+                              fs.unlink(req.file.path, err => {
+                                  if (!err) {
+                                       const fire = new FireAdmin()
+                                       const db = fire.firebase.database()
+                                       const ref = db.ref(`users/${req.session.ussID}/patientFiles/${req.body.key}/medRecords`)
+                                       ref.once('value', snapshots => {
+                                           let childRef = ref.child(snapshots.numChildren())
+                                           childRef.update({
+                                               complains: req.body.complains,
+                                               findings: req.body.findings,
+                                               filename: filename,
+                                               attached: originalname,
+                                               date: new Date().toString()
+                                           }, err => {
+                                               if(!err) res.send(error) 
+                                           })
+                                       })
+                                  } else {
+                                      error.fileErr = 'An error occur.'
+                                      res.send(error)
+                                  }
+                              })
+                          } else {
+                              error.fileErr = err.message
+                              res.send(error)
+                          }
+                  })
+           } else {
+               fs.unlink(req.file.path, err => {
+                   if (!err) {
+                       error.fileErr = `Invalid file type. Images and PDF's are only allowed`
+                       res.send(error)
+                   }
+               })
+           }
+       }
+   }
+})
+
+// Submit Patient Registration
+route.post('/submit/patient-reg', (req, res) => {
+    let err = {}
+    err.fnameErr = !req.body.fname ? 'Input required.' : ''
+    err.mnameErr = !req.body.mname ? 'Input required.' : ''
+    err.lnameErr = !req.body.lname ? 'Input required.' : ''
+    err.genderErr = !req.body.gender ? 'Input required.' : ''
+    err.cStatusErr = !req.body.cStatus ? 'Input required.' : ''
+    err.addressErr = !req.body.address ? 'Input required.' : ''
+    err.historyErr = !req.body.history ? 'Input required.' : ''
+
+    if(req.body.email) {
+        err.emailErr = !validator.isEmail(req.body.email) ? 'Invalid email.' : ''
+    }
+
+    if(!req.body.dob) {
+        err.dobErr = 'Input required.'    
+    } else if(new Date(req.body.dob).toString() === 'Invalid Date') {
+        err.dobErr = 'Invalid date'
+    } else {
+        err.dobErr = ''
+    }
+
+    let errExist = []
+    for(let key in err) {
+        if(err[key].indexOf('Invalid') === 0) {
+            errExist.push(true)
+        }
+    }
+
+    if(errExist.indexOf(true) === -1 && req.body.history) {
+        let today = new Date();
+        let birthDate = new Date(req.body.dob);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let month = today.getMonth() - birthDate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref(`users/${req.session.ussID}/patientFiles`)
+        ref.push({
+            fname: req.body.fname,
+            mname: req.body.mname,
+            lname: req.body.lname,
+            dob: req.body.dob,
+            gender: req.body.gender,
+            age: age,
+            cStatus: req.body.cStatus,
+            address: req.body.address,
+            bloodType: req.body.bloodType,
+            email: req.body.email,
+            occupation: req.body.occupation,
+            companion: req.body.companion,
+            history: req.body.history,
+            date: today.toString(),
+            medRecords: [0]
+        }, (error) => res.send(err))
+    } else res.send(err)
+})
+
 // -------------- Search ---------------------
 // Search Results
 route.post('/search/', (req, res) => {
     if(req.session.ussID === undefined || req.session.ussID === '') {
         res.redirect('/')
     } else {
-        let id = req.body.id.toLowerCase()
+        let id = req.body.id.toLowerCase().split(' ')
         let results = {}
         const fire = new FireAdmin()
         const db = fire.firebase.database()
         const ref = db.ref('users')
         ref.once('value', snapshots => {
             let datas = snapshots.val()
-            for (let key in datas) {
-                if(key !== req.session.ussID) {
-                    for (k in datas[key].basicInfo) {
-                        if (datas[key].basicInfo[k].toLowerCase().indexOf(id) !== -1)
-                            results[key] = datas[key]
+            id.forEach(value => {
+                for (let key in datas) {
+                    if (key !== req.session.ussID) {
+                        for (k in datas[key].basicInfo) {
+                            if (datas[key].basicInfo[k].toLowerCase().indexOf(value) !== -1)
+                                results[key] = datas[key]
+                        }
+
+                        //  Temporary Clinic Search
+                        if(datas[key].uType === 'doctor') {
+                            for (k in datas[key].clinics[0]) {
+                                if (
+                                    (datas[key].clinics[0].address.toLowerCase().indexOf(value) !== -1) ||
+                                    (datas[key].clinics[0].name.toLowerCase().indexOf(value) !== -1)
+                                    ) results[key] = datas[key]
+                            }
+                        }
                     }
                 }
-            }
+            })
             res.send(results)
         })
     }
@@ -237,7 +430,7 @@ route.post('/view/sched', (req, res) => {
     })
 })
 
-// ---------------- Set Appointment ------------------
+// ---------------- Patient Set Appointment ------------------
 route.post('/set/appointment', (req, res) => {
     let dateNow = new Date()
     let sched = {
@@ -263,44 +456,216 @@ route.post('/set/appointment', (req, res) => {
 
         const fire = new FireAdmin()
         const db = fire.firebase.database()
-        const ref = db.ref(`users/${sched.key}`)
-
+        let ref = db.ref(`users/${req.session.ussID}`)
+        
         ref.once('value', snapshots => {
             let datas = snapshots.val()
             let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
 
+            // Set Doctors Appointment
+            ref = db.ref(`users/${sched.key}`)
             let childRef = ref.child('appointments')
-            childRef.once('value', count => {
-                childRef = ref.child(`appointments/${count.numChildren()}`)
-                childRef.update({
+            
+            // TODO!!!!!!
+            // GENERATE THE SAME ID WITH PATIENTS APPOINTMENT
+            childRef.push({
                     date: sched.date,
                     time: sched.time,
+                    receiver: sched.key,
+                    sender: req.session.ussID,
                     name: name,
                     img: datas.basicInfo.profile,
-                    status: 'pending'
+                    status: 'pending',
+                    uType: 'patient'
                 })
-            })
 
-            childRef = ref.child('notifs')
-            childRef.once('value', count => {
-                childRef = ref.child(`notifs/${count.numChildren()}`)
-                childRef.update({
-                    date: new Date(),
-                    message: `${name} wants to set an appointment with you at ${finalDate}`,
-                    from: name,
-                    key: sched.key,
-                    img: datas.basicInfo.profile,
-                    uType: datas.uType,
-                    type: 'pending',
-                    status: 'new'
-                }, err => {
-                    if (!err) res.send(sched.err)
-                })
-            })
+            // Set Doctors Notificatiton
+                // childRef = ref.child('notifs')
+                // childRef.once('value', count => {
+                //     childRef = ref.child(`notifs/${count.numChildren()}`)
+                //     childRef.update({
+                //         date: new Date(),
+                //         message: `${name} wants to set an appointment with you at ${finalDate}`,
+                //         name: name,
+                //         receiver: sched.key,
+                //         sender: req.session.ussID,
+                //         img: datas.basicInfo.profile,
+                //         uType: 'patient',
+                //         type: 'pending',
+                //         status: 'new'
+                //     }, err => {
+                //         if (!err) res.send(sched.err)
+                //     })
+                // })
+
+                // Set patients appointment
+                // ref = db.ref(`users/${req.session.ussID}/appointments`)
+                // ref.once('value', count => {
+                //     childRef = ref.child(count.numChildren())
+                //     childRef.update({
+                //         sender: req.session.ussID,
+                //         receiver: sched.key,
+                //         date: sched.date,
+                //         time: sched.time,
+                //         name: name,
+                //         img: datas.basicInfo.profile,
+                //         status: 'pending',
+                //         uType: 'doctor'
+                //     })
+                // })
         })
     } else {
         res.send(sched.err)
     }
+})
+
+
+// ----------- View Appointments ------------
+route.post('/get-schedules', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/appointments`)
+    let schedules = {}
+    if(req.body.type === 'today') {
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            for(key in datas) {
+                if(datas !== 0) {
+                    if(datas[key].status === 'today') {
+                        schedules[key] = datas[key]
+                    }
+                }
+            }
+            res.send(schedules)
+        })
+    } else if(req.body.type === 'pending') {
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            for (key in datas) {
+                if (datas !== 0) {
+                    if (datas[key].status === 'pending') {
+                        schedules[key] = datas[key]
+                    }
+                }
+            }
+            res.send(schedules)
+        })
+    }
+})
+
+// Accept Appointment request
+route.post('/accept-req', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    let ref = db.ref(`users/${req.session.ussID}`)
+    ref.once('value', snapshots => {
+        let datas = snapshots.val()
+        let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
+        let avatar = datas.basicInfo.profile
+
+        let childRef = ref.child(`appointments/${req.body.appointmentID}`)        
+        childRef.once('value', snapshots => {
+            let datas = snapshots.val()
+            let date = new Date(datas.date).toString().split(' ')
+            let dateStr = `${date[0]} ${date[1]} ${date[2]} ${date[3]}`
+            let dateNow = new Date().toString().split(' ')
+            let dateNowStr = `${dateNow[0]} ${dateNow[1]} ${dateNow[2]} ${dateNow[3]}`
+
+            if (dateStr === dateNowStr) {
+                childRef.update({
+                    status: 'today'
+                })
+            } else {
+                childRef.update({
+                    status: 'upcoming'
+                })
+            }
+
+            ref = db.ref(`users/${req.body.sender}/notifs`)
+            ref.once('value', count => {
+                childRef = ref.child(count.numChildren())
+                childRef.update({
+                    date: new Date(),
+                    message: `${name} accepted your request.`,
+                    name: name,
+                    receiver: req.body.sender,
+                    sender: req.session.ussID,
+                    img: avatar,
+                    uType: 'doctor',
+                    type: 'message',
+                    status: 'new'
+                }, () => {
+                    res.send({err: 'nice'})
+                })
+            })
+        })
+    })
+})
+
+// ----------- Message
+route.get('/messages/:id', (req, res) => {
+    if(req.session.ussID === '' || req.session.ussID === undefined) res.redirect('/')
+    else {
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        let ref = db.ref('users/')
+        ref.orderByKey().equalTo(req.params.id).once('value', snapshots => {
+            if(snapshots.val() === null) res.redirect('/')
+            else {
+                ref = db.ref(`users/${req.params.id}`)
+                ref.once('value', snapshots => {
+                    let from = snapshots.val()
+                    ref = db.ref(`users/${req.session.ussID}/messages`)
+                    ref.once('value', messages => {
+                        let mine = messages.val()
+                        let msg = {}
+                        for (let key in mine) {
+                            if (key === req.body.id) {
+                                msg[key] = mine[key]
+                            }
+                        }
+                        res.render('profile/message', { mine: mine, from: from, msg: msg, key: req.params.id, channel: req.session.ussID })
+                    })
+                })
+            }
+        })
+    }
+})
+
+// Send Message
+route.post('/send-message', (req, res) => {
+   if(validator.trim(req.body.msg) === '') {
+       res.send('')
+   } else {
+       const fire = new FireAdmin()
+       const db = fire.firebase.database()
+       // Senders copy
+       let ref = db.ref(`users/${req.session.ussID}/messages`)
+       ref.once('value', snapshots => {
+           let id = snapshots.numChildren()
+           let childRef = ref.child(id)
+           childRef.update({
+               sender: req.session.ussID,
+               receiver: req.body.key,
+               msg: req.body.msg,
+               date: new Date().toString(),
+           })
+       })
+
+       // Receivers Copy
+       ref = db.ref(`users/${req.body.key}/messages`)
+       ref.once('value', snapshots => {
+           let id = snapshots.numChildren()
+           let childRef = ref.child(id)
+           childRef.update({
+               sender: req.session.ussID,
+               receiver: req.body.key,
+               msg: req.body.msg,
+               date: new Date().toString(),
+               status: 'new'
+           })
+       })
+   }
 })
 
 
@@ -320,7 +685,7 @@ module.exports = (io) => {
             const fire = new FireAdmin()
             const db = fire.firebase.database()
             socket.join(room, () => {
-                // Notifs count
+                // Notifs count && updates
                 let ref = db.ref(`users/${room}/notifs`)                
                 ref.on('value', snapshots => {
                     let notifs = snapshots.val()
@@ -334,10 +699,18 @@ module.exports = (io) => {
                     io.to(room).emit('notif updates', notifs)
                 })
 
-                // Messages count
+                // Messages count && Updates
                 ref = db.ref(`users/${room}/messages`)
                 ref.on('value', snapshots => {
-                    io.to(room).emit('chat count', snapshots.numChildren())
+                    let count = 0
+                    let msgs = snapshots.val()
+                    for (msg in msgs) {
+                        if (msgs[msg] !== 0) {
+                            if (msgs[msg].status === 'new') count++
+                        }
+                    }
+                    io.to(room).emit('chat count', count)
+                    io.to(room).emit('chat updates', snapshots.val())
                 })
 
                 // Doctor specialty update

@@ -1,5 +1,3 @@
-const socket = io()
-
 document.body.addEventListener('click', e => {
     let specialtyDiv = document.querySelector('.add-specialty-div')
     let bioDiv = document.querySelector('.add-bio-div')
@@ -209,7 +207,8 @@ document.body.addEventListener('click', e => {
             }
         } else if(_classList.contains('message-icon-cont') ||
         _classList.contains('message-text')) {
-            alert('message')
+            let key = document.querySelector('.key').value
+            window.open(`/u/messages/${key}`)
         }
 
         // Appointments
@@ -219,9 +218,92 @@ document.body.addEventListener('click', e => {
                 value.classList.remove('active-timeline')
             })
 
-            e.target.classList.add('active-timeline')
+            let btnClassList = e.target.classList
+            btnClassList.add('active-timeline')
+            
+            const _Timeline = new Timeline()
+            if(btnClassList.contains('today-btn')) _Timeline.today()
+            else if(btnClassList.contains('pending-btn')) _Timeline.pending()
         }
 
+        // View or Delete Patient Files
+        if(_classList.contains('patients-name') || _classList.contains('del-patient-icon')) {
+            let key = e.target.parentElement.getAttribute('data-key')
+            const Ajax = new AjaxAPI()
+
+            // Delete Patient Profile
+            if(_classList.contains('del-patient-icon')) {
+                let conf = confirm('Are you sure to delete this data?')
+                if(conf) {
+                    Ajax.post('/u/del/patient-profile', `key=${key}`)
+                    Ajax.xhr.onreadystatechange = () => {
+                        try {
+                            if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                                let datas = JSON.parse(Ajax.xhr.responseText)
+                                const PatientFile = new PatientFiles()
+                                PatientFile.main(datas)
+                            }
+                        } catch(err) {
+                            console.log(err)
+                        }
+                    }
+                }
+
+                // View Patient Profile
+            } else if(_classList.contains('patients-name')){
+                document.querySelector('.center-div').innerHTML = `
+                    <div class="patients-div col-12">
+                        <img src="/static/images/loader.svg" class="loader">
+                    </div>`
+
+                Ajax.post('/u/view/individual/patient-profile', `key=${key}`)
+                Ajax.xhr.onreadystatechange = () => {
+                    try {
+                        if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                            let datas = JSON.parse(Ajax.xhr.responseText)
+                            const PatientFile = new PatientFiles()
+                            PatientFile.individualProfile(datas, key)
+                        }
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
+            }
+        }
+
+
+        // Add Medical Records
+        if(_classList.contains('add-med-text')) {
+            document.querySelector('.outer-modal-bg').style.display = "block"
+            const PatientFile = new PatientFiles()
+            PatientFile.addMedicalRecords()
+        }
+
+        if(_classList.contains('accept-btn')) {
+            let timeLineBtns = document.querySelectorAll('.timeline-btns')
+            if(timeLineBtns[2].classList.contains('active-timeline')) {
+                e.target.textContent = 'Accepting...'
+                let appointmentID = e.target.parentElement.parentElement.getAttribute('data-key')
+                let sender = e.target.parentElement.parentElement.getAttribute('data-sender')
+                const Ajax = new AjaxAPI()
+                Ajax.post('/u/accept-req', `appointmentID=${appointmentID}&sender=${sender}`)
+                Ajax.xhr.onreadystatechange = () => {
+                    try {
+                        if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                            let datas = JSON.parse(Ajax.xhr.responseText)
+                            console.log(datas)
+                            e.target.getAttribute = 'Accepted'
+                            setTimeout(() => {
+                                const _Timeline = new Timeline()
+                                _Timeline.pending()
+                            }, 2000)
+                        }
+                    } catch(err) {
+                        console.log(err)
+                    }
+                }
+            }
+        }
 })
 
 // Signed In listener

@@ -1,4 +1,6 @@
-const Notif = new Notification()    
+const Notif = new Notification()
+const _Timeline = new Timeline()
+_Timeline.today()    
 
 // For Nav Icons
 let icons = document.querySelectorAll('.nav-icons')
@@ -11,7 +13,7 @@ let searchIcon = document.querySelector('.search-icon')
 
 // let searchOutputDiv = document.querySelector('.search-output-div')
 // searchInput.addEventListener('keyup', (e) => {
-//     let inputValue = e.target.value
+//     let inputValue = e.target.va lue
 //     if(inputValue.toLowerCase() === 'iloilo') {
 //         searchOutputDiv.style.display = "inline"
 //     } else {
@@ -21,73 +23,77 @@ let searchIcon = document.querySelector('.search-icon')
 
 
 //  Searching
-searchInput.addEventListener('focus', () => {
-    searchInput.style.border = "1px solid #1da1f2"
-    searchInput.style.borderRight = "none"
-    searchIcon.style.color = "#1da1f2"
+try {
+    searchInput.addEventListener('focus', () => {
+        searchInput.style.border = "1px solid #1da1f2"
+        searchInput.style.borderRight = "none"
+        searchIcon.style.color = "#1da1f2"
 
-    searchBtn.style.border = "1px solid #1da1f2"
-    searchBtn.style.borderLeft = "none" 
-})
+        searchBtn.style.border = "1px solid #1da1f2"
+        searchBtn.style.borderLeft = "none"
+    })
 
-searchInput.addEventListener('focusout', (e) => {
-    searchInput.style.border = "1px solid lightgray"
-    searchInput.style.borderRight = "none"
-    searchIcon.style.color = "black"
+    searchInput.addEventListener('focusout', (e) => {
+        searchInput.style.border = "1px solid lightgray"
+        searchInput.style.borderRight = "none"
+        searchIcon.style.color = "black"
 
-    searchBtn.style.border = "1px solid lightgray"
-    searchBtn.style.borderLeft = "none"
-})
+        searchBtn.style.border = "1px solid lightgray"
+        searchBtn.style.borderLeft = "none"
+    })
+} catch(err) {
+    console.log()
+}
 
+try {
+    // Submit Search Input
+    document.querySelector('.search-form').addEventListener('submit', e => {
+        e.preventDefault()
+        searchInput.blur()
 
-// Submit Search Input
-document.querySelector('.search-form').addEventListener('submit', e => {
-    e.preventDefault()
-    searchInput.blur()
-
-    try {
-        if (window.innerWidth <= 768) {
-            document.querySelector('.profile-div').style.display = "none"
+        try {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.profile-div').style.display = "none"
+            }
+        } catch (err) {
+            console.log('')
         }
-    } catch(err) {
-        console.log('')
-    }
 
-    searchInput.value = searchInput.value.trim()
-    if(searchInput.value !== '') {
-        icons.forEach(value => {
-            value.classList.remove('active-icon')
-        })
+        searchInput.value = searchInput.value.trim()
+        if (searchInput.value !== '') {
+            icons.forEach(value => {
+                value.classList.remove('active-icon')
+            })
 
-        let centerDiv = document.querySelector('.center-div')
-        centerDiv.innerHTML = `
+            let centerDiv = document.querySelector('.center-div')
+            centerDiv.innerHTML = `
             <div class="search-res-div">
                 <div class="false-result">
                     <img src="/static/images/loader.svg" class="loader">
                 </div>
             </div>
         `
-        
-        const Ajax = new AjaxAPI()
-        Ajax.post('/u/search', `id=${searchInput.value}`)
 
-        Ajax.xhr.onreadystatechange = () => {
-            try {
-                let results = ''
-                if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
-                    let datas = JSON.parse(Ajax.xhr.responseText)
-                    let str = JSON.stringify(datas)
-                    if(str === '{}') {
-                        centerDiv.innerHTML = `
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/search', `id=${searchInput.value}`)
+
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    let results = ''
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        let str = JSON.stringify(datas)
+                        if (str === '{}') {
+                            centerDiv.innerHTML = `
                             <div class="search-res-div">
                                 <div class="false-result">No result found</div>
                             </div>
                         `
-                    } else {
-                        for(let data in datas) {
-                            let name = `${datas[data].basicInfo.fname} ${datas[data].basicInfo.mname} ${datas[data].basicInfo.lname}`
-                            let abb = datas[data].uType === 'doctor' ? 'Dr.' : ''
-                            results += `
+                        } else {
+                            for (let data in datas) {
+                                let name = `${datas[data].basicInfo.fname} ${datas[data].basicInfo.mname} ${datas[data].basicInfo.lname}`
+                                let abb = datas[data].uType === 'doctor' ? 'Dr.' : ''
+                                results += `
                             <div class="search-res-div" data-uid="${data}">
                                 <div class=" true-results">
                                     <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].basicInfo.profile}" class="search-img">
@@ -96,20 +102,20 @@ document.querySelector('.search-form').addEventListener('submit', e => {
                                 </div>
                             </div>
                         `
-                        }
+                            }
 
-                        centerDiv.innerHTML = results
+                            centerDiv.innerHTML = results
+                        }
                     }
+                } catch (err) {
+                    console.log(err)
                 }
-            } catch(err) {
-                console.log(err)
             }
         }
-    }
-
-})
-
-
+    })
+} catch(err) {
+    console.log('')
+}
 
 document.body.addEventListener('click', (e) => {
     let _classList = e.target.classList
@@ -173,14 +179,68 @@ document.body.addEventListener('click', (e) => {
 
         let centerDiv = document.querySelector('.center-div')
 
+        // Timeline
         if(_classList.contains('sched-icon')) {
-            alert('sched')
+            if (window.innerWidth <= 768) {
+                try {
+                    let profileDiv = document.querySelector('.profile-div')
+                    profileDiv.style.display = "none"
+                    profileDiv.classList.remove('search-profile-div')
+                    profileDiv.classList.remove('view-my-profile')
+                } catch (err) {
+                    console.log('')
+                }
+            }
+
+            document.querySelector('.center-div').innerHTML = `
+            <div class="inner-profile-div">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>`
+
+            const _Timeline = new Timeline()
+            _Timeline.today()
+            
+        } else if(_classList.contains('patient-icon')) {
+            if (window.innerWidth <= 768) {
+                try {
+                    let profileDiv = document.querySelector('.profile-div')
+                    profileDiv.style.display = "none"
+                    profileDiv.classList.remove('search-profile-div')
+                    profileDiv.classList.remove('view-my-profile')
+                } catch (err) {
+                    console.log('')
+                }
+            }
+
+            document.querySelector('.center-div').innerHTML = `
+            <div class="inner-profile-div">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>
+            `
+
+            // Patient Files
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/all/patient-files', '')
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        const PatientFile = new PatientFiles()
+                        PatientFile.main(datas)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+
+            // Notification
         } else if(_classList.contains('notif-icon')) {
             if(window.innerWidth <= 768) {
                 try {
                     let profileDiv = document.querySelector('.profile-div')
                     profileDiv.style.display = "none"
-                    profileDiv.classList.remove('search-profile-div')                    
+                    profileDiv.classList.remove('search-profile-div')
+                    profileDiv.classList.remove('view-my-profile')
                 } catch(err) {
                     console.log('')
                 }
@@ -206,6 +266,7 @@ document.body.addEventListener('click', (e) => {
                 }
             }
             
+            // Chat
         } else if(_classList.contains('mail-icon')) {
             alert('mail')
         }
@@ -263,10 +324,18 @@ document.body.addEventListener('click', (e) => {
             console.log()
         }
     }
+
+
+    if(_classList.contains('add-patient-icon') || _classList.contains('add-patient-text')) {
+        document.querySelector('.outer-modal-bg').style.display = "block"
+        const PatientFile = new PatientFiles()
+        PatientFile.loadForm()
+    }
 })
 
-    let profileDiv = document.querySelector('.profile-div')
    try {
+       let profileDiv = document.querySelector('.profile-div')
+
        if (window.innerWidth <= 768) {
            if (!profileDiv.classList.contains('search-profile-div') &&
                !profileDiv.classList.contains('view-my-profile')) {
@@ -281,21 +350,22 @@ document.body.addEventListener('click', (e) => {
            window.addEventListener('scroll', () => {
                if (window.pageYOffset > 50) {
                    document.querySelector('.inner-left').style.height = "0px"
-                   document.querySelector('.search-div').style.display = "none"
                    document.querySelector('.outer-nav').style.height = "50px"
+                   document.querySelector('.search-div').style.display = "none"
                } else {
                    document.querySelector('.inner-left').style.height = "50px"
-                   document.querySelector('.search-div').style.display = "block"
                    document.querySelector('.outer-nav').style.height = "100px"
+                   document.querySelector('.search-div').style.display = "block"
                }
            })
        }
 
        window.addEventListener('resize', () => {
            if (window.innerWidth <= 768) {
+               document.querySelector('.inner-left').style.height = "100%"
+
                if (!profileDiv.classList.contains('search-profile-div') &&
-                   !profileDiv.classList.contains('view-my-profile')
-               ) {
+                   !profileDiv.classList.contains('view-my-profile')) {
                    document.querySelector('.profile-div').style.display = "none"
                } else {
                    document.querySelector('.profile-div').style.display = "block"
@@ -304,12 +374,12 @@ document.body.addEventListener('click', (e) => {
                window.addEventListener('scroll', () => {
                    if (window.pageYOffset > 50) {
                        document.querySelector('.inner-left').style.height = "0px"
+                       document.querySelector('.outer-nav').style.height = "50px"
                        document.querySelector('.search-div').style.display = "none"
-                       document.querySelector('.outer-nav').style.height = "100%c"
                    } else {
                        document.querySelector('.inner-left').style.height = "50px"
+                       document.querySelector('.outer-nav').style.height = "100px"
                        document.querySelector('.search-div').style.display = "block"
-                       document.querySelector('.outer-nav').style.height = "100%"
                    }
                })
            } 

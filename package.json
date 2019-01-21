@@ -26,6 +26,7 @@
     "express-session": "^1.15.6",
     "firebase-admin": "^6.3.0",
     "helmet": "^3.15.0",
+    "multer": "^1.4.1",
     "socket.io": "^2.2.0",
     "validator": "^10.9.0"
   },

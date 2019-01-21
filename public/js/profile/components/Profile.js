@@ -296,9 +296,9 @@ class Profile {
         let name = `${docs.datas.basicInfo.fname} ${docs.datas.basicInfo.mname} ${docs.datas.basicInfo.lname}`
         let specialty = ''
 
-        if(docs.datas.uType === 'doctor' && !this.search) {
-            name = `Dr. ${name}`
+        if(docs.datas.uType === 'doctor') name = `Dr. ${name}`
 
+        if(docs.datas.uType === 'doctor' && !this.search) {
             specialty = `
                         <div class="add-specialty-div">
                             <button class="add-specialty-btn">

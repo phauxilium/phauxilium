@@ -1,6 +1,3 @@
-<!-- TODOS -->
-<!-- GENERATE PROFILE DATA -->
-
 <%- include('../index/header') %>
 
     <link rel="stylesheet" href="/static/css/profile/timeline.css">
@@ -87,28 +84,6 @@
 
         <!-- ---------------- Center Div ------------------ -->
         <div class="col-6 inner-div center-div">
-            <!-- <div class="timeline-div col-12">
-                <div class="timeline-nav col-12">
-                    <span class="timeline-btns-div col-4">
-                        <span class="timeline-btns active-timeline today-btn">
-                            Today
-                        </span>
-                    </span>
-                    <span class="timeline-btns-div col-4">
-                        <span class="timeline-btns upcoming-btn">
-                            Upcoming
-                        </span>
-                    </span>
-                    <span class="timeline-btns-div col-4">
-                        <span class="timeline-btns pending-btn">
-                            Pending
-                        </span>
-                    </span>
-                </div>
-
-                <div class="timeline-contents">
-                </div>
-            </div> -->
         </div>
 
 
@@ -123,7 +98,7 @@
                         <img src="/static/images/ads/wh.png" class="ads-img">
                     </div>
                     
-                    <a href="http://startupproject.ph" class="ads-links">Start Up Project PH</a>
+                    <a onclick="window.open('http://startupproject.ph')" class="ads-links">Start Up Project PH</a>
 
                     <p class="ads-content">
                         We create a divers and collaborative space that is responsive to the 
@@ -139,11 +114,12 @@
                         <img src="/static/images/ads/occa.png" class="ads-img">
                     </div>
                     
-                    <a href="http://startupproject.ph" class="ads-links">Occashop</a>
+                    <a onclick="window.open('https://occashop.000webhostapp.com/')" class="ads-links">Occashop</a>
 
                     <p class="ads-content">
-                        We create a divers and collaborative space that is responsive to the productivity 
-                        needs and stylistic preferences of today’s creative work force.
+                        Enhance the skills of the students in computing, using various technology that will leverage their perception in the
+                        following turf, like computer programming, system design, machine language, neural networks, web and mobile
+                        application, artificial intelligence and gamification.
                     </p>
 
                 </center>
@@ -167,6 +143,7 @@
     <input type="hidden" class="channel" value="<%= channel %>">
     <input type="hidden" class="key" value="">
 
+    <%- include('global_socket') %>
     <%- include('scripts') %>
 
 <body>

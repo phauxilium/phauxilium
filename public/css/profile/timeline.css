@@ -155,13 +155,13 @@
     margin-left: 10px;
 }
 
-.edit-info-icon, .add-clinic-icon, .add-sched-icon, .edit-clinic-icon {
+.edit-info-icon, .add-clinic-icon, .add-sched-icon, .edit-clinic-icon, .add-med-icon {
     font-size: 18px;
     float: left;
     cursor: pointer;
 }
 
-.edit-info-text, .add-clinic-text, .add-sched-text, .edit-clinic-text {
+.edit-info-text, .add-clinic-text, .add-sched-text, .edit-clinic-text, .add-med-text {
     font-size: 15px;
     float: left;
     cursor: pointer;
@@ -193,12 +193,13 @@
     font-size: 15px;
 }
 
-.access-btn {
+.patient-file-btn {
     background-color: #1da1f2;
     color: white;
     border: none;
-    padding: 10px;
-    border-radius: 5px;
+    width: 80px;
+    padding: 8px;
+    border-radius: 150px;
     cursor: pointer;
     margin-top: 5px;
     outline: none;
@@ -268,7 +269,12 @@
     padding: 15px;
 }
 
+.asterisk {
+    color: red;
+}
+
 .inputs {
+    background-color: white;
     padding: 5px;
     width: 100%;
     border: none;
@@ -359,7 +365,7 @@
     border-bottom: 2px solid #1da1f2;
 }
 
-.todays-div, .medical-records-div, .upcoming-div, .post-div {
+.todays-div, .upcoming-div, .post-div {
     margin-top: 8px;
     background-color: white;
     padding: 15px;
@@ -425,6 +431,7 @@
 
 /* Timeline Contents */
 .timeline-contents {
+    text-align: left;
     border: 1px solid red;
     float: left;
     width: 100%;
@@ -435,6 +442,202 @@
     padding: 15px;
 }
 
+/* TImeline Profiles */
+/* .schedule-header {
+} */
+
+.sched-avatar-div {
+    float: left;
+}
+
+.sched-avatar {
+    height: 60px;
+    border-radius: 150px;
+    box-shadow: 0 2px 2px 0 lightgray;
+    border: 2px solid white;
+}
+
+.sched-name-div {
+    float: left;
+    padding-left: 10px;
+    padding-top: 15px;
+    font-weight: bold;
+}
+
+.sched-time-div {
+    float: left;
+    width: 100%;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.nothing {
+    text-align: center;
+}
+
+.accept-decline-div {
+    margin-top: 10px;
+    float: left;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+
+.accept-btn {
+    border: none;
+    border-radius: 150px;
+    background-color: #1da1f2;
+    color: white;
+    height: 35px;
+    padding: 0 15px 0 15px;
+    cursor: pointer;
+}
+
+.decline-btn {
+    color: red;
+    cursor: pointer;
+    border: none;
+    background-color: white;
+}
+
+/* ------------- Patients Div ---------------- */
+.patients-div, .medical-records-div {
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+    float: left;
+    width: 100%;
+    background-color: white;
+}
+
+.patients-title {
+    color: #1da1f2;
+    padding: 15px;
+    background-color: white;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px solid lightgray;
+}
+
+.add-patient-div {
+    float: right;
+}
+
+.add-patient-icon, .edit-patient-icon {
+    float: left;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.add-patient-text, .edit-patient-text {
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.patient-contents {
+    text-align: left;
+    float: left;
+    width: 100%;
+    background-color: white;
+    padding: 15px;
+}
+
+.go-back-link {
+    font-size: 15px;
+    color: #1da1f2;
+    visibility: hidden;
+}
+
+.left-patient-btn {
+    text-align: left;
+}
+
+.right-patient-btn {
+    text-align: right;
+}
+
+.patient-form-div {
+    display: none;
+}
+
+.active-form {
+    display: block;
+}
+
+.patients-name:hover {
+    color: #1da1f2;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.del-patient-icon {
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.patient-profile-div {
+    background-color: white;
+    padding: 15px;
+    float: left;
+    width: 100%;
+}
+
+.patient-data {
+    float: left;
+    padding-bottom: 10px;
+}
+
+.labels {
+    margin-bottom: 0 !important;
+}
+
+/* Medical Records */
+ .medical-records-div{
+     margin-top: 5px;
+}
+
+.medical-records-content {
+    padding: 15px;
+    float: left;
+}
+
+.attach-icon {
+    float: left;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.attach-text {
+    float: left;
+    cursor: pointer;
+}
+
+.attach-input {
+    display: none;
+}
+
+.filename {
+    float: left;
+    margin-left: 10px;
+    color: #1da1f2;
+}
+
+.add-med-btn {
+    background-color: #1da1f2;
+    color: white;
+    border-radius: 150px !important;
+    width: 100px !important;
+    cursor: pointer;
+}
+
+.medical-records-content {
+    border-bottom: 1px solid lightgray;
+}
+
+.med-cont {
+    margin-bottom: 5px;
+}
 
 /* -------------- Notification Div -------------- */
 
@@ -570,13 +773,13 @@
 /* Set Appointment */
 .connect-div {
     padding-top: 15px;
-    cursor: pointer;
 }
 
 .icon-cont {
     padding: 8px;
     border-radius: 150px;
     background-color: whitesmoke;
+    cursor: pointer;
 }
 
 .appointment-text , .message-text{
@@ -734,11 +937,12 @@
 .ads-img {
     width: 100%;
     height: 100%;
-    cursor: pointer;
 }
 
 .ads-links {
     color: #1da1f2;
+    cursor: pointer;
+    text-decoration: underline;
 }
 
 .ads-content {
@@ -932,6 +1136,14 @@
     cursor: pointer;
 }
 
+
+/* Register Patient File */
+.register-patient {
+    float: left;
+    background-color: white;
+}
+
+
 /* Cancel Appointment ------------- Add Medical Records */
 
 .cancel-modal, .add-medical-modal {
@@ -949,7 +1161,7 @@
     transition: 0.3s;
 }
 
-.cancel-textarea, .add-medical-textarea {
+.cancel-textarea, .add-medical-textarea, .add-med-btn {
     padding: 10px;
     outline: none;
     resize: none;
@@ -976,6 +1188,14 @@
 .add-medical-message, .add-medical-sched-btn {
     background-color: #1da1f2;
 }
+
+.attached-file {
+    cursor: pointer;
+    color: #1da1f2;
+    text-decoration: underline;
+}
+
+/*  */
 
 @media only screen and (max-width: 950px) {
     .send-chat-btn {
@@ -1015,7 +1235,7 @@
 @media only screen and (max-width: 768px) {
     .inner-div {
         padding: 0;
-        padding-top: 10px;
+        padding-top: 5px;
     }
 
     .ads-div {
@@ -1045,8 +1265,12 @@
 
 @media only screen and (max-width: 550px) {
 
-    .basic-contents, .clinic-contents {
+    .basic-contents, .clinic-contents, .inputs-container {
         width: 100%;
+    }
+
+    .gender-cont, .civil-status-cont {
+        width: 50%;
     }
 
     /* Notif modal */
@@ -1102,6 +1326,23 @@
         width: 100%;
     }
 
+
+    /* Patients Profile */
+    .patient-datas-div {
+        width: 100%;
+    }
+
+
+    /* Timeline */
+    .sched-name-div {
+        font-size: 14px;
+    }
+
+    .sched-time-div {
+        font-size: 13px;
+    }
+
+    /* None */
 
     .date-now {
         font-size: 15px;

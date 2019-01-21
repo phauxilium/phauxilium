@@ -1,5 +1,4 @@
 class Notification {
-
     notifModalView(datas) {
         let dateObj = new Date(datas.date)
         let dateStr = dateObj.toString().split(' ')
@@ -18,7 +17,7 @@ class Notification {
                     <span class="modal-notif-span modal-img-notif">
                         <img src="${img}" alt="Could'nt load" class="modal-img-src">
                     </span>
-                    <span class="modal-notif-span modal-title-notif">${datas.from}</span>
+                    <span class="modal-notif-span modal-title-notif">${datas.name}</span>
                     <span class="modal-notif-span modal-msg-notif">${datas.message}</span>
                     <span class="modal-notif-span modal-date-notif">${finalDate}</span>
                 </div>
@@ -46,6 +45,18 @@ class Notification {
                     console.log(err)
                 }
             }
+        } else if(notifType === 'pending') {
+            document.querySelector('.center-div').innerHTML = `
+                <img src="/static/images/loader.svg" alt="Loading..." class="loader">
+                `
+            const _Timeline = new Timeline()
+            _Timeline.pending()
+
+            let navIcons = document.querySelectorAll('.nav-icons')
+            navIcons.forEach(value => value.classList.remove('active-icon'))
+
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/notif', `notifID=${notifID}`)
         }
     }
 
@@ -78,7 +89,7 @@ class Notification {
                             <img class="notif-img-src" src="${img}" alt="Could'nt load image">
                         </span>
                         <span class="notif-span notif-from">
-                            ${datas[data].from}
+                            ${datas[data].name}
                         </span>
                     </div>
                     <span class="notif-span notif-message ${datas[data].status}-msg">
