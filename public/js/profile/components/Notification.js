@@ -24,6 +24,7 @@ class Notification {
         `
     }
 
+    // View Individual Notification
     viewNotifs(param) {
         let notifID = param.getAttribute('data-notif-id')
         let notifType = param.getAttribute('data-notif-type')
@@ -37,7 +38,7 @@ class Notification {
             Ajax.post('/u/view/notif', `notifID=${notifID}`)
             Ajax.xhr.onreadystatechange = () => {
                 try {
-                    if(Ajax.xhr.readyState === 4 && Ajax.xhr.status) {
+                    if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
                         let datas = JSON.parse(Ajax.xhr.responseText)
                         this.notifModalView(datas)
                     }

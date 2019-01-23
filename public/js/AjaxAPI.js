@@ -4,7 +4,7 @@ class AjaxAPI {
     }
 
     post(url, data) {
-        this.xhr.open('POST', url, true)
+        this.xhr.open('POST', url)
         this.xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
         this.xhr.send(data)
     }

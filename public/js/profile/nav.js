@@ -265,7 +265,6 @@ document.body.addEventListener('click', (e) => {
                     console.log(err)
                 }
             }
-            
             // Chat
         } else if(_classList.contains('mail-icon')) {
             alert('mail')

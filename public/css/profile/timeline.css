@@ -646,6 +646,10 @@
     margin: 15px;
 }
 
+.loader-div {
+    text-align: center;
+}
+
 .n-content {
     text-align: center;
 }

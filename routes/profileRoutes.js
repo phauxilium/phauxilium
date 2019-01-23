@@ -466,10 +466,8 @@ route.post('/set/appointment', (req, res) => {
             ref = db.ref(`users/${sched.key}`)
             let childRef = ref.child('appointments')
             
-            // TODO!!!!!!
-            // GENERATE THE SAME ID WITH PATIENTS APPOINTMENT
             childRef.push({
-                    date: sched.date,
+                    date: sched.date.toString(),
                     time: sched.time,
                     receiver: sched.key,
                     sender: req.session.ussID,
@@ -477,42 +475,40 @@ route.post('/set/appointment', (req, res) => {
                     img: datas.basicInfo.profile,
                     status: 'pending',
                     uType: 'patient'
+                }).then(snap => {
+                    // Set Doctors Notificatiton
+                    childRef = ref.child('notifs')
+                    childRef.once('value', count => {
+                        childRef = ref.child(`notifs/${count.numChildren()}`)
+                        childRef.update({
+                            date: new Date(),
+                            message: `${name} wants to set an appointment with you at ${finalDate}`,
+                            name: name,
+                            receiver: sched.key,
+                            sender: req.session.ussID,
+                            img: datas.basicInfo.profile,
+                            uType: 'patient',
+                            type: 'pending',
+                            status: 'new'
+                        }, err => {
+                            if (!err) res.send(sched.err)
+                        })
+                    })
+
+                    // Set patients appointment
+                    ref = db.ref(`users/${req.session.ussID}/appointments`)
+                    childRef = ref.child(snap.key)
+                    childRef.update({
+                        sender: req.session.ussID,
+                        receiver: sched.key,
+                        date: sched.date,
+                        time: sched.time,
+                        name: name,
+                        img: datas.basicInfo.profile,
+                        status: 'pending',
+                        uType: 'doctor'
+                    })
                 })
-
-            // Set Doctors Notificatiton
-                // childRef = ref.child('notifs')
-                // childRef.once('value', count => {
-                //     childRef = ref.child(`notifs/${count.numChildren()}`)
-                //     childRef.update({
-                //         date: new Date(),
-                //         message: `${name} wants to set an appointment with you at ${finalDate}`,
-                //         name: name,
-                //         receiver: sched.key,
-                //         sender: req.session.ussID,
-                //         img: datas.basicInfo.profile,
-                //         uType: 'patient',
-                //         type: 'pending',
-                //         status: 'new'
-                //     }, err => {
-                //         if (!err) res.send(sched.err)
-                //     })
-                // })
-
-                // Set patients appointment
-                // ref = db.ref(`users/${req.session.ussID}/appointments`)
-                // ref.once('value', count => {
-                //     childRef = ref.child(count.numChildren())
-                //     childRef.update({
-                //         sender: req.session.ussID,
-                //         receiver: sched.key,
-                //         date: sched.date,
-                //         time: sched.time,
-                //         name: name,
-                //         img: datas.basicInfo.profile,
-                //         status: 'pending',
-                //         uType: 'doctor'
-                //     })
-                // })
         })
     } else {
         res.send(sched.err)
@@ -550,6 +546,20 @@ route.post('/get-schedules', (req, res) => {
             }
             res.send(schedules)
         })
+    } else if(req.body.type === 'upcoming') {
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            for (key in datas) {
+                if (datas !== 0) {
+                    if (datas[key].status === 'upcoming') {
+                        schedules[key] = datas[key]
+                    }
+                }
+            }
+            res.send(schedules)
+        })
+    } else {
+        res.sendStatus(500)
     }
 })
 
@@ -594,8 +604,24 @@ route.post('/accept-req', (req, res) => {
                     uType: 'doctor',
                     type: 'message',
                     status: 'new'
-                }, () => {
-                    res.send({err: 'nice'})
+                }, err => {
+                    if(!err) {
+                        ref = db.ref(`users/${req.body.sender}/appointments`)
+                        childRef = ref.child(req.body.appointmentID)
+                        if (dateStr === dateNowStr) {
+                            childRef.update({
+                                status: 'today'
+                            }, err => {
+                                if(!err) res.send({ nice :'nice' })
+                            })
+                        } else {
+                            childRef.update({
+                                status: 'upcoming'
+                            }, err => {
+                                    if (!err) res.send({ nice: 'nice' })
+                            })
+                        }
+                    }
                 })
             })
         })
@@ -632,43 +658,6 @@ route.get('/messages/:id', (req, res) => {
     }
 })
 
-// Send Message
-route.post('/send-message', (req, res) => {
-   if(validator.trim(req.body.msg) === '') {
-       res.send('')
-   } else {
-       const fire = new FireAdmin()
-       const db = fire.firebase.database()
-       // Senders copy
-       let ref = db.ref(`users/${req.session.ussID}/messages`)
-       ref.once('value', snapshots => {
-           let id = snapshots.numChildren()
-           let childRef = ref.child(id)
-           childRef.update({
-               sender: req.session.ussID,
-               receiver: req.body.key,
-               msg: req.body.msg,
-               date: new Date().toString(),
-           })
-       })
-
-       // Receivers Copy
-       ref = db.ref(`users/${req.body.key}/messages`)
-       ref.once('value', snapshots => {
-           let id = snapshots.numChildren()
-           let childRef = ref.child(id)
-           childRef.update({
-               sender: req.session.ussID,
-               receiver: req.body.key,
-               msg: req.body.msg,
-               date: new Date().toString(),
-               status: 'new'
-           })
-       })
-   }
-})
-
-
 // ------------- Signout --------------
 route.get('/sign/o', (req, res) => {
     if(req.session.ussID) {
@@ -681,6 +670,51 @@ route.get('/sign/o', (req, res) => {
 
 module.exports = (io) => {
     io.on('connection', socket => {
+
+        // Send Message
+        socket.on('chat send', data => {
+            const fire = new FireAdmin()
+            const db = fire.firebase.database()
+            // Senders copy
+            let ref = db.ref(`users/${data.sender}/messages`)
+            ref.once('value', snapshots => {
+                let id = snapshots.numChildren()
+                let childRef = ref.child(id)
+                childRef.update({
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    msg: crypto.encrypt(data.msg),
+                    date: new Date().toString(),
+                })
+            })
+
+            // Receivers Copy
+            ref = db.ref(`users/${data.receiver}/messages`)
+            ref.once('value', snapshots => {
+                let datas = snapshots.val()
+                let id = snapshots.numChildren()
+                let childRef = 0                
+                for(let key in datas) {
+                    if(datas[key].receiver === data.receiver  && datas[key].status === 'new') {
+                        childRef = ref.child(key)
+                        childRef.update({
+                            status: 'old'
+                        })
+                    }   
+                }   
+                
+                childRef = ref.child(id)
+                childRef.update({
+                    sender: data.sender,
+                    receiver: data.receiver,
+                    msg: crypto.encrypt(data.msg),
+                    date: new Date().toString(),
+                    status: 'new'
+                })
+            })
+        })
+
+        // For Realtime Updates
         socket.on('signed in', room => {
             const fire = new FireAdmin()
             const db = fire.firebase.database()
@@ -703,16 +737,25 @@ module.exports = (io) => {
                 ref = db.ref(`users/${room}/messages`)
                 ref.on('value', snapshots => {
                     let count = 0
+                    let msgObj = {}
                     let msgs = snapshots.val()
                     for (msg in msgs) {
                         if (msgs[msg] !== 0) {
                             if (msgs[msg].status === 'new') count++
+                            msgObj[msg] = {
+                                date: msgs[msg].date,
+                                msg: crypto.decrypt(msgs[msg].msg, (err, data) => data),
+                                receiver: msgs[msg].receiver,
+                                sender: msgs[msg].sender,
+                            }
                         }
                     }
+
                     io.to(room).emit('chat count', count)
-                    io.to(room).emit('chat updates', snapshots.val())
+                    io.to(room).emit('chat updates', msgObj)
                 })
 
+                
                 // Doctor specialty update
                 if(uType === 'doctor') {
                     ref = db.ref(`users/${room}/specialty`)

@@ -1,11 +1,16 @@
 function sendMessage(event) {
     event.preventDefault()
-    const Ajax = new AjaxAPI()
     let textArea = document.querySelector('.chat-textarea')
+    let receiver = document.querySelector('.key').value
+    let sender = document.querySelector('.channel').value
 
-    let key = document.querySelector('.key').value
-    Ajax.post('/u/send-message', `msg=${textArea.value.replace(/\r?\n/gi, '')}&key=${key}`)
-    textArea.value = ''
+    socket.emit('chat send', { 
+        msg: textArea.value.replace(/\r?\n/gi, ''),
+        receiver: receiver,
+        sender: sender 
+     })
+
+     textArea.value = ''
 }
 
 let textareaHeight = document.querySelector('.textarea-div').offsetHeight
@@ -37,7 +42,7 @@ socket.on('chat updates' , datas => {
     let msgs = ''
     let senderKey = document.querySelector('.channel').value
     let receiverKey = document.querySelector('.key').value
-
+    console.log(datas)
     for(key in datas) {
         if(datas[key] !== 0) {
             if((datas[key].sender === senderKey && datas[key].receiver === receiverKey) || 

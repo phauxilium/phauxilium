@@ -31,7 +31,7 @@ socket.on('notif updates', datas => {
                             <img class="notif-img-src" src="${img}" alt="Could'nt load image">
                         </span>
                         <span class="notif-span notif-from">
-                            ${datas[data].from}
+                            ${datas[data].name}
                         </span>
                     </div>
                     <span class="notif-span notif-message ${datas[data].status}-msg">

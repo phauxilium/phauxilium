@@ -224,6 +224,7 @@ document.body.addEventListener('click', e => {
             const _Timeline = new Timeline()
             if(btnClassList.contains('today-btn')) _Timeline.today()
             else if(btnClassList.contains('pending-btn')) _Timeline.pending()
+            else if (btnClassList.contains('upcoming-btn')) _Timeline.upcoming()
         }
 
         // View or Delete Patient Files
@@ -290,8 +291,7 @@ document.body.addEventListener('click', e => {
                 Ajax.xhr.onreadystatechange = () => {
                     try {
                         if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
-                            let datas = JSON.parse(Ajax.xhr.responseText)
-                            console.log(datas)
+                            // let datas = JSON.parse(Ajax.xhr.responseText)
                             e.target.getAttribute = 'Accepted'
                             setTimeout(() => {
                                 const _Timeline = new Timeline()

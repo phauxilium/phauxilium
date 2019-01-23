@@ -310,14 +310,14 @@ router.post('/c/s/p', (req, res) => {
                     patientFiles: [0],
                     specialty: [0],
                     messages: [0],
-                    notifs: [0,
-                        {
-                            from: 'Auxilium Team',
-                            message: 'We are still verifying your account. Some features of Auxilium is restricted until we fuck ya!',
-                            date: new Date(),
-                            type: 'message',
-                            status: 'new'
-                        }
+                    notifs: [0
+                        // {
+                        //     from: 'Auxilium Team',
+                        //     message: 'We are still verifying your account. Some features of Auxilium is restricted until we fuck ya!',
+                        //     date: new Date(),
+                        //     type: 'message',
+                        //     status: 'new'
+                        // }
                     ],
                     uType: auth.uType,
                     status: {
