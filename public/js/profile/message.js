@@ -42,7 +42,6 @@ socket.on('chat updates' , datas => {
     let msgs = ''
     let senderKey = document.querySelector('.channel').value
     let receiverKey = document.querySelector('.key').value
-    console.log(datas)
     for(key in datas) {
         if(datas[key] !== 0) {
             if((datas[key].sender === senderKey && datas[key].receiver === receiverKey) || 

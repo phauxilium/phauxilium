@@ -628,7 +628,7 @@ route.post('/accept-req', (req, res) => {
     })
 })
 
-// ----------- Message
+// ----------- Get Individual Messages
 route.get('/messages/:id', (req, res) => {
     if(req.session.ussID === '' || req.session.ussID === undefined) res.redirect('/')
     else {
@@ -656,6 +656,25 @@ route.get('/messages/:id', (req, res) => {
             }
         })
     }
+})
+
+// Get all message
+route.post('/view/messages', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/messages`)
+    ref.once('value', snapshots => {
+        let datas = snapshots.val()
+        let msgObj = {}
+        for(let key in datas) {
+            if(datas[key].status === 'new') {
+                msgObj[key] = {
+                    msg: crypto.decrypt(datas[key].msg, (err, data) => data)
+                }
+            }
+        }
+        res.send(msgObj)
+    })
 })
 
 // ------------- Signout --------------
@@ -693,7 +712,9 @@ module.exports = (io) => {
             ref.once('value', snapshots => {
                 let datas = snapshots.val()
                 let id = snapshots.numChildren()
-                let childRef = 0                
+                let childRef = 0
+                
+                // Update new messages to old
                 for(let key in datas) {
                     if(datas[key].receiver === data.receiver  && datas[key].status === 'new') {
                         childRef = ref.child(key)
@@ -703,6 +724,7 @@ module.exports = (io) => {
                     }   
                 }   
                 
+                // Inserting new message
                 childRef = ref.child(id)
                 childRef.update({
                     sender: data.sender,

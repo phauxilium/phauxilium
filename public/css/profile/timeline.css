@@ -639,8 +639,8 @@
     margin-bottom: 5px;
 }
 
-/* -------------- Notification Div -------------- */
 
+/* -------------- Notification Div -------------- */
 .loader {
     width: 40px;
     margin: 15px;
@@ -650,11 +650,11 @@
     text-align: center;
 }
 
-.n-content {
+.n-content, .m-content {
     text-align: center;
 }
 
-.notif-div {
+.notif-div, .message-div {
     text-align: left;
     background-color: white;
     border: 1px solid lightgray;
@@ -669,9 +669,10 @@
     font-weight: bold;
 }
 
-.notif-title {
+.notif-title, .message-title {
     padding: 15px;
     border-bottom: 1px solid lightgray;
+
 }
 
 .notif-content {
@@ -726,9 +727,8 @@
     color: gray;
 }
 
+
 /* Search */
-
-
 .true-results, .false-result {
     border: 1px solid lightgray;
     padding: 15px;
@@ -870,15 +870,6 @@
     border: 1px solid #1da1f2;
     cursor: pointer;
     outline: none;
-}
-
-.message-div {
-    padding: 10px;
-    word-wrap: break-word;
-}
-
-.message-div:nth-child(even) {
-    background-color: rgba(211, 211, 211, 0.3)
 }
 
 .chat-name {

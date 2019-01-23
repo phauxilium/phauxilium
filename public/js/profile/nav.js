@@ -267,7 +267,38 @@ document.body.addEventListener('click', (e) => {
             }
             // Chat
         } else if(_classList.contains('mail-icon')) {
-            alert('mail')
+            if (window.innerWidth <= 768) {
+                try {
+                    let profileDiv = document.querySelector('.profile-div')
+                    profileDiv.style.display = "none"
+                    profileDiv.classList.remove('search-profile-div')
+                    profileDiv.classList.remove('view-my-profile')
+                } catch (err) {
+                    console.log('')
+                }
+            }
+            document.querySelector('.center-div').innerHTML = `
+            <div class="inner-profile-div">
+                <img src="/static/images/loader.svg" class="loader">
+            </div>
+        `
+            const _Messages = new Messages()
+            const RenderDOM = new Render()
+            RenderDOM.render(_Messages.main(), centerDiv)
+
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/messages', '')
+            Ajax.xhr.onreadystatechange = () => {
+                try {
+                    if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        let datas = JSON.parse(Ajax.xhr.responseText)
+                        const _Messages = new Messages()
+                        _Messages.appendData(datas)
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
         }
     }
 
@@ -293,11 +324,7 @@ document.body.addEventListener('click', (e) => {
             profileDiv.classList.remove('search-profile-div')
             profileDiv.classList.add('view-my-profile')
             profileDiv.style.display = "block"
-            profileDiv.innerHTML = `
-            <div class="inner-profile-div">
-                <img src="/static/images/loader.svg" class="loader">
-            </div>
-        `
+    
 
             const centerDiv = document.querySelector('.center-div')
             centerDiv.innerHTML = `
