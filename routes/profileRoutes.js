@@ -27,14 +27,37 @@ route.get('/t/', (req, res) => {
     } else {
         const fire = new FireAdmin()
         const db = fire.firebase.database()
-        const ref = db.ref('users')
-        const childRef = ref.child(sessionID)
+        let ref = db.ref('users')
+        let childRef = ref.child(sessionID)
         childRef.once('value', snapshots => {
             let datas = snapshots.val()
             let email = crypto.decrypt(datas.auth.email, (err, data) => data)
             let prc = crypto.decrypt(datas.basicInfo.prc, (err, data) =>data)
             uType = datas.uType
             res.render('profile/profile', {docs: datas, channel: sessionID, email: email, prc: prc})
+        })
+
+        // Update Todays Schedule
+        let dateNow = new Date().toString().split(' ')
+        let dateNowStr = `${dateNow[0]} ${dateNow[1]} ${dateNow[2]} ${dateNow[3]}`
+        ref = db.ref(`users/${req.session.ussID}/appointments`)
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            for (let key in datas) {
+                if (key !== '0') {
+                    childRef = ref.child(key)
+                    childRef.once('value', snapshots => {
+                        let datas = snapshots.val()
+                        let date = datas.date.split(' ')
+                        let dateStr = `${date[0]} ${date[1]} ${date[2]} ${date[3]}`
+                        if (dateStr === dateNowStr && datas.status !== 'pending') {
+                            childRef.update({
+                                status: 'today'
+                            })
+                        }
+                    })
+                }
+            }
         })
     }
 })
@@ -223,7 +246,36 @@ route.post('/view/individual/patient-profile', (req, res) => {
     const db = fire.firebase.database()
     const ref = db.ref(`users/${req.session.ussID}/patientFiles/${req.body.key}`)
     ref.once('value', snapshots => {
-        res.send(snapshots.val())
+        let datas = snapshots.val()
+        let medArr = []
+        for(let key in datas.medRecords) {
+            medArr.push({
+                attached: crypto.decrypt(datas.medRecords[key].attached, (err, data) => data),
+                complains: crypto.decrypt(datas.medRecords[key].complains, (err, data) => data),
+                filename: crypto.decrypt(datas.medRecords[key].filename, (err, data) => data),
+                findings: crypto.decrypt(datas.medRecords[key].findings, (err, data) => data),
+                date: datas.medRecords[key].date
+            })
+        }
+        let meds = {
+            address: datas.address,
+            age: datas.age,
+            bloodType: datas.bloodType,
+            cStatus: datas.cStatus,
+            companion: datas.companion,
+            date: datas.date,
+            dob: datas.dob,
+            email: datas.email,
+            fname: datas.fname,
+            gender: datas.gender,
+            history: datas.history,
+            lname: datas.lname,
+            medRecords: medArr,
+            mname: datas.mname,
+            occupation: datas.occupation
+        }
+
+        res.send(meds)
     })
 })
 
@@ -244,8 +296,8 @@ route.post('/add/med-records', upload.single('attach'), (req, res, next) => {
            ref.once('value', snapshots => {
                let childRef = ref.child(snapshots.numChildren())
                childRef.update({
-                   complains: req.body.complains,
-                   findings: req.body.findings,
+                   complains: crypto.encrypt(req.body.complains),
+                   findings: crypto.encrypt(req.body.findings),
                    filename: '',
                    attached: '',
                    date: new Date().toString()
@@ -270,10 +322,10 @@ route.post('/add/med-records', upload.single('attach'), (req, res, next) => {
                                        ref.once('value', snapshots => {
                                            let childRef = ref.child(snapshots.numChildren())
                                            childRef.update({
-                                               complains: req.body.complains,
-                                               findings: req.body.findings,
-                                               filename: filename,
-                                               attached: originalname,
+                                               complains: crypto.encrypt(req.body.complains),
+                                               findings: crypto.encrypt(req.body.findings),
+                                               filename: crypto.encrypt(filename),
+                                               attached: crypto.encrypt(originalname),
                                                date: new Date().toString()
                                            }, err => {
                                                if(!err) res.send(error) 
@@ -435,13 +487,16 @@ route.post('/set/appointment', (req, res) => {
     let dateNow = new Date()
     let sched = {
         date: new Date(req.body.date),
+        compareDate: new Date(`${req.body.date} ${req.body.time}`),
         time: req.body.time,
         key: req.body.key,
         err: {}
     }
 
+    console.log(req.body.date)
+
     if(sched.date.toString() === 'Invalid Date') sched.err.errDate = 'Date cannot be empty.'
-    else if(sched.date < dateNow) sched.err.errDate = 'Invalid date.'
+    else if(sched.compareDate < dateNow) sched.err.errDate = 'Invalid date.'
     else sched.err.errDate = ''
     sched.err.errTime = !sched.time ? 'Time cannot be empty' : ''
     sched.err.errKey = !sched.key ? 'An error occur' : ''
@@ -596,7 +651,7 @@ route.post('/accept-req', (req, res) => {
                 childRef = ref.child(count.numChildren())
                 childRef.update({
                     date: new Date(),
-                    message: `Dr. ${name} accepted your request.`,
+                    message: `Dr. ${name} accepted your appointment request.`,
                     name: name,
                     receiver: req.body.sender,
                     sender: req.session.ussID,

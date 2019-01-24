@@ -1,4 +1,21 @@
 class Timeline {
+    constructor() {
+        this.MONTH = {
+            'Jan': 1,
+            'Feb': 2,
+            'Mar': 3,
+            'Apr': 4,
+            'May': 5,
+            'Jun': 6,
+            'Jul': 7,
+            'Aug': 8,
+            'Sep': 9,
+            'Oct': 10,
+            'Nov': 11,
+            'Dec': 12
+        }
+    }
+
     upcoming() {
         document.querySelector('.center-div').innerHTML = `
                     <div class="timeline-div col-12">
@@ -78,7 +95,7 @@ class Timeline {
                             hours = time[0]
                         }
 
-                        let meridiem = time[0] > 12 ? 'pm' : 'am'
+                        let meridiem = time[0] > 12 ? 'PM' : 'AM'
                         let finTime = `${hours}:${time[1]} ${meridiem}`
                         let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
                         
@@ -170,7 +187,7 @@ class Timeline {
                                 hours = time[0]
                             }
 
-                            let meridiem = time[0] > 12 ? 'pm' : 'am'
+                            let meridiem = time[0] > 12 ? 'PM' : 'AM'
                             let finTime = `${hours}:${time[1]} ${meridiem}`
                             let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 
@@ -256,11 +273,39 @@ class Timeline {
                 if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
                     let datas = JSON.parse(Ajax.xhr.responseText)
                     let dataStr = JSON.stringify(datas)
+                    let arr = []
                     if (dataStr === '{}') {
                         schedContent = '<div class="nothing">Nothing to show</div>'
                     } else {
                         for (let key in datas) {
+                            let dateStr = new Date(datas[key].date).toString().split(' ')
                             let time = datas[key].time.split(':')
+
+                            arr.push({
+                                finDate: new Date(`${dateStr[1]} ${dateStr[2]}, ${dateStr[3]}, ${time[0]}:${time[1]}:00`),
+                                key: key,
+                                date: datas[key].date,
+                                img: datas[key].img,
+                                name: datas[key].name,
+                                receiver: datas[key].receiver,
+                                sender: datas[key].sender,
+                                status: datas[key].status,
+                                time: datas[key].time,
+                                uType: datas[key].uType
+                            })
+                        }
+
+                        arr.sort((a, b) => {
+                            a = a.finDate
+                            b = b.finDate
+
+                            return a - b
+                        })
+
+                        console.log(arr)
+
+                        for(let key in arr) {
+                            let time = arr[key].time.split(':')
                             let hours = ''
                             if (time[0] === '00') {
                                 hours = 12
@@ -270,25 +315,32 @@ class Timeline {
                                 hours = time[0]
                             }
 
-                            let meridiem = time[0] > 12 ? 'pm' : 'am'
+                            let meridiem = time[0] > 12 ? 'PM' : 'AM'
                             let finTime = `${hours}:${time[1]} ${meridiem}`
                             // let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
+
+                            let btns = `
+                                <div class="accept-decline-div">
+                                    <button class="accept-btn">Reschedule</button>
+                                    <button class="decline-btn">Cancel</button>
+                                </div>`
 
                             schedContent += `
                             <div class="outer-sched" data-key=${key}>
                                 <div class="schedule-header">
                                     <div class="sched-avatar-div">
-                                        <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[key].uType}/${datas[key].img}" class="sched-avatar" alt="Couldn't load image">
+                                        <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${arr[key].uType}/${arr[key].img}" class="sched-avatar" alt="Couldn't load image">
                                     </div>
                                     <div class="col-9">
                                         <div class="sched-name-div">
-                                            ${datas[key].name}
+                                            ${arr[key].name}
                                         </div>
                                         <div class="sched-time-div">
                                             ${finTime}
                                         </div>
                                     </div>
                                 </div>
+                                ${btns}
                             </div>
                         `
                         }
