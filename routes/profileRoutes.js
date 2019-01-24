@@ -596,7 +596,7 @@ route.post('/accept-req', (req, res) => {
                 childRef = ref.child(count.numChildren())
                 childRef.update({
                     date: new Date(),
-                    message: `${name} accepted your request.`,
+                    message: `Dr. ${name} accepted your request.`,
                     name: name,
                     receiver: req.body.sender,
                     sender: req.session.ussID,
@@ -667,13 +667,32 @@ route.post('/view/messages', (req, res) => {
         let datas = snapshots.val()
         let msgObj = {}
         for(let key in datas) {
-            if(datas[key].status === 'new') {
-                msgObj[key] = {
-                    msg: crypto.decrypt(datas[key].msg, (err, data) => data)
+            if(datas[key].sender !== req.session.ussID && key !== '0') {
+                msgObj[datas[key].sender] = {
+                    date: datas[key].date,
+                    msg: crypto.decrypt(datas[key].msg, (err, data) => data),
+                    receiver: datas[key].receiver,
+                    sender: datas[key].sender,
+                    status: datas[key].status,
+                    key: key,
+                    profile: datas[key].profile,
+                    name: datas[key].name,
+                    uType: datas[key].uType
                 }
             }
         }
         res.send(msgObj)
+    })
+})
+
+// Update Message
+route.post('/update-msg', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/messages`)
+    const childRef = ref.child(req.body.key)
+    childRef.update({
+        status: 'old'
     })
 })
 
@@ -694,44 +713,56 @@ module.exports = (io) => {
         socket.on('chat send', data => {
             const fire = new FireAdmin()
             const db = fire.firebase.database()
-            // Senders copy
-            let ref = db.ref(`users/${data.sender}/messages`)
+            let ref = db.ref(`users/${data.sender}`)
             ref.once('value', snapshots => {
-                let id = snapshots.numChildren()
-                let childRef = ref.child(id)
-                childRef.update({
-                    sender: data.sender,
-                    receiver: data.receiver,
-                    msg: crypto.encrypt(data.msg),
-                    date: new Date().toString(),
-                })
-            })
 
-            // Receivers Copy
-            ref = db.ref(`users/${data.receiver}/messages`)
-            ref.once('value', snapshots => {
                 let datas = snapshots.val()
-                let id = snapshots.numChildren()
-                let childRef = 0
-                
-                // Update new messages to old
-                for(let key in datas) {
-                    if(datas[key].receiver === data.receiver  && datas[key].status === 'new') {
-                        childRef = ref.child(key)
-                        childRef.update({
-                            status: 'old'
-                        })
-                    }   
-                }   
-                
-                // Inserting new message
-                childRef = ref.child(id)
-                childRef.update({
-                    sender: data.sender,
-                    receiver: data.receiver,
-                    msg: crypto.encrypt(data.msg),
-                    date: new Date().toString(),
-                    status: 'new'
+                let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
+                let uType = datas.uType
+                let profile = datas.basicInfo.profile
+
+                // Senders copy
+                ref = db.ref(`users/${data.sender}/messages`)
+                ref.once('value', snapshots => {
+                    let id = snapshots.numChildren()
+                    let childRef = ref.child(id)
+                    childRef.update({
+                        sender: data.sender,
+                        receiver: data.receiver,
+                        msg: crypto.encrypt(data.msg),
+                        date: new Date().toString(),
+                    })
+                })
+
+                // Receivers Copy
+                ref = db.ref(`users/${data.receiver}/messages`)
+                ref.once('value', snapshots => {
+                    let datas = snapshots.val()
+                    let id = snapshots.numChildren()
+                    let childRef = 0
+
+                    // Update new messages to old
+                    for (let key in datas) {
+                        if (datas[key].receiver === data.receiver && datas[key].sender === data.sender && datas[key].status === 'new') {
+                            childRef = ref.child(key)
+                            childRef.update({
+                                status: 'old'
+                            })
+                        }
+                    }
+
+                    // Inserting new message
+                    childRef = ref.child(id)
+                    childRef.update({
+                        sender: data.sender,
+                        receiver: data.receiver,
+                        msg: crypto.encrypt(data.msg),
+                        date: new Date().toString(),
+                        status: 'new',
+                        name: name,
+                        uType: uType,
+                        profile: profile
+                    })
                 })
             })
         })
@@ -772,11 +803,28 @@ module.exports = (io) => {
                             }
                         }
                     }
-
                     io.to(room).emit('chat count', count)
                     io.to(room).emit('chat updates', msgObj)
-                })
 
+                    let datas = snapshots.val()
+                    let msgsObj = {}
+                    for (let key in datas) {
+                        if (datas[key].sender !== room && key !== '0') {
+                            msgsObj[datas[key].sender] = {
+                                date: datas[key].date,
+                                msg: crypto.decrypt(datas[key].msg, (err, data) => data),
+                                receiver: datas[key].receiver,
+                                sender: datas[key].sender,
+                                status: datas[key].status,
+                                key: key,
+                                profile: datas[key].profile,
+                                name: datas[key].name,
+                                uType: datas[key].uType
+                            }
+                        }
+                    }
+                    io.to(room).emit('all chats updates', msgsObj)
+                })
                 
                 // Doctor specialty update
                 if(uType === 'doctor') {

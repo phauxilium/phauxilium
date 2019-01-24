@@ -60,7 +60,7 @@ class Timeline {
                         }
                     }
                     // Sorting Time
-                    arr.sort(function (a, b) {
+                    arr.sort((a, b) => {
                         a = new Date(a.finDate);
                         b = new Date(b.finDate);
                         return a - b;

@@ -1,4 +1,5 @@
 const Notif = new Notification()
+const _Messages = new Messages()
 const _Timeline = new Timeline()
 _Timeline.today()    
 
@@ -282,7 +283,6 @@ document.body.addEventListener('click', (e) => {
                 <img src="/static/images/loader.svg" class="loader">
             </div>
         `
-            const _Messages = new Messages()
             const RenderDOM = new Render()
             RenderDOM.render(_Messages.main(), centerDiv)
 
@@ -292,7 +292,6 @@ document.body.addEventListener('click', (e) => {
                 try {
                     if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
                         let datas = JSON.parse(Ajax.xhr.responseText)
-                        const _Messages = new Messages()
                         _Messages.appendData(datas)
                     }
                 } catch (err) {
