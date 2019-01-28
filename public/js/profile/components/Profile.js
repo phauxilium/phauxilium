@@ -295,8 +295,7 @@ class Profile {
         let docs = this.datas
         let name = `${docs.datas.basicInfo.fname} ${docs.datas.basicInfo.mname} ${docs.datas.basicInfo.lname}`
         let specialty = ''
-
-        if(docs.datas.uType === 'doctor') name = `Dr. ${name}`
+        let _specialtyDiv = ''
 
         if(docs.datas.uType === 'doctor' && !this.search) {
             specialty = `
@@ -308,9 +307,21 @@ class Profile {
                         </div>`
 
         }
+
+
+        if (docs.datas.uType === 'doctor') {
+            name = `Dr. ${name}`
+            _specialtyDiv = `
+                    <div class="specialty">
+                            <div class="specialty-content">
+                            </div>
+                            ${specialty}
+                        </div>
+                `
+        }
+
         
         let imgBtn = ''
-
         if(!this.search) {
             imgBtn = `
                 <div class="upload-container">
@@ -383,12 +394,7 @@ class Profile {
                         <div class="name">
                             ${name}
                         </div>
-
-                        <div class="specialty">
-                            <div class="specialty-content">
-                            </div>
-                            ${specialty}
-                        </div>
+                        ${_specialtyDiv}
                         ${connect}
                         <div class="add-bio-div">
 
@@ -417,5 +423,30 @@ class Profile {
 
         this.centerDiv.innerHTML = `
         `
+
+        // Updating profile picture 
+        document.querySelector('.upload-avatar').addEventListener('change', e => {
+            let formData = document.querySelector('.upload-form')
+            let uploadingText = document.querySelector('.uploading-text')
+            uploadingText.textContent = 'Uploading...'
+            const xhr = new XMLHttpRequest()
+            xhr.open('POST', '/u/upload/avatar/', true)
+            xhr.send(new FormData(formData))
+            xhr.onreadystatechange = () => {
+                try {
+                    if(xhr.readyState === 4 && xhr.status === 200) {
+                        let datas = JSON.parse(xhr.responseText)
+                        uploadingText.textContent = ''
+                        if(!datas.fileErr) {
+                            document.querySelector('.image').setAttribute('src', `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.profile}`)
+                        } else {
+                            alert(datas.fileErr)
+                        }
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        })
     }
 }

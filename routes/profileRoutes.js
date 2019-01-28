@@ -894,10 +894,11 @@ route.post('/re-sched', (req, res) => {
                     })
 
                     // Receiver is always the doctor AND Sender is always the patient
+
+                    // Set patients appointment
                     ref = db.ref(`users/${sched.sender}`)
                     ref.once('value', snapshots => {
                         let data = snapshots.val()                    
-                        // Set patients appointment
                         childRef = ref.child(`appointments/${sched.appointmentID}`)
                         childRef.update({
                             date: sched.date,
@@ -906,11 +907,10 @@ route.post('/re-sched', (req, res) => {
                         })
                     })
 
+
+                    // Set doctors appointment
                     ref = db.ref(`users/${sched.receiver}`)
                     ref.once('value', snapshots => {
-                        let data = snapshots.val()
-                        let docImg = data.basicInfo.profile
-                        // Set doctors appointment
                         childRef = ref.child(`appointments/${sched.appointmentID}`)
                         childRef.update({
                             date: sched.date,
