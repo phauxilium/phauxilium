@@ -903,21 +903,19 @@ route.post('/re-sched', (req, res) => {
                             date: sched.date,
                             time: sched.time,
                             status: status,
-                            img: data.basicInfo.profile
                         })
                     })
 
                     ref = db.ref(`users/${sched.receiver}`)
                     ref.once('value', snapshots => {
                         let data = snapshots.val()
-
+                        let docImg = data.basicInfo.profile
                         // Set doctors appointment
                         childRef = ref.child(`appointments/${sched.appointmentID}`)
                         childRef.update({
                             date: sched.date,
                             time: sched.time,
                             status: status,
-                            img: data.basicInfo.profile
                         })
                     })
 
