@@ -299,6 +299,8 @@ class Timeline {
                                 hours = time[0]
                             }
 
+                            let allias = arr[key].uType === 'doctor' ? 'Dr.' : ''
+
                             let meridiem = time[0] >= 12 ? 'PM' : 'AM'
                             let finTime = `${hours}:${time[1]} ${meridiem}`
                             // let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
@@ -317,7 +319,7 @@ class Timeline {
                                     </div>
                                     <div class="col-9">
                                         <div class="sched-name-div">
-                                            ${arr[key].name}
+                                            ${allias} ${arr[key].name}
                                         </div>
                                         <div class="sched-time-div">
                                             ${finTime}

@@ -51,19 +51,17 @@ try {
     document.querySelector('.search-form').addEventListener('submit', e => {
         e.preventDefault()
         searchInput.blur()
-
-        try {
-            if (window.innerWidth <= 768) {
-                document.querySelector('.profile-div').style.display = "none"
-            }
-        } catch (err) {
-            console.log('')
-        }
-
         searchInput.value = searchInput.value.trim()
         if (searchInput.value !== '') {
             icons.forEach(value => {
                 value.classList.remove('active-icon')
+                try {
+                    if (window.innerWidth <= 768) {
+                        document.querySelector('.profile-div').style.display = "none"
+                    }
+                } catch (err) {
+                    console.log('')
+                }
             })
 
             let centerDiv = document.querySelector('.center-div')

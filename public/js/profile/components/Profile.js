@@ -375,7 +375,7 @@ class Profile {
                     </center>
 
                     <form class="upload-form" method="POST" enctype="multipart/form-data">
-                        <input type="file" id="upload-btn">
+                        <input type="file" id="upload-btn" name="upload-avatar" class="upload-avatar">
                     </form>
 
                     <div class="details-div">

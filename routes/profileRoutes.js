@@ -565,13 +565,17 @@ route.post('/set/appointment', (req, res) => {
         
         ref.once('value', snapshots => {
             let datas = snapshots.val()
+            let myImg = datas.basicInfo.profile
             let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
-
+            
             // Set Doctors Appointment
             ref = db.ref(`users/${sched.key}`)
-            let childRef = ref.child('appointments')
-            
-            childRef.push({
+            ref.once('value', snapshots => {
+                let docInfo = snapshots.val()
+                let doctorImg = docInfo.basicInfo.profile
+                let doctorName = `${docInfo.basicInfo.fname} ${docInfo.basicInfo.mname} ${docInfo.basicInfo.lname}`
+                let childRef = ref.child('appointments')
+                childRef.push({
                     date: sched.date.toString(),
                     time: sched.time,
                     receiver: sched.key,
@@ -591,7 +595,7 @@ route.post('/set/appointment', (req, res) => {
                             name: name,
                             receiver: sched.key,
                             sender: req.session.ussID,
-                            img: datas.basicInfo.profile,
+                            img: myImg,
                             uType: 'patient',
                             type: 'pending',
                             status: 'new'
@@ -608,12 +612,13 @@ route.post('/set/appointment', (req, res) => {
                         receiver: sched.key,
                         date: sched.date.toString(),
                         time: sched.time,
-                        name: name,
-                        img: datas.basicInfo.profile,
+                        name: doctorName,
+                        img: doctorImg,
                         status: 'pending',
                         uType: 'doctor'
                     })
                 })
+            })
         })
     } else {
         res.send(sched.err)
@@ -888,18 +893,35 @@ route.post('/re-sched', (req, res) => {
                         status: status
                     })
 
-                    // Receiver is always the doctor
-                    // Sender is always the patient
-                    if(datas.uType === 'doctor') {
-                        ref = db.ref(`users/${sched.sender}`)
+                    // Receiver is always the doctor AND Sender is always the patient
+                    ref = db.ref(`users/${sched.sender}`)
+                    ref.once('value', snapshots => {
+                        let data = snapshots.val()                    
+                        // Set patients appointment
                         childRef = ref.child(`appointments/${sched.appointmentID}`)
                         childRef.update({
                             date: sched.date,
                             time: sched.time,
                             status: status,
-                            img: datas.basicInfo.profile
+                            img: data.basicInfo.profile
                         })
+                    })
 
+                    ref = db.ref(`users/${sched.receiver}`)
+                    ref.once('value', snapshots => {
+                        let data = snapshots.val()
+
+                        // Set doctors appointment
+                        childRef = ref.child(`appointments/${sched.appointmentID}`)
+                        childRef.update({
+                            date: sched.date,
+                            time: sched.time,
+                            status: status,
+                            img: data.basicInfo.profile
+                        })
+                    })
+
+                    if(datas.uType === 'doctor') {
                         // Set Patient Notificatiton
                         childRef = ref.child('notifs')
                         childRef.once('value', count => {
@@ -918,16 +940,7 @@ route.post('/re-sched', (req, res) => {
                                 if (!err) res.send(sched.err)
                             })
                         })
-                    } else {
-                        ref = db.ref(`users/${sched.receiver}`)
-                        childRef = ref.child(`appointments/${sched.appointmentID}`)
-                        childRef.update({
-                            date: sched.date,
-                            time: sched.time,
-                            status: status,
-                            img: datas.basicInfo.profile
-                        })
-
+                    } else if(datas.uType === 'patient') {
                         // Set Doctors  Notificatiton
                         childRef = ref.child('notifs')
                         childRef.once('value', count => {
