@@ -75,6 +75,58 @@ route.post('/my/profile', (req, res) => {
     })   
 })
 
+// Upload Avatar
+route.post('/upload/avatar', upload.single('upload-avatar'), (req, res) => {
+    let error = {}
+    let mimetype = req.file.mimetype
+    let filename = req.file.filename
+    if (mimetype.split('/')[0] === 'image') {
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        const ref = db.ref(`users/${req.session.ussID}`)
+        ref.once('value', snapshots => {
+            let datas = snapshots.val()
+            cloudinary.getCloud().v2.uploader.upload(req.file.path, { 
+                    public_id: `ax-images/${datas.uType}/${req.file.filename}`,
+                    width:  520,
+                    height: 520,
+                    crop: 'fill'
+            }, err => {
+                if (!err) {
+                    fs.unlink(req.file.path, err => {
+                        if (!err) {
+                            let childRef = ref.child('basicInfo')
+                            childRef.update({
+                                profile: filename
+                            }, err => {
+                                if (!err) {
+                                    ref.once('value', snapshots => {
+                                        let datas = snapshots.val()
+                                        res.send({ uType: datas.uType, profile: datas.basicInfo.profile })
+                                    })
+                                }
+                            })
+                        } else {
+                            error.fileErr = 'An error occur.'
+                            res.send(error)
+                        }
+                    })
+                } else {
+                    error.fileErr = err.message
+                    res.send(error)
+                }
+            })
+        })
+    } else {
+        fs.unlink(req.file.path, err => {
+            if (!err) {
+                error.fileErr = `Invalid file type. Images  are only allowed`
+                res.send(error)
+            }
+        })
+    }
+})
+
 // Adding Doctor Datas
 route.post('/d/add', (req, res) => {
     let datas = {
@@ -493,8 +545,6 @@ route.post('/set/appointment', (req, res) => {
         err: {}
     }
 
-    console.log(req.body.date)
-
     if(sched.date.toString() === 'Invalid Date') sched.err.errDate = 'Date cannot be empty.'
     else if(sched.compareDate < dateNow) sched.err.errDate = 'Invalid date.'
     else sched.err.errDate = ''
@@ -505,7 +555,7 @@ route.post('/set/appointment', (req, res) => {
         let dateStr =sched.date.toString().split(' ')
         let time = dateStr[4].split(':')
         let hours = time[0] > 12 ? time[0] - 12 : time[0]
-        let meridiem = time[0] > 12 ? 'pm' : 'am'
+        let meridiem = time[0] >= 12 ? 'pm' : 'am'
         let finTime = `${hours}:${time[1]} ${meridiem}`
         let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 
@@ -556,7 +606,7 @@ route.post('/set/appointment', (req, res) => {
                     childRef.update({
                         sender: req.session.ussID,
                         receiver: sched.key,
-                        date: sched.date,
+                        date: sched.date.toString(),
                         time: sched.time,
                         name: name,
                         img: datas.basicInfo.profile,
@@ -681,6 +731,272 @@ route.post('/accept-req', (req, res) => {
             })
         })
     })
+})
+
+// ----------- Decline Request 
+route.post('/decline-req', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    let ref = db.ref(`users/${req.session.ussID}`)
+    ref.once('value', snapshots => {
+        let datas = snapshots.val()
+        let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
+        let avatar = datas.basicInfo.profile
+        let msg = ''
+
+        if(datas.uType === 'doctor') {
+            msg = `Dr. ${name} canceled your appointment request.`
+
+            let childRef = ref.child(`appointments/${req.body.appointmentID}`)
+            childRef.once('value', snapshots => {
+                childRef.remove()
+
+                ref = db.ref(`users/${req.body.sender}/notifs`)
+                ref.once('value', count => {
+                    childRef = ref.child(count.numChildren())
+                    childRef.update({
+                        date: new Date(),
+                        message: msg,
+                        name: name,
+                        receiver: req.body.sender,
+                        sender: req.session.ussID,
+                        img: avatar,
+                        uType: 'patient',
+                        type: 'message',
+                        status: 'new'
+                    }, err => {
+                        if (!err) {
+                            ref = db.ref(`users/${req.body.sender}/appointments`)
+                            childRef = ref.child(req.body.appointmentID)
+                            childRef.remove()
+                            res.send({ nice: 'nice' })
+                        }
+                    })
+                })
+            })
+        } else {
+            let gender = datas.basicInfo.gender === 'Male' ? 'his' : 'her'
+            msg = `${name} canceled ${gender} appointment request.`
+
+            // Removing patients copy of appointment
+            let childRef = ref.child(`appointments/${req.body.appointmentID}`)
+            childRef.once('value', snapshots => {
+                childRef.remove()
+                ref = db.ref(`users/${req.body.receiver}/notifs`)
+                ref.once('value', count => {
+                    childRef = ref.child(count.numChildren())
+                    childRef.update({
+                        date: new Date(),
+                        message: msg,
+                        name: name,
+                        receiver: req.body.sender,
+                        sender: req.session.ussID,
+                        img: avatar,
+                        uType: 'patient',
+                        type: 'message',
+                        status: 'new'
+                    }, err => {
+                        if (!err) {
+
+                            // Removing Patients copy of appointment
+                            ref = db.ref(`users/${req.body.sender}/appointments`)
+                            childRef = ref.child(req.body.appointmentID)
+                            childRef.remove()
+
+                            // Removing Doctors copy of appointment
+                            ref = db.ref(`users/${req.body.receiver}/appointments`)
+                            childRef = ref.child(req.body.appointmentID)
+                            childRef.remove()
+                            res.send({ nice: 'nice' })
+                        }
+                    })
+                })
+            })
+        }
+    })
+})
+
+// Get Individual Appointments
+route.post('/get/i/appointments', (req, res) => {
+    const fire = new FireAdmin()
+    const db = fire.firebase.database()
+    const ref = db.ref(`users/${req.session.ussID}/appointments`)
+    const childRef = ref.child(req.body.appointmentID)
+    childRef.once('value', snapshots => {
+        res.send(snapshots.val())
+    })
+})
+
+// -------------- Re-scheduling
+route.post('/re-sched', (req, res) => {
+    let dateNow = new Date()
+    let sched = {
+        date: new Date(req.body.date),
+        compareDate: new Date(`${req.body.date} ${req.body.time}`),
+        time: req.body.time,
+        sender: req.body.sender,
+        receiver: req.body.receiver,
+        appointmentID: req.body.appointmentID,
+        err: {}
+    }
+
+    if (sched.date.toString() === 'Invalid Date') sched.err.errDate = 'Date cannot be empty.'
+    else if (sched.compareDate < dateNow) sched.err.errDate = 'Invalid date.'
+    else sched.err.errDate = ''
+    sched.err.errTime = !sched.time ? 'Time cannot be empty' : ''
+    sched.err.errKey = !sched.appointmentID ? 'An error occur' : ''
+
+        let dateStr = sched.compareDate.toString().split(' ')
+        let time = dateStr[4].split(':')
+        let hours = time[0] > 12 ? time[0] - 12 : time[0]
+        let meridiem = time[0] >= 12 ? 'pm' : 'am'
+
+        let finTime = `${hours}:${time[1]} ${meridiem}`
+        let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
+
+        const fire = new FireAdmin()
+        const db = fire.firebase.database()
+        let ref = db.ref(`users/${req.session.ussID}`)
+
+        let childRef = ref.child(`appointments/${sched.appointmentID}`)
+        childRef.once('value', snapshots => {
+            let datas = snapshots.val()
+            let date = new Date(datas.date).toString().split(' ')
+            let dateStr = `${date[0]} ${date[1]} ${date[2]} ${date[3]}`
+            let dateReq = new Date(sched.date).toString().split(' ')
+            let dateReqStr = `${dateReq[0]} ${dateReq[1]} ${dateReq[2]} ${dateReq[3]}`
+            let dateNow = new Date().toString().split(' ')
+            let dateNowStr = `${dateNow[0]} ${dateNow[1]} ${dateNow[2]} ${dateNow[3]}`
+
+            sched.err.errKey = dateStr === dateReqStr && datas.time === sched.time ? 'Must be a different time or date' : ''
+
+            if(!sched.err.errDate && !sched.err.errTime && !sched.err.errKey) {
+                ref.once('value', snapshots => {
+                    let datas = snapshots.val()
+                    let name = `${datas.basicInfo.fname} ${datas.basicInfo.mname} ${datas.basicInfo.lname}`
+                    let gender = datas.basicInfo.gender === 'Male' ? 'his' : 'her'
+                    let status = ''
+
+                    if(datas.uType === 'patient') status = 'pending'
+                    else if (dateReqStr === dateNowStr) status = 'today'
+                    else status = 'upcoming'
+                    
+                    childRef = ref.child(`appointments/${sched.appointmentID}`)
+                    childRef.update({
+                        date: sched.date,
+                        time: sched.time,
+                        status: status
+                    })
+
+                    // Receiver is always the doctor
+                    // Sender is always the patient
+                    if(datas.uType === 'doctor') {
+                        ref = db.ref(`users/${sched.sender}`)
+                        childRef = ref.child(`appointments/${sched.appointmentID}`)
+                        childRef.update({
+                            date: sched.date,
+                            time: sched.time,
+                            status: status,
+                            img: datas.basicInfo.profile
+                        })
+
+                        // Set Patient Notificatiton
+                        childRef = ref.child('notifs')
+                        childRef.once('value', count => {
+                            childRef = ref.child(`notifs/${count.numChildren()}`)
+                            childRef.update({
+                                date: new Date(),
+                                message: `${name} rescheduled your appointment at ${finalDate}`,
+                                name: name,
+                                receiver: sched.sender,
+                                sender: req.session.ussID,
+                                img: datas.basicInfo.profile,
+                                uType: 'doctor',
+                                type: status,
+                                status: 'new'
+                            }, err => {
+                                if (!err) res.send(sched.err)
+                            })
+                        })
+                    } else {
+                        ref = db.ref(`users/${sched.receiver}`)
+                        childRef = ref.child(`appointments/${sched.appointmentID}`)
+                        childRef.update({
+                            date: sched.date,
+                            time: sched.time,
+                            status: status,
+                            img: datas.basicInfo.profile
+                        })
+
+                        // Set Doctors  Notificatiton
+                        childRef = ref.child('notifs')
+                        childRef.once('value', count => {
+                            childRef = ref.child(`notifs/${count.numChildren()}`)
+                            childRef.update({
+                                date: new Date(),
+                                message: `${name} rescheduled ${gender} appointment at ${finalDate}`,
+                                name: name,
+                                receiver: sched.sender,
+                                sender: req.session.ussID,
+                                img: datas.basicInfo.profile,
+                                uType: 'patient',
+                                type: status,
+                                status: 'new'
+                            }, err => {
+                                if (!err) res.send(sched.err)
+                            })
+                        })
+                    }
+                }) 
+            } else {
+                res.send(sched.err)
+            }
+        })
+
+           
+    //         // Set Doctors Appointment
+    //         let childRef = ref.child(`appointments/${sched.appointmentID}`)
+
+    //         childRef.update({
+    //             date: sched.date.toString(),
+    //             time: sched.time,
+    //             img: datas.basicInfo.profile,
+    //             status: 'pending',
+    //             uType: 'patient'
+    //         })
+            
+    //         // Set Doctors Notificatiton
+    //         childRef = ref.child('notifs')
+    //         childRef.once('value', count => {
+    //             childRef = ref.child(`notifs/${count.numChildren()}`)
+    //             childRef.update({
+    //                 date: new Date(),
+    //                 message: `${name} wants to set an appointment with you at ${finalDate}`,
+    //                 name: name,
+    //                 receiver: sched.key,
+    //                 sender: req.session.ussID,
+    //                 img: datas.basicInfo.profile,
+    //                 uType: 'patient',
+    //                 type: 'pending',
+    //                 status: 'new'
+    //             }, err => {
+    //                 if (!err) res.send(sched.err)
+    //             })
+    //         })
+
+    //         // Set patients appointment
+    //         ref = db.ref(`users/${req.session.ussID}/appointments`)
+    //         childRef = ref.child(snap.key)
+    //         childRef.update({
+    //             sender: req.session.ussID,
+    //             receiver: sched.key,
+    //             date: sched.date.toString(),
+    //             time: sched.time,
+    //             name: name,
+    //             img: datas.basicInfo.profile,
+    //             status: 'pending',
+    //             uType: 'doctor'
+    //         })
 })
 
 // ----------- Get Individual Messages

@@ -1,21 +1,5 @@
 class Timeline {
-    constructor() {
-        this.MONTH = {
-            'Jan': 1,
-            'Feb': 2,
-            'Mar': 3,
-            'Apr': 4,
-            'May': 5,
-            'Jun': 6,
-            'Jul': 7,
-            'Aug': 8,
-            'Sep': 9,
-            'Oct': 10,
-            'Nov': 11,
-            'Dec': 12
-        }
-    }
-
+    // Upcoming Schedules
     upcoming() {
         document.querySelector('.center-div').innerHTML = `
                     <div class="timeline-div col-12">
@@ -95,7 +79,7 @@ class Timeline {
                             hours = time[0]
                         }
 
-                        let meridiem = time[0] > 12 ? 'PM' : 'AM'
+                        let meridiem = time[0] >= 12 ? 'PM' : 'AM'
                         let finTime = `${hours}:${time[1]} ${meridiem}`
                         let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
                         
@@ -108,7 +92,7 @@ class Timeline {
                         </div>`
 
                         schedContent += `
-                        <div class="outer-sched" data-key=${arr[key].key} data-sender=${arr[key].sender}>
+                        <div class="outer-sched" data-key=${arr[key].key} data-sender=${arr[key].sender} data-receiver=${arr[key].receiver}>
                             <div class="schedule-header">
                                 <div class="sched-avatar-div">
                                     <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${arr[key].uType}/${arr[key].img}" class="sched-avatar" alt="Couldn't load image">
@@ -134,6 +118,7 @@ class Timeline {
         }
     }
 
+    // Pending Schedules
     pending() {
         document.querySelector('.center-div').innerHTML = `
                         <div class="timeline-div col-12">
@@ -187,7 +172,7 @@ class Timeline {
                                 hours = time[0]
                             }
 
-                            let meridiem = time[0] > 12 ? 'PM' : 'AM'
+                            let meridiem = time[0] >= 12 ? 'PM' : 'AM'
                             let finTime = `${hours}:${time[1]} ${meridiem}`
                             let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 
@@ -209,7 +194,7 @@ class Timeline {
                             }
 
                             schedContent += `
-                            <div class="outer-sched" data-key=${key} data-sender=${datas[key].sender}>
+                            <div class="outer-sched" data-key=${key} data-sender=${datas[key].sender} data-receiver=${datas[key].receiver}>
                                 <div class="schedule-header">
                                     <div class="sched-avatar-div">
                                         <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[key].uType}/${datas[key].img}" class="sched-avatar" alt="Couldn't load image">
@@ -236,6 +221,7 @@ class Timeline {
         }
     }
 
+    // Todays Schedule
     today() {
         document.querySelector('.center-div').innerHTML = `
                         <div class="timeline-div col-12">
@@ -302,8 +288,6 @@ class Timeline {
                             return a - b
                         })
 
-                        console.log(arr)
-
                         for(let key in arr) {
                             let time = arr[key].time.split(':')
                             let hours = ''
@@ -315,7 +299,7 @@ class Timeline {
                                 hours = time[0]
                             }
 
-                            let meridiem = time[0] > 12 ? 'PM' : 'AM'
+                            let meridiem = time[0] >= 12 ? 'PM' : 'AM'
                             let finTime = `${hours}:${time[1]} ${meridiem}`
                             // let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 
@@ -326,7 +310,7 @@ class Timeline {
                                 </div>`
 
                             schedContent += `
-                            <div class="outer-sched" data-key=${key}>
+                            <div class="outer-sched" data-key=${arr[key].key} data-sender=${arr[key].sender} data-receiver=${arr[key].receiver}>
                                 <div class="schedule-header">
                                     <div class="sched-avatar-div">
                                         <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${arr[key].uType}/${arr[key].img}" class="sched-avatar" alt="Couldn't load image">

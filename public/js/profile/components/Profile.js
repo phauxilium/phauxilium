@@ -379,6 +379,7 @@ class Profile {
                     </form>
 
                     <div class="details-div">
+                        <span class="uploading-text"></span>
                         <div class="name">
                             ${name}
                         </div>

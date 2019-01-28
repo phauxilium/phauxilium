@@ -226,7 +226,7 @@ class PatientFiles {
         } else {
             hours = time[0]
         }
-        let meridiem = time[0] > 12 ? 'pm' : 'am'
+        let meridiem = time[0] >= 12 ? 'pm' : 'am'
         let finTime = `${hours}:${time[1]} ${meridiem}`
         let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
         
@@ -250,7 +250,7 @@ class PatientFiles {
                     }
 
 
-                    let meridiem = time[0] > 12 ? 'pm' : 'am'
+                    let meridiem = time[0] >= 12 ? 'pm' : 'am'
                     let finTime = `${hours}:${time[1]} ${meridiem}`
                     let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 

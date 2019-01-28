@@ -4,7 +4,7 @@ class Notification {
         let dateStr = dateObj.toString().split(' ')
         let time = dateStr[4].split(':')
         let hours = time[0] > 12 ? time[0] - 12 : time[0]
-        let meridiem = time[0] > 12 ? 'pm' : 'am'
+        let meridiem = time[0] >= 12 ? 'pm' : 'am'
         let finTime = `${hours}:${time[1]} ${meridiem}`
         let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
         let img = datas.from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.img}`
@@ -58,8 +58,32 @@ class Notification {
 
             const Ajax = new AjaxAPI()
             Ajax.post('/u/view/notif', `notifID=${notifID}`)
+        } else if (notifType === 'upcoming') {
+            document.querySelector('.center-div').innerHTML = `
+                <img src="/static/images/loader.svg" alt="Loading..." class="loader">
+                `
+            const _Timeline = new Timeline()
+            _Timeline.upcoming()
+
+            let navIcons = document.querySelectorAll('.nav-icons')
+            navIcons.forEach(value => value.classList.remove('active-icon'))
+
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/notif', `notifID=${notifID}`)
+        } else if (notifType === 'today') {
+            document.querySelector('.center-div').innerHTML = `
+                <img src="/static/images/loader.svg" alt="Loading..." class="loader">
+                `
+            const _Timeline = new Timeline()
+            _Timeline.today()
+
+            let navIcons = document.querySelectorAll('.nav-icons')
+            navIcons.forEach(value => value.classList.remove('active-icon'))
+
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/view/notif', `notifID=${notifID}`)
         }
-    }
+    } 
 
     appendData(datas) {
         let nContent = document.querySelector('.n-content')
@@ -76,7 +100,7 @@ class Notification {
                     let dateStr = dateObj.toString().split(' ')
                     let time = dateStr[4].split(':')
                     let hours = time[0] > 12 ? time[0] - 12 : time[0]
-                    let meridiem = time[0] > 12 ? 'PM' : 'AM'
+                    let meridiem = time[0] >= 12 ? 'PM' : 'AM'
                     let finTime = `${hours}:${time[1]} ${meridiem}`
                     let finalDate = `${dateStr[0]} - ${dateStr[1]} ${dateStr[2]}, ${dateStr[3]} ${finTime}`
                     let img = datas[data].from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].img}`

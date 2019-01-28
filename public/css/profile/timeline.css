@@ -44,6 +44,13 @@
     background-color: rgba(211, 211, 211, 0.5);
 }
 
+.uploading-text {
+    color: #1da1f2;
+    padding-bottom: 10px;
+    float: left;
+    width: 100%;
+}
+
 .upload-container {
     position: absolute;
     width: 170px;
