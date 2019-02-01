@@ -74,6 +74,7 @@ class Profile {
                 timeTo += `${to[key] || line}<br/>`
             }
 
+
             if(docs.datas.uType === 'doctor' && !this.search) {
                 prc = `
                 <div class="col-6 basic-contents">
@@ -184,6 +185,35 @@ class Profile {
             }
         }
 
+        let address = ''
+        if (!this.search) {
+            dob = `
+                        <div class="col-6 basic-contents">
+                            <span class="basic-label">
+                                Date of Birth:
+                            </span>
+                            <span class="input-data">
+                                ${dob[1]} ${dob[2]}, ${dob[3]}
+                            </span>
+                            <span class="saving-edited"></span>
+                        </div>`
+
+            address = `
+                            <div class="col-6 basic-contents">
+                                <span class="basic-label">
+                                    Address:
+                                </span>
+                                <span class="input-data">
+                                ${docs.datas.basicInfo.address}
+                                </span>
+                                <span class="saving-edited"></span>                            
+                            </div>
+                `
+        } else {
+            dob = ''
+            address = ''
+        }
+
         let details = `
         <div class="profile-title">
             Basic Information
@@ -198,30 +228,30 @@ class Profile {
         </div>
 
         <div class="basic-info-content">
-            <div class="col-6 basic-contents">
+            <div class="col-4 basic-contents">
                 <span class="basic-label">
                     Firstname:
-                </span>
+                </span> <br />
                 <span class="input-data">
                 ${docs.datas.basicInfo.fname}
                 </span>
                 <span class="saving-edited"></span>
             </div>
 
-            <div class="col-6 basic-contents">
+            <div class="col-4 basic-contents">
                 <span class="basic-label">
                     Middle name:
-                </span>
-                <span class="input-data">
+                </span> <br />
+                <span class="input-data"> 
                 ${docs.datas.basicInfo.mname}
                 </span>
                 <span class="saving-edited"></span>
             </div>
 
-            <div class="col-6 basic-contents">
+            <div class="col-4 basic-contents">
                 <span class="basic-label">
                     Lastname:
-                </span>
+                </span> <br />
                 <span class="input-data">
                     ${docs.datas.basicInfo.lname}
                 </span>
@@ -238,25 +268,9 @@ class Profile {
                 <span class="saving-edited"></span>
             </div>
 
-            <div class="col-6 basic-contents">
-                <span class="basic-label">
-                    Date of Birth:
-                </span>
-                <span class="input-data">
-                    ${dob[1]} ${dob[2]}, ${dob[3]}
-                </span>
-                <span class="saving-edited"></span>
-            </div>
+            ${dob}
 
-            <div class="col-6 basic-contents">
-                <span class="basic-label">
-                    Address:
-                </span>
-                <span class="input-data">
-                ${docs.datas.basicInfo.address}
-                </span>
-                <span class="saving-edited"></span>                            
-            </div>
+            ${address}
 
             <div class="col-6 basic-contents">
                 <span class="basic-label">
