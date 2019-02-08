@@ -47,12 +47,16 @@ class DoctorSignup extends PatientSignup {
             }
             
         if (this.state.elementIndex === 0) {
+            this.appendLoading()
+            this.disableInputs()
 
             const Ajax = new AjaxAPI()
             Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}`)
             
             Ajax.xhr.onreadystatechange = () => {
                 if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                    this.enableInputs()
+                    this.appendRemoveEl()
                     try {
                         let datas = JSON.parse(Ajax.xhr.responseText)
 
@@ -74,6 +78,8 @@ class DoctorSignup extends PatientSignup {
                 }
             }
         } else if (this.state.elementIndex === 1) {
+            this.appendLoading()
+            this.disableInputs()
 
             const Ajax = new AjaxAPI()
             Ajax.post('/c/s/p', `uType=doctor&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}&dob=${auth.dob}&gender=${auth.gender}&contact=${auth.contact}&address=${auth.address}`)
@@ -81,6 +87,8 @@ class DoctorSignup extends PatientSignup {
             Ajax.xhr.onreadystatechange = () => {
                 try {
                     if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        this.enableInputs()
+                        this.appendRemoveEl()
                         let datas = JSON.parse(Ajax.xhr.responseText)
 
                         let dobHelper = document.querySelector('.dob-helper')
@@ -141,11 +149,7 @@ class DoctorSignup extends PatientSignup {
                                 setTimeout(() => {
                                     signupMessage.style.display = 'none'
 
-                                    let SignIn = new Signin()
-                                    let RenderDOM = new Render()
-                                    RenderDOM.render(SignIn.main(), this.state.signForm)
-
-                                    document.querySelector('.email').focus()
+                                   window.location = '/u/t'
                                 }, 3000)
                             } else if (datas.fireError) {
                                 alert(datas.fireError)

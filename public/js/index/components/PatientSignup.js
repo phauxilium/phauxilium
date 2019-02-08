@@ -86,12 +86,17 @@ class PatientSignup{
         }
 
         if (this.state.nextBtn[0].textContent === 'Next') {
+            this.appendLoading()
+            this.disableInputs()
 
             const Ajax = new AjaxAPI()
             Ajax.post('/c/s/p', `uType=patient&fname=${auth.fname}&mname=${auth.mname}&lname=${auth.lname}`)
    
             Ajax.xhr.onreadystatechange = () => {
                 if(Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                    this.appendRemoveEl()
+                    this.enableInputs()
+                    
                     try {
                         let datas = JSON.parse(Ajax.xhr.responseText)
 
@@ -162,11 +167,7 @@ class PatientSignup{
 
                             setTimeout(() => {
                                 signupMessage.style.display = 'none'
-
-                                let SignIn = new Signin()
-                                let RenderDOM = new Render()
-                                RenderDOM.render(SignIn.main(), this.state.signForm)
-                                document.querySelector('.email').focus()
+                                window.location = '/u/t'
                             }, 3000)
                         } else if(datas.fireError) {
                             alert(datas.fireError)

@@ -78,8 +78,8 @@ class Profile {
             if(docs.datas.uType === 'doctor' && !this.search) {
                 prc = `
                 <div class="col-6 basic-contents">
-                    <span class="basic-label">
-                        PRC License number:
+                    <span class="basic-label labels">
+                        PRC License number
                         </span>
                     <span class="input-data">
                         ${docs.prc}
@@ -91,6 +91,7 @@ class Profile {
 
             if (docs.datas.uType === 'doctor') {
                 let searchBtn = ''
+                let editBtn = ''
 
                 if(!this.search) {
                     searchBtn = `
@@ -101,20 +102,24 @@ class Profile {
                         Edit schedule
                     </span>
                     `
-                }
 
-                clinicInfo = `
-                <div class="outer-clinic-content">
-                    <div class="clinic-title">
-                        Clinic Information
-                        <!-- <span class="edit-clinic-info">
+                    editBtn = `
+                        <span class="edit-clinic-info">
                             <i class="material-icons edit-clinic-icon">
                                 edit
                             </i>
                             <span class="edit-clinic-text">
                                 Edit Clinic info
                             </span>
-                        </span>
+                        </span>`
+                }
+
+                clinicInfo = `
+                <div class="outer-clinic-content">
+                    <div class="clinic-title">
+                        Clinic Information
+                        ${editBtn}
+                        <!-- 
                         <span class="add-clinic">
                             <i class="material-icons add-clinic-icon">
                                 add
@@ -127,8 +132,8 @@ class Profile {
                     
                     <div class="clinic-info-content">
                         <div class="col-6 clinic-contents">
-                            <span class="clinic-label">
-                                Clinic's name:
+                            <span class="clinic-label labels">
+                                Clinic's name
                             </span>
                             <span class="input-data">
                                 ${docs.datas.clinics[0].name}
@@ -136,8 +141,8 @@ class Profile {
                         </div>
                     
                         <div class="col-6 clinic-contents">
-                            <span class="clinic-label">
-                                Location:
+                            <span class="clinic-label labels">
+                                Location
                             </span>
                             <span class="input-data">
                                 ${docs.datas.clinics[0].address}
@@ -145,8 +150,8 @@ class Profile {
                         </div>
                     
                         <div class="col-9 clinic-contact">
-                            <span class="clinic-label">
-                                Clinic's contact number:
+                            <span class="clinic-label labels">
+                                Clinic's contact number
                             </span>
                             <span class="input-data">
                                 ${docs.datas.clinics[0].contact[0]}
@@ -186,11 +191,24 @@ class Profile {
         }
 
         let address = ''
+        let editBtn = ''
+        let dobStr = ''
+        let contactNumber = ''
+        let mobileMap = ''
+        if(docs.datas.uType === 'doctor') {
+            if(docs.datas.clinics[0].map) {
+                mobileMap = `
+                    <div class="col-12 mobile-map-div">
+                        <img src="https://res.cloudinary.com/dreyan/image/upload/v1549509780/ax-images/doctor/maps/${docs.datas.clinics[0].map}" alt="Map" class="desktop-map-img">
+                    </div>`
+            }
+        }
+
         if (!this.search) {
-            dob = `
+            dobStr = `
                         <div class="col-6 basic-contents">
-                            <span class="basic-label">
-                                Date of Birth:
+                            <span class="basic-label labels">
+                                Date of Birth
                             </span>
                             <span class="input-data">
                                 ${dob[1]} ${dob[2]}, ${dob[3]}
@@ -200,8 +218,8 @@ class Profile {
 
             address = `
                             <div class="col-6 basic-contents">
-                                <span class="basic-label">
-                                    Address:
+                                <span class="basic-label labels">
+                                    Address
                                 </span>
                                 <span class="input-data">
                                 ${docs.datas.basicInfo.address}
@@ -209,28 +227,41 @@ class Profile {
                                 <span class="saving-edited"></span>                            
                             </div>
                 `
-        } else {
-            dob = ''
-            address = ''
+
+            contactNumber = `
+                        <div class="col-6 basic-contents">
+                            <span class="basic-label labels">
+                                Contact number
+                            </span>
+                            <span class="input-data">
+                            ${docs.datas.basicInfo.contact}
+                            </span>
+                            <span class="saving-edited"></span>                        
+                        </div>
+`
+
+            editBtn = `
+                    <span class="edit-info">
+                        <i class="material-icons edit-info-icon">
+                            edit
+                        </i>
+                        <span class="edit-info-text">
+                            Edit Info
+                        </span>
+                    </span>`
+
         }
 
         let details = `
         <div class="profile-title">
             Basic Information
-            <!-- <span class="edit-info">
-                <i class="material-icons edit-info-icon">
-                    edit
-                </i>
-                <span class="edit-info-text">
-                    Edit Info
-                </span>
-            </span> -->
+            ${editBtn}
         </div>
 
         <div class="basic-info-content">
             <div class="col-4 basic-contents">
-                <span class="basic-label">
-                    Firstname:
+                <span class="basic-label labels">
+                    Firstname
                 </span> <br />
                 <span class="input-data">
                 ${docs.datas.basicInfo.fname}
@@ -239,8 +270,8 @@ class Profile {
             </div>
 
             <div class="col-4 basic-contents">
-                <span class="basic-label">
-                    Middle name:
+                <span class="basic-label labels">
+                    Middle name
                 </span> <br />
                 <span class="input-data"> 
                 ${docs.datas.basicInfo.mname}
@@ -249,8 +280,8 @@ class Profile {
             </div>
 
             <div class="col-4 basic-contents">
-                <span class="basic-label">
-                    Lastname:
+                <span class="basic-label labels">
+                    Lastname
                 </span> <br />
                 <span class="input-data">
                     ${docs.datas.basicInfo.lname}
@@ -259,8 +290,8 @@ class Profile {
             </div>     
 
             <div class="col-6 basic-contents">
-                <span class="basic-label">
-                    Gender:
+                <span class="basic-label labels">
+                    Gender
                 </span>
                 <span class="input-data">
                     ${docs.datas.basicInfo.gender}
@@ -268,23 +299,15 @@ class Profile {
                 <span class="saving-edited"></span>
             </div>
 
-            ${dob}
+            ${dobStr}
 
             ${address}
 
-            <div class="col-6 basic-contents">
-                <span class="basic-label">
-                    Contact number:
-                </span>
-                <span class="input-data">
-                ${docs.datas.basicInfo.contact}
-                </span>
-                <span class="saving-edited"></span>                        
-            </div>
+            ${contactNumber}
 
             <div class="col-6 basic-contents">
-                <span class="basic-label">
-                    Email:
+                <span class="basic-label labels">
+                    Email
                 </span>
                 <span class="input-data">
                 ${docs.email}
@@ -301,6 +324,7 @@ class Profile {
             ${prc}
         </div>
         ${clinicInfo}
+        ${mobileMap}
            `
            this.centerDiv.innerHTML = details
     }
@@ -336,6 +360,15 @@ class Profile {
 
         
         let imgBtn = ''
+        let desktopMap = ''
+        if(docs.datas.uType === 'doctor') {
+            if(docs.datas.clinics[0].map) {
+                desktopMap = 
+                        `<div class="desktop-map-div">
+                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1549509780/ax-images/doctor/maps/${docs.datas.clinics[0].map}" alt="Map" class="desktop-map-img">
+                        </div>`
+            }
+        }
         if(!this.search) {
             imgBtn = `
                 <div class="upload-container">
@@ -419,7 +452,9 @@ class Profile {
                         </div>
                     </div>
                 </div>
-            </div>`
+            </div>
+            ${desktopMap}
+            `
 
         if(docs.datas.uType === 'doctor') {
             let specialtyDiv = document.querySelector('.specialty-content')
@@ -442,7 +477,9 @@ class Profile {
         document.querySelector('.upload-avatar').addEventListener('change', e => {
             let formData = document.querySelector('.upload-form')
             let uploadingText = document.querySelector('.uploading-text')
+            let uploadingContainer = document.querySelector('.upload-container')
             uploadingText.textContent = 'Uploading...'
+            uploadingContainer.style.display = "none"
             const xhr = new XMLHttpRequest()
             xhr.open('POST', '/u/upload/avatar/', true)
             xhr.send(new FormData(formData))
@@ -453,8 +490,10 @@ class Profile {
                         uploadingText.textContent = ''
                         if(!datas.fileErr) {
                             document.querySelector('.image').setAttribute('src', `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.profile}`)
+                            uploadingContainer.style.display = "block"
                         } else {
                             alert(datas.fileErr)
+                            uploadingContainer.style.display = "block"
                         }
                     }
                 } catch (err) {

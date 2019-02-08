@@ -6,7 +6,6 @@ socket.on('chat count', datas => {
 
 socket.on('all chats updates', datas => {
     if(document.querySelector('.mail-icon').classList.contains('active-icon')) {
-
         let centerDiv = `
             <div class="message-div col-12">
                 <span class="message-title col-12">Messages</span>
@@ -59,22 +58,31 @@ socket.on('all chats updates', datas => {
                 let allias = dataArr[i].uType === 'doctor' ? 'Dr.' : ''
 
                 let notifs = `
-            <div class="notif-content col-12 ${dataArr[i].status}" onclick="_Messages.viewMessage(this)" data-key="${dataArr[i].key}" data-sender="${dataArr[i].sender}">
-                <div class="notif-header">
-                    <span class="notif-span notif-img">
-                        <img class="notif-img-src" src="${img}" alt="Could'nt load image">
-                    </span>
-                    <span class="notif-span notif-from">
-                        ${allias} ${dataArr[i].name}
-                    </span>
-                </div>
-                <span class="notif-span notif-message ${dataArr[i].status}-msg">
-                    ${msg}
-                </span>
-                <span class="notif-span notif-date ${dataArr[i].status}-date">
-                    ${finalDate}
-                </span>
-            </div>`
+                            <div class="notif-content col-12 ${dataArr[i].status}">
+                                <div class="notif-inner-cont  col-11" onclick="_Messages.viewMessage(this)" data-key="${dataArr[i].key}" data-sender="${dataArr[i].sender}">
+                                    <div class="notif-header">
+                                        <span class="notif-span notif-img">
+                                            <img class="notif-img-src" src="${img}">
+                                        </span>
+                                    </div>
+                                    <div class="notif-msg-content">
+                                        <div class="col-12">
+                                            <span class="notif-span notif-from">
+                                                ${allias} ${dataArr[i].name}
+                                            </span>
+                                            <span class="notif-span notif-message ${dataArr[i].status}-msg">
+                                                ${msg}
+                                            </span>
+                                            <span class="notif-span notif-date ${dataArr[i].status}-date">
+                                                ${finalDate}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1 delete-notif-div" onclick="Notif.notifDelete(this)" data-notif-id="${dataArr[i].key}">
+                                    <i class="material-icons delete-notif">close</i>
+                                </div>
+                            </div>`
 
                 nContent.innerHTML += notifs
             }

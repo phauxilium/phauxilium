@@ -51,10 +51,9 @@ class Signin {
             e.preventDefault()
 
             if (this.state.form.children[0].className === 'sign-div') {
-
+                
                 this.appendLoading()
-
-               this.disableInputs()
+                this.disableInputs()
 
                 // AJAX POST request        
 
@@ -88,6 +87,8 @@ class Signin {
                                 RenderDOM.render(ChooseSign.main(), signForm)
 
                             } else {
+                                this.appendLoading()
+                                this.disableInputs()
                                 window.location = `/u/t/`
                             }
                         }

@@ -9,6 +9,14 @@ class Messages {
         Ajax.post('/u/update-msg', `key=${key}`)
     }
 
+    msgDelete(self) {
+        let key = self.getAttribute('data-key')
+        if (confirm('Are you sure to delete this?')) {
+            const Ajax = new AjaxAPI()
+            Ajax.post('/u/delete-msg', `msgKey=${key}`)
+        }
+    }
+
     appendData(datas) {
         let dataArr = []
         for(let key in datas) {
@@ -53,22 +61,31 @@ class Messages {
                 let allias =dataArr[i].uType === 'doctor' ? 'Dr.' : ''
 
                 let notifs = `
-            <div class="notif-content col-12 ${dataArr[i].status}" onclick="_Messages.viewMessage(this)" data-key="${dataArr[i].key}" data-sender="${dataArr[i].sender}">
-                <div class="notif-header">
-                    <span class="notif-span notif-img">
-                        <img class="notif-img-src" src="${img}" alt="Could'nt load image">
-                    </span>
-                    <span class="notif-span notif-from">
-                        ${allias} ${dataArr[i].name}
-                    </span>
-                </div>
-                <span class="notif-span notif-message ${dataArr[i].status}-msg">
-                    ${msg}
-                </span>
-                <span class="notif-span notif-date ${dataArr[i].status}-date">
-                    ${finalDate}
-                </span>
-            </div>`
+                            <div class="notif-content col-12 ${dataArr[i].status}">
+                                <div class="notif-inner-cont  col-11" onclick="_Messages.viewMessage(this)" data-key="${dataArr[i].key}" data-sender="${dataArr[i].sender}">
+                                    <div class="notif-header">
+                                        <span class="notif-span notif-img">
+                                            <img class="notif-img-src" src="${img}">
+                                        </span>
+                                    </div>
+                                    <div class="notif-msg-content">
+                                        <div class="col-12">
+                                            <span class="notif-span notif-from">
+                                                ${allias} ${dataArr[i].name}
+                                            </span>
+                                            <span class="notif-span notif-message ${dataArr[i].status}-msg">
+                                                ${msg}
+                                            </span>
+                                            <span class="notif-span notif-date ${dataArr[i].status}-date">
+                                                ${finalDate}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1 delete-notif-div" onclick="_Messages.msgDelete(this)" data-key="${dataArr[i].sender}">
+                                    <i class="material-icons delete-notif">close</i>
+                                </div>
+                            </div>`
 
                 nContent.innerHTML += notifs
             }

@@ -80,6 +80,14 @@
                     </div>
                 </div>
             </div>
+            <% if(docs.uType === 'doctor') { %>
+                <% if(docs.clinics[0].map) { %>
+                <div class="desktop-map-div">
+                    <img src="https://res.cloudinary.com/dreyan/image/upload/v1549509780/ax-images/doctor/maps/<%= docs.clinics[0].map %>"
+                        alt="" class="desktop-map-img">
+                </div>
+                <% } %>
+            <% } %>
         </div>
 
 
@@ -115,7 +123,7 @@
                         <img src="/static/images/ads/occa.png" class="ads-img">
                     </div>
                     
-                    <a onclick="window.open('https://occashop.000webhostapp.com/')" class="ads-links">Occashop</a>
+                    <a onclick="window.open('http://occashop.online/')" class="ads-links">Occashop</a>
 
                     <p class="ads-content">
                         Enhance the skills of the students in computing, using various technology that will leverage their perception in the

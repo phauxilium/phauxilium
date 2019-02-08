@@ -147,6 +147,27 @@
     background-color: white;
 }
 
+/* Maps */
+.desktop-map-div {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 2px 0 lightgray;
+}
+
+.desktop-map-img {
+    width: 100%;
+}
+
+.mobile-map-div {
+    margin-top: 10px;
+    display: none;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid lightgrey;
+    box-shadow: 0 2px 2px 0 lightgrey;
+}
 
 /* Clinic Title */
 .clinic-title {
@@ -685,45 +706,61 @@
 
 .notif-content {
     cursor: pointer;
-    padding-top: 10px;
-    padding-bottom: 10px; 
+    padding:10px;
     float: left;
 }
 
 .notif-span {
-    width: 100%;
     float: left;
     text-align: left;
+    width: 100%;
+}
+
+.notif-header {
+    float: left;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .notif-img {
-    padding-top: 10px;
-    text-align: center;
-    height: 100px;
-    width: 100px;
+    text-align: center !important;
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .notif-img-src {
-    width: 60px;
+    width: 70px;
+    height: 70px;
     border-radius: 150px;
     border: 2px solid white;
     box-shadow: 0 3px 3px 0 lightgray;    
 }
 
 .notif-from {
-    width: 70%;
     padding-top: 5px;
     font-weight: bolder;
     font-size: 17px;   
 }
 
-.notif-message {
+.notif-msg-content {
+    float: left;
     width: 70%;
+    padding-top: 10px;
+}
+
+.notif-message {
     font-size: 15px;
 }
 
 .notif-date {
-    width: 70%;
     font-size: 13px;
 }
 
@@ -733,6 +770,18 @@
 
 .old-msg, .old-date {
     color: gray;
+}
+
+.delete-notif-div {
+    display: flex;
+    display: -webkit-flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.delete-notif {
+    font-size: 16px;
 }
 
 
@@ -1257,6 +1306,14 @@
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
+
+    .desktop-map-div {
+        display: none;
+    }
+
+    .mobile-map-div {
+        display: block;
+    }
 }
 
 @media only screen and (max-width: 700px) {
@@ -1428,20 +1485,21 @@
     }
 
     .notif-from {
-        font-size: 15px;
+        font-size: 13px;
     }
 
-    .notif-img {
-        width: 70px;
+    .notif-header {
+        width: 60px;
     }
 
     .notif-img-src {
-        width: 40px;
+        width: 50px;
+        height: 50px;
     }
 
     .notif-message {
         width: 60%;
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .notif-date {

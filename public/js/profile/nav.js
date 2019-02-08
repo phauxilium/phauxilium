@@ -244,19 +244,21 @@ document.body.addEventListener('click', (e) => {
                     console.log('')
                 }
             }
-            document.querySelector('.center-div').innerHTML = `
-            <div class="inner-profile-div">
-                <img src="/static/images/loader.svg" class="loader">
-            </div>
-        `
+
             const RenderDOM = new Render()
             RenderDOM.render(Notif.main(), centerDiv)
-        
+
+            document.querySelector('.n-content').innerHTML = `
+                <div class="inner-profile-div">
+                    <img src="/static/images/loader.svg" class="loader">
+                </div>
+            `   
             const Ajax = new AjaxAPI()
             Ajax.post('/u/view/notifs', '')
             Ajax.xhr.onreadystatechange = () => {
                 try {
                     if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                        document.querySelector('.n-content').innerHTML = ''
                         let datas = JSON.parse(Ajax.xhr.responseText)
                         Notif.appendData(datas)
                     }
@@ -276,14 +278,15 @@ document.body.addEventListener('click', (e) => {
                     console.log('')
                 }
             }
-            document.querySelector('.center-div').innerHTML = `
-            <div class="inner-profile-div">
-                <img src="/static/images/loader.svg" class="loader">
-            </div>
-        `
+
             const RenderDOM = new Render()
             RenderDOM.render(_Messages.main(), centerDiv)
 
+            document.querySelector('.n-content').innerHTML = `
+                    <div class="inner-profile-div">
+                        <img src="/static/images/loader.svg" class="loader">
+                    </div>
+                `
             const Ajax = new AjaxAPI()
             Ajax.post('/u/view/messages', '')
             Ajax.xhr.onreadystatechange = () => {
@@ -376,15 +379,18 @@ document.body.addEventListener('click', (e) => {
                    document.querySelector('.outer-nav').style.height = "50px"
                    document.querySelector('.search-div').style.display = "none"
                } else {
+                   document.querySelector('.search-div').style.display = "block"
                    document.querySelector('.inner-left').style.height = "50px"
                    document.querySelector('.outer-nav').style.height = "100px"
-                   document.querySelector('.search-div').style.display = "block"
                }
            })
+       } else {
+           document.querySelector('.outer-nav').style.height = "50px"
        }
 
        window.addEventListener('resize', () => {
            if (window.innerWidth <= 768) {
+               document.querySelector('.outer-nav').style.height = "100px"
                document.querySelector('.inner-left').style.height = "100%"
 
                if (!profileDiv.classList.contains('search-profile-div') &&
@@ -394,18 +400,33 @@ document.body.addEventListener('click', (e) => {
                    document.querySelector('.profile-div').style.display = "block"
                }
 
-               window.addEventListener('scroll', () => {
-                   if (window.pageYOffset > 50) {
-                       document.querySelector('.inner-left').style.height = "0px"
-                       document.querySelector('.outer-nav').style.height = "50px"
-                       document.querySelector('.search-div').style.display = "none"
-                   } else {
-                       document.querySelector('.inner-left').style.height = "50px"
-                       document.querySelector('.outer-nav').style.height = "100px"
-                       document.querySelector('.search-div').style.display = "block"
-                   }
-               })
-           } 
+            //    window.addEventListener('scroll', () => {
+            //        if (window.pageYOffset > 50) {
+            //            document.querySelector('.inner-left').style.height = "0px"
+            //            document.querySelector('.outer-nav').style.height = "50px"
+            //            document.querySelector('.search-div').style.display = "none"
+            //        } else {
+            //            document.querySelector('.inner-left').style.height = "50px"
+            //            document.querySelector('.outer-nav').style.height = "100px"
+            //            document.querySelector('.search-div').style.display = "block"
+            //        }
+            //    })
+           } else {
+               document.querySelector('.outer-nav').style.height = "50px"
+            //    window.addEventListener('scroll', () => {
+            //        if (window.pageYOffset > 50) {
+            //            document.querySelector('.inner-left').style.height = "0px"
+            //            document.querySelector('.outer-nav').style.height = "50px"
+            //            document.querySelector('.search-div').style.display = "none"
+            //        } 
+            //     //    else {
+            //     //        document.querySelector('.inner-left').style.height = "50px"
+            //     //        document.querySelector('.outer-nav').style.height = "100px"
+            //     //        document.querySelector('.search-div').style.display = "block"
+            //     //    }
+            //    })
+            
+           }
        })
    } catch (err) {
        console.log('')

@@ -6,11 +6,20 @@ const Cryptos = require('../my_modules/Cryptos')
 const crypto = new Cryptos()
 const SendGrid = require('../my_modules/SendGrid')
 
-router.get('/', (req, res) => res.render('index/index'))
+router.get('/', (req, res) => {
+    if (!req.session.ussID) res.render('index/index')
+    else res.redirect('/u/t')
+})
 
-router.get('/about', (req, res) => res.render('index/about'))
+router.get('/about', (req, res) => {
+    if (!req.session.ussID) res.render('index/about')
+    else res.redirect('/u/t')
+})
 
-router.get('/contact', (req, res) => res.render('index/contact'))
+router.get('/contact', (req, res) => {
+    if (!req.session.ussID) res.render('index/contact')
+    else res.redirect('/u/t')
+})
 
 
 // ----------------------- Sign in ------------------
@@ -280,6 +289,9 @@ router.post('/c/s/p', (req, res) => {
                     },
                     clinics: {
                         0: {
+                            lat: 0,
+                            long: 0,
+                            map: '',
                             name: auth.cName,
                             address: auth.cAddress,
                             contact: [auth.cContact],
