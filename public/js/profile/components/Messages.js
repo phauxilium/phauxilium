@@ -11,6 +11,7 @@ class Messages {
 
     msgDelete(self) {
         let key = self.getAttribute('data-key')
+        const Ajax = new AjaxAPI()
         if (confirm('Are you sure to delete this?')) {
             const Ajax = new AjaxAPI()
             Ajax.post('/u/delete-msg', `msgKey=${key}`)
@@ -37,7 +38,7 @@ class Messages {
         if (JSON.stringify(datas) === '{}') {
             nContent.innerHTML = `
                 <div class="notif-content col-12">
-                    <span class="notif-span notif-none">Nothing to show</span>
+                    <span class="notif-span notif-none nothing">Nothing to show</span>
                 </div>`
         } else {
             dataArr.sort((a, b) => {
@@ -58,7 +59,7 @@ class Messages {
 
                 if (msg.length > 80) msg = `${msg.substring(0, 80)}...`
 
-                let allias =dataArr[i].uType === 'doctor' ? 'Dr.' : ''
+                let allias =dataArr[i].uType === 'doctor' ? 'M.D.' : ''
 
                 let notifs = `
                             <div class="notif-content col-12 ${dataArr[i].status}">

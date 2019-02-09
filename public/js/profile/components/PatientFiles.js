@@ -232,7 +232,7 @@ class PatientFiles {
         
         let medRecords = ''
         if(datas.medRecords.length === 1) {
-            medRecords = '<div class="medical-records-content">Nothing to show.</div>'
+            medRecords = '<div class="medical-records-content nothing">Nothing to show.</div>'
         } else {
             let click = ''
             let medData = datas.medRecords
@@ -254,35 +254,40 @@ class PatientFiles {
                     let finTime = `${hours}:${time[1]} ${meridiem}`
                     let finalDate = `${dateStr[0]} - ${dateStr[1]}. ${dateStr[2]}, ${dateStr[3]} ${finTime}`
 
-                    if(medData[key].attached !== '') {
-                        click = `window.open('https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/doctor/assets/${medData[key].filename}')`
-                    } else {
-                        click = ''
+                    try {
+                        if (medData[key].attached !== '') {
+                            click = `window.open('https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/doctor/assets/${medData[key].filename}')`
+                        } else {
+                            click = ''
+                        }
+                    } catch (err) {
+                        console.log(err)
                     }
                     
                     medRecords += `
                         <div class="medical-records-content col-12">
                             <div class="col-12 med-cont">
                                 <label class="labels">Date Added</label>
-                                <span class="col-12"> ${finalDate} </span>
+                                <span class="col-12 med-rec"> ${finalDate} </span>
                             </div>
 
                             <div class="col-12 med-cont">
                                 <label class="labels">Complain</label>
-                                <span class="col-12"> ${medData[key].complains || empty} </span>
+                                <span class="col-12 med-rec"> ${medData[key].complains || empty} </span>
                             </div>
                             
                             <div class="col-12 med-cont">
                                 <label class="labels">Findings</label>
-                                <span class="col-12"> ${medData[key].findings || empty} </span>
+                                <span class="col-12 med-rec"> ${medData[key].findings || empty} </span>
                             </div>
 
                             <div class="col-12 med-cont">
                                 <label class="labels">Attached File</label>
-                                <span class="col-12 attached-file" onclick="${click}">
+                                <span class="col-12 attached-file  med-rec" onclick="${click}">
                                     ${medData[key].attached || empty} 
                                 </span>
                             </div>
+                            <a href="#">Delete</a>
                         </div>
                     `
                 }
@@ -386,7 +391,7 @@ class PatientFiles {
                             <i class="material-icons add-med-icon">add</i>
                         </span>
                         <span class="add-med-text">
-                            Add Medical Records    
+                            Add Records    
                         </span>
                     </div>
                 </div>
@@ -474,7 +479,7 @@ class PatientFiles {
     main(datas) {
         let patientData = ''
 
-        if(datas.length === 1) patientData = `<div class="patient-contents">Nothing to show</div>`
+        if(datas.length === 1) patientData = `<div class="patient-contents nothing">Nothing to show</div>`
         else {
             for(let key in datas) {
                 if(key !== '0') {

@@ -48,7 +48,7 @@ route.get('/t/', (req, res) => {
                     childRef = ref.child(key)
                     childRef.once('value', snapshots => {
                         let datas = snapshots.val()
-                        let date = datas.date.split(' ')
+                        let date = new Date(datas.date).toString().split(' ')
                         let dateStr = `${date[0]} ${date[1]} ${date[2]} ${date[3]}`
                         if (dateStr === dateNowStr && datas.status !== 'pending') {
                             childRef.update({
@@ -721,7 +721,7 @@ route.post('/accept-req', (req, res) => {
                 childRef = ref.child(count.numChildren())
                 childRef.update({
                     date: new Date(),
-                    message: `Dr. ${name} accepted your appointment request.`,
+                    message: `M.D. ${name} accepted your appointment request.`,
                     name: name,
                     receiver: req.body.sender,
                     sender: req.session.ussID,
@@ -765,7 +765,7 @@ route.post('/decline-req', (req, res) => {
         let msg = ''
 
         if(datas.uType === 'doctor') {
-            msg = `Dr. ${name} canceled your appointment request.`
+            msg = `M.D. ${name} canceled your appointment request.`
 
             let childRef = ref.child(`appointments/${req.body.appointmentID}`)
             childRef.once('value', snapshots => {
@@ -1186,7 +1186,13 @@ module.exports = (io) => {
             const db = fire.firebase.database()
             socket.join(room, () => {
                 // Notifs count && updates
-                let ref = db.ref(`users/${room}/notifs`)                
+                let ref = db.ref(`users/${room}/notifs`)
+                ref.on('child_added', snapshots => {
+                    io.to(room).emit('notif-sound', true)
+                })
+
+                // Fix Notif sound
+
                 ref.on('value', snapshots => {
                     let notifs = snapshots.val()
                     let count = 0
@@ -1195,6 +1201,7 @@ module.exports = (io) => {
                             if(notifs[notif].status === 'new') count++
                         }
                     }
+
                     io.to(room).emit('notif count', count)
                     io.to(room).emit('notif updates', notifs)
                 })
@@ -1215,7 +1222,7 @@ module.exports = (io) => {
                                 sender: msgs[msg].sender,
                             }
                         }
-                    }
+                    }             
                     io.to(room).emit('chat count', count)
                     io.to(room).emit('chat updates', msgObj)
 

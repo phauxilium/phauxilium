@@ -503,34 +503,36 @@ document.body.addEventListener('click', e => {
 })
 
 // Updating profile picture 
-document.querySelector('.upload-avatar').addEventListener('change', e => {
-    let formData = document.querySelector('.upload-form')
-    let uploadingText = document.querySelector('.uploading-text')
-    uploadingText.textContent = 'Uploading...'
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', '/u/upload/avatar/', true)
-    xhr.send(new FormData(formData))
-    xhr.onreadystatechange = () => {
-        try {
-            if(xhr.readyState === 4 && xhr.status === 200) {
-                let datas = JSON.parse(xhr.responseText)
-                uploadingText.textContent = ''
-                if(!datas.fileErr) {
-                    document.querySelector('.image').setAttribute('src', `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.profile}`)
-                } else {
-                    alert(datas.fileErr)
-                }
-            }
-        } catch (err) {
-            console.log(err)
-        }
-    }
-})
+// document.querySelector('.upload-avatar').addEventListener('change', e => {
+//     let formData = document.querySelector('.upload-form')
+//     let uploadingText = document.querySelector('.uploading-text')
+//     uploadingText.textContent = 'Uploading...'
+//     const xhr = new XMLHttpRequest()
+//     xhr.open('POST', '/u/upload/avatar/', true)
+//     xhr.send(new FormData(formData))
+//     xhr.onreadystatechange = () => {
+//         try {
+//             if(xhr.readyState === 4 && xhr.status === 200) {
+//                 let datas = JSON.parse(xhr.responseText)
+//                 uploadingText.textContent = ''
+//                 if(!datas.fileErr) {
+//                     document.querySelector('.image').setAttribute('src', `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas.uType}/${datas.profile}`)
+//                 } else {
+//                     alert(datas.fileErr)
+//                 }
+//             }
+//         } catch (err) {
+//             console.log(err)
+//         }
+//     }
+// })
 
 // Signed In listener
 // Don't Remove!!!
 try {
     socket.emit('signed in', document.querySelector('.channel').value)
+    socket.emit('notif-del', true)
+
 } catch {
     console.log('')
 }

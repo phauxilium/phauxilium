@@ -1,3 +1,11 @@
+socket.on('notif-sound', data => {
+    const filename = '/static/sounds/just-like-magic'
+    let mp3Source = `<source src="${filename}.mp3" type="audio/mpeg">`
+    let oggSource = `<source src="${filename}.ogg" type="audio/ogg">`
+    let embedSource = `<embed hidden="true" autostart="true" loop="false" src="${filename.mp3}">`
+    document.querySelector(".sound").innerHTML = `<audio autoplay="autoplay">${mp3Source}${oggSource}${embedSource}</audio>`
+})
+
 socket.on('notif count', datas => {
     let notifContainer = document.querySelector('.notif-count')
     datas === 0 ? notifContainer.style.display = "none" : notifContainer.style.display = "inline"
@@ -11,7 +19,7 @@ socket.on('notif updates', datas => {
         if (datas.length === 1) {
             nContent.innerHTML = `
                 <div class="notif-content col-12">
-                    <span class="notif-span notif-none">Nothing to show</span>
+                    <span class="notif-span notif-none nothing">Nothing to show</span>
                 </div>`
         } else {
             nContent.innerHTML = ''
@@ -29,7 +37,7 @@ socket.on('notif updates', datas => {
                         let img = datas[data].from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].img}`
 
                         if (msg.length > 80) msg = `${msg.substring(0, 80)}...`
-                        let allias = datas[data].uType === 'doctor' ? 'Dr.' : ''
+                        let allias = datas[data].uType === 'doctor' ? 'M.D.' : ''
 
                         let notifs = `
                             <div class="notif-content col-12 ${datas[data].status}">

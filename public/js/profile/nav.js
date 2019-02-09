@@ -1,7 +1,96 @@
+
+// Page Reload
+try {
+    let profileDiv = document.querySelector('.profile-div')
+
+    if (window.innerWidth <= 768) {
+        if (!profileDiv.classList.contains('search-profile-div') &&
+            !profileDiv.classList.contains('view-my-profile')) {
+            document.querySelector('.profile-div').style.display = "none"
+        } else {
+            document.querySelector('.profile-div').style.display = "block"
+            document.querySelectorAll('.nav-icons').forEach(value => {
+                value.classList.remove('active-icon')
+            })
+        }
+
+        window.addEventListener('scroll', () => {
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                document.querySelector('.inner-left').style.height = "0px"
+                document.querySelector('.outer-nav').style.height = "50px"
+                document.querySelector('.search-div').style.display = "none"
+            } else {
+                document.querySelector('.search-div').style.display = "block"
+                document.querySelector('.inner-left').style.height = "50px"
+                document.querySelector('.outer-nav').style.height = "100px"
+            }
+        })
+    } else {
+        document.querySelector('.outer-nav').style.height = "50px"
+        const Ajax = new AjaxAPI()
+        Ajax.post('/u/my/profile')
+        Ajax.xhr.onreadystatechange = () => {
+            try {
+                if (Ajax.xhr.readyState === 4 && Ajax.xhr.status === 200) {
+                    let datas = JSON.parse(Ajax.xhr.responseText)
+                    const Prof = new Profile(datas, profileDiv)
+                    Prof.profile()
+                }
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth <= 768) {
+            document.querySelector('.outer-nav').style.height = "100px"
+
+            if (!profileDiv.classList.contains('search-profile-div') &&
+                !profileDiv.classList.contains('view-my-profile')) {
+                document.querySelector('.profile-div').style.display = "none"
+            } else {
+                document.querySelector('.profile-div').style.display = "block"
+            }
+
+            //    window.addEventListener('scroll', () => {
+            //        if (window.pageYOffset > 50) {
+            //            document.querySelector('.inner-left').style.height = "0px"
+            //            document.querySelector('.outer-nav').style.height = "50px"
+            //            document.querySelector('.search-div').style.display = "none"
+            //        } else {
+            //            document.querySelector('.inner-left').style.height = "50px"
+            //            document.querySelector('.outer-nav').style.height = "100px"
+            //            document.querySelector('.search-div').style.display = "block"
+            //        }
+            //    })
+        } else {
+            document.querySelector('.outer-nav').style.height = "50px"
+            //    window.addEventListener('scroll', () => {
+            //        if (window.pageYOffset > 50) {
+            //            document.querySelector('.inner-left').style.height = "0px"
+            //            document.querySelector('.outer-nav').style.height = "50px"
+            //            document.querySelector('.search-div').style.display = "none"
+            //        } 
+            //     //    else {
+            //     //        document.querySelector('.inner-left').style.height = "50px"
+            //     //        document.querySelector('.outer-nav').style.height = "100px"
+            //     //        document.querySelector('.search-div').style.display = "block"
+            //     //    }
+            //    })
+
+        }
+    })
+} catch (err) {
+    console.log('')
+}
+
+
 const Notif = new Notification()
 const _Messages = new Messages()
 const _Timeline = new Timeline()
 _Timeline.today()    
+
 
 // For Nav Icons
 let icons = document.querySelectorAll('.nav-icons')
@@ -11,16 +100,6 @@ let dropdownDiv = document.querySelector('.dropdown-div')
 let searchInput = document.querySelector('.search-input')
 let searchBtn = document.querySelector('.search-btn')
 let searchIcon = document.querySelector('.search-icon')
-
-// let searchOutputDiv = document.querySelector('.search-output-div')
-// searchInput.addEventListener('keyup', (e) => {
-//     let inputValue = e.target.va lue
-//     if(inputValue.toLowerCase() === 'iloilo') {
-//         searchOutputDiv.style.display = "inline"
-//     } else {
-//         searchOutputDiv.style.display = "none"
-//     }
-// })
 
 
 //  Searching
@@ -53,26 +132,26 @@ try {
         searchInput.blur()
         searchInput.value = searchInput.value.trim()
         if (searchInput.value !== '') {
+            if (window.innerWidth <= 768) {
+                let profileDiv = document.querySelector('.profile-div')
+                profileDiv.classList.remove('view-my-profile')
+                profileDiv.classList.remove('search-profile-div')
+                profileDiv.style.display = "none"
+            }
+
             icons.forEach(value => {
                 value.classList.remove('active-icon')
-                try {
-                    if (window.innerWidth <= 768) {
-                        document.querySelector('.profile-div').style.display = "none"
-                    }
-                } catch (err) {
-                    console.log('')
-                }
             })
 
             let centerDiv = document.querySelector('.center-div')
             centerDiv.innerHTML = `
-            <div class="search-res-div">
-                <div class="false-result">
-                    <img src="/static/images/loader.svg" class="loader">
-                </div>
-            </div>
-        `
-
+                    <div class="search-res-div">
+                        <div class="false-result">
+                            <img src="/static/images/loader.svg" class="loader">
+                        </div>
+                    </div>
+                `
+        
             const Ajax = new AjaxAPI()
             Ajax.post('/u/search', `id=${searchInput.value}`)
 
@@ -84,23 +163,23 @@ try {
                         let str = JSON.stringify(datas)
                         if (str === '{}') {
                             centerDiv.innerHTML = `
-                            <div class="search-res-div">
-                                <div class="false-result">No result found</div>
-                            </div>
-                        `
+                                <div class="search-res-div">
+                                    <div class="false-result">No result found</div>
+                                </div>
+                            `
                         } else {
                             for (let data in datas) {
                                 let name = `${datas[data].basicInfo.fname} ${datas[data].basicInfo.mname} ${datas[data].basicInfo.lname}`
-                                let abb = datas[data].uType === 'doctor' ? 'Dr.' : ''
+                                let abb = datas[data].uType === 'doctor' ? 'M.D.' : ''
                                 results += `
-                            <div class="search-res-div" data-uid="${data}">
-                                <div class=" true-results">
-                                    <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].basicInfo.profile}" class="search-img">
-                                    <span class="search-name">${abb} ${name}</span>
-                                    <span class="search-loc">${datas[data].basicInfo.address}</span>
-                                </div>
-                            </div>
-                        `
+                                    <div class="search-res-div" data-uid="${data}">
+                                        <div class=" true-results">
+                                            <img src="https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].basicInfo.profile}" class="search-img">
+                                            <span class="search-name">${abb} ${name}</span>
+                                            <span class="search-loc">${datas[data].basicInfo.address}</span>
+                                        </div>
+                                    </div>
+                                `
                             }
 
                             centerDiv.innerHTML = results
@@ -141,11 +220,7 @@ document.body.addEventListener('click', (e) => {
                 profileDiv.classList.add('search-profile-div')
                 profileDiv.classList.remove('view-my-profile')
                 profileDiv.style.display = "block"
-                profileDiv.innerHTML = `
-                    <div class="inner-profile-div">
-                        <img src="/static/images/loader.svg" class="loader">
-                    </div>
-                `
+                profileDiv.innerHTML = ''
 
                 const centerDiv = document.querySelector('.center-div')
                 
@@ -171,6 +246,9 @@ document.body.addEventListener('click', (e) => {
         }
 
     if(_classList.contains('nav-icons') && !_classList.contains('arrow-icon')) {
+        document.body.scrollTop = 0
+        document.documentElement.scrollTop = 0
+        
         icons.forEach(value => {
             value.classList.remove('active-icon')
         })
@@ -358,78 +436,4 @@ document.body.addEventListener('click', (e) => {
         PatientFile.loadForm()
     }
 })
-
-   try {
-       let profileDiv = document.querySelector('.profile-div')
-
-       if (window.innerWidth <= 768) {
-           if (!profileDiv.classList.contains('search-profile-div') &&
-               !profileDiv.classList.contains('view-my-profile')) {
-                document.querySelector('.profile-div').style.display = "none"
-            } else {
-               document.querySelector('.profile-div').style.display = "block"
-               document.querySelectorAll('.nav-icons').forEach(value => {
-                   value.classList.remove('active-icon')
-               })
-            }
-
-           window.addEventListener('scroll', () => {
-               if (window.pageYOffset > 50) {
-                   document.querySelector('.inner-left').style.height = "0px"
-                   document.querySelector('.outer-nav').style.height = "50px"
-                   document.querySelector('.search-div').style.display = "none"
-               } else {
-                   document.querySelector('.search-div').style.display = "block"
-                   document.querySelector('.inner-left').style.height = "50px"
-                   document.querySelector('.outer-nav').style.height = "100px"
-               }
-           })
-       } else {
-           document.querySelector('.outer-nav').style.height = "50px"
-       }
-
-       window.addEventListener('resize', () => {
-           if (window.innerWidth <= 768) {
-               document.querySelector('.outer-nav').style.height = "100px"
-               document.querySelector('.inner-left').style.height = "100%"
-
-               if (!profileDiv.classList.contains('search-profile-div') &&
-                   !profileDiv.classList.contains('view-my-profile')) {
-                   document.querySelector('.profile-div').style.display = "none"
-               } else {
-                   document.querySelector('.profile-div').style.display = "block"
-               }
-
-            //    window.addEventListener('scroll', () => {
-            //        if (window.pageYOffset > 50) {
-            //            document.querySelector('.inner-left').style.height = "0px"
-            //            document.querySelector('.outer-nav').style.height = "50px"
-            //            document.querySelector('.search-div').style.display = "none"
-            //        } else {
-            //            document.querySelector('.inner-left').style.height = "50px"
-            //            document.querySelector('.outer-nav').style.height = "100px"
-            //            document.querySelector('.search-div').style.display = "block"
-            //        }
-            //    })
-           } else {
-               document.querySelector('.outer-nav').style.height = "50px"
-            //    window.addEventListener('scroll', () => {
-            //        if (window.pageYOffset > 50) {
-            //            document.querySelector('.inner-left').style.height = "0px"
-            //            document.querySelector('.outer-nav').style.height = "50px"
-            //            document.querySelector('.search-div').style.display = "none"
-            //        } 
-            //     //    else {
-            //     //        document.querySelector('.inner-left').style.height = "50px"
-            //     //        document.querySelector('.outer-nav').style.height = "100px"
-            //     //        document.querySelector('.search-div').style.display = "block"
-            //     //    }
-            //    })
-            
-           }
-       })
-   } catch (err) {
-       console.log('')
-   }
-
 

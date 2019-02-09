@@ -1,3 +1,4 @@
+
 class Notification {
     notifModalView(datas) {
         let dateObj = new Date(datas.date)
@@ -29,6 +30,7 @@ class Notification {
         if(confirm("Are you sure to delete this?") === true) {
             const Ajax = new AjaxAPI()
             Ajax.post('/u/delete/notif', `notifID=${param.getAttribute('data-notif-id')}`)
+            socket.emit('notif-del', true)
         }
     }
 
@@ -98,11 +100,9 @@ class Notification {
         if(datas.length === 1) {
             nContent.innerHTML = `
                 <div class="notif-content col-12">
-                    <span class="notif-span notif-none">Nothing to show</span>
+                    <span class="notif-span notif-none nothing">Nothing to show</span>
                 </div>`
-        } else { 
-            
-            // FIXTHIS
+        } else {             
             try {
                 for (let data = datas.length - 1; data >= 0; data--) {
                     if (datas[data] !== 0 && datas[data] !== null) {
@@ -117,7 +117,7 @@ class Notification {
                         let img = datas[data].from === 'Auxilium Team' ? '/static/images/black.png' : `https://res.cloudinary.com/dreyan/image/upload/v1538466628/ax-images/${datas[data].uType}/${datas[data].img}`
 
                         if (msg.length > 80) msg = `${msg.substring(0, 80)}...`
-                        let allias = datas[data].uType === 'doctor' ? 'Dr.' : ''
+                        let allias = datas[data].uType === 'doctor' ? 'M.D.' : ''
 
                         let notifs = `
                         <div class="notif-content col-12 ${datas[data].status}">

@@ -34,7 +34,7 @@ socket.on('all chats updates', datas => {
         if (JSON.stringify(datas) === '{}') {
             nContent.innerHTML = `
                 <div class="notif-content col-12">
-                    <span class="notif-span notif-none">Nothing to show</span>
+                    <span class="notif-span notif-none nothing">Nothing to show</span>
                 </div>`
         } else {
             dataArr.sort((a, b) => {
@@ -55,7 +55,7 @@ socket.on('all chats updates', datas => {
 
                 if (msg.length > 80) msg = `${msg.substring(0, 80)}...`
 
-                let allias = dataArr[i].uType === 'doctor' ? 'Dr.' : ''
+                let allias = dataArr[i].uType === 'doctor' ? 'M.D.' : ''
 
                 let notifs = `
                             <div class="notif-content col-12 ${dataArr[i].status}">

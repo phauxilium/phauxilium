@@ -7,17 +7,17 @@ const crypto = new Cryptos()
 const SendGrid = require('../my_modules/SendGrid')
 
 router.get('/', (req, res) => {
-    if (!req.session.ussID) res.render('index/index')
+    if (!req.session.ussID || req.session.profileComplete === false) res.render('index/index')
     else res.redirect('/u/t')
 })
 
 router.get('/about', (req, res) => {
-    if (!req.session.ussID) res.render('index/about')
+    if (!req.session.ussID || req.session.profileComplete === false) res.render('index/about')
     else res.redirect('/u/t')
 })
 
 router.get('/contact', (req, res) => {
-    if (!req.session.ussID) res.render('index/contact')
+    if (!req.session.ussID || req.session.profileComplete === false) res.render('index/contact')
     else res.redirect('/u/t')
 })
 
@@ -73,9 +73,13 @@ router.post('/signin', (req, res) => {
                     } else {
                         req.session.ussID = encryptKey
                         if (datas.status.profileComplete === false) {
+                            req.session.profileComplete = false
                             auth.err.completeErr = true
                             res.send(auth.err)
-                        } else res.send(auth.err)
+                        } else {
+                            req.session.profileComplete === true
+                            res.send(auth.err)
+                        }
                     }
                 }
             }

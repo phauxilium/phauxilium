@@ -91,6 +91,17 @@
     font-weight: bold;
 }
 
+.edit-clinic {
+    background-color: white;
+    border: 1px solid lightgray;
+    border-bottom: 0;
+    padding: 0 15px;
+    padding-top: 10px;
+    float: left;
+    width: 100%;
+    color: #1da1f2;
+}
+
 /* Basic Info Content */
 .basic-info-content, .clinic-info-content {
     border: 1px solid lightgray;
@@ -99,6 +110,10 @@
     background-color: white;
     padding: 10px;
     box-shadow: 0 1px 2px 0 lightgray;
+}
+
+.clinic-info-content {
+    border-top: 0;
 }
 
 .basic-contents, .clinic-contents, .clinic-contact {
@@ -179,9 +194,6 @@
     font-weight: lighter;
 }
 
-.edit-clinic-info {
-    margin-left: 10px;
-}
 
 .edit-info-icon, .add-clinic-icon, .add-sched-icon, .edit-clinic-icon, .add-med-icon {
     font-size: 18px;
@@ -501,7 +513,7 @@
 }
 
 .nothing {
-    text-align: center;
+    text-align: center !important;
 }
 
 .accept-decline-div {
@@ -794,7 +806,7 @@
     width: 100%;
     text-align: left;
     margin-bottom: 5px;
-    border-radius: 15px;
+    border-radius:px;
     cursor: pointer;
     transition: 0.2s;
 }
@@ -1461,6 +1473,23 @@
 }
 
 @media only screen and (max-width: 500px) {
+    .nothing {
+        font-size: 14px;
+    }
+
+
+    /* Profile */
+    .name {
+        font-size: 17px;
+    }
+
+    .add-specialty-text {
+        font-size: 14px;
+    }
+
+    .profile-title, .clinic-title, .schedule-title, .edit-info-icon, .edit-clinic-icon, .add-sched-icon, .input-data {
+        font-size: 15px;
+    }
 
     /* Notification */
     .modal-img-notif {
@@ -1518,14 +1547,22 @@
         font-size: 12px;
     }
 
+    .timeline-btns {
+        font-size: 14px;
+    }
+
     .bar-btn {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .today-re-sched, .today-cancel {
         font-size: 12px;
         width: 70px;
         padding: 5px;
+    }
+
+    .message-title {
+        font-size: 14px;
     }
 
     .chat-textarea-div {
@@ -1536,4 +1573,11 @@
         width: 25%;
     }
 
+    .patients-title {
+        font-size: 14px;
+    }
+
+    .add-patient-icon, .patient-data, .edit-patient-icon, .add-med-icon, .patients-name, .med-rec {
+        font-size: 15px;
+    }
 }

@@ -5,6 +5,8 @@ class Profile {
         this.search = search
         this.centerDiv = document.querySelector('.center-div'),
         this.week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        this.editBtn = ''
+        this.addClinicBtn = ''
     }
 
     profDetails() {
@@ -12,6 +14,7 @@ class Profile {
         let dob = new Date(docs.datas.basicInfo.dob).toString().split(' ')
         let prc = ''
         let clinicInfo = ''
+        let clinicContent = ''
 
         if(docs.datas.uType === 'doctor') {
             let line = '--:-- --'
@@ -91,8 +94,6 @@ class Profile {
 
             if (docs.datas.uType === 'doctor') {
                 let searchBtn = ''
-                let editBtn = ''
-
                 if(!this.search) {
                     searchBtn = `
                     <i class="material-icons add-sched-icon" data-cID="0">
@@ -103,90 +104,96 @@ class Profile {
                     </span>
                     `
 
-                    editBtn = `
+                    this.editBtn = `
                         <span class="edit-clinic-info">
                             <i class="material-icons edit-clinic-icon">
                                 edit
                             </i>
                             <span class="edit-clinic-text">
-                                Edit Clinic info
+                                Edit clinic info
                             </span>
                         </span>`
-                }
 
-                clinicInfo = `
-                <div class="outer-clinic-content">
-                    <div class="clinic-title">
-                        Clinic Information
-                        ${editBtn}
-                        <!-- 
-                        <span class="add-clinic">
-                            <i class="material-icons add-clinic-icon">
-                                add
-                            </i>
-                            <span class="add-clinic-text">
-                                Add clinic
-                            </span>
-                        </span> -->
-                    </div>
-                    
-                    <div class="clinic-info-content">
-                        <div class="col-6 clinic-contents">
-                            <span class="clinic-label labels">
-                                Clinic's name
-                            </span>
-                            <span class="input-data">
-                                ${docs.datas.clinics[0].name}
-                            </span>
-                        </div>
-                    
-                        <div class="col-6 clinic-contents">
-                            <span class="clinic-label labels">
-                                Location
-                            </span>
-                            <span class="input-data">
-                                ${docs.datas.clinics[0].address}
-                            </span>
-                        </div>
-                    
-                        <div class="col-9 clinic-contact">
-                            <span class="clinic-label labels">
-                                Clinic's contact number
-                            </span>
-                            <span class="input-data">
-                                ${docs.datas.clinics[0].contact[0]}
-                            </span>
-                        </div>
-                        <span class="col-3 add-contact">
-                            <!-- <span class="add-contact-text">
-                                <i class="material-icons add-contact-icon">
+                    this.addClinicBtn = `
+                            <span class="add-clinic">
+                                <i class="material-icons add-clinic-icon">
                                     add
                                 </i>
-                                Add contact number
-                            </span> -->
-                        </span>
-                    
-                        <div class="col-12 sched-title">
-                            <div class="schedule-title">
-                                Clinic's Schedule
-                                <span class="add-sched">
-                                    ${searchBtn}
+                                <span class="add-clinic-text">
+                                    Add clinic
                                 </span>
+                            </span>`
+
+                    clinicInfo = `               
+                            <div class="clinic-info-content">
+                                <div class="col-6 clinic-contents">
+                                    <span class="clinic-label labels">
+                                        Clinic's name
+                                    </span>
+                                    <span class="input-data">
+                                        ${docs.datas.clinics[0].name}
+                                    </span>
+                                </div>
+                            
+                                <div class="col-6 clinic-contents">
+                                    <span class="clinic-label labels">
+                                        Location
+                                    </span>
+                                    <span class="input-data">
+                                        ${docs.datas.clinics[0].address}
+                                    </span>
+                                </div>
+                            
+                                <div class="col-9 clinic-contact">
+                                    <span class="clinic-label labels">
+                                        Clinic's contact number
+                                    </span>
+                                    <span class="input-data">
+                                        ${docs.datas.clinics[0].contact[0]}
+                                    </span>
+                                </div>
+                                <span class="col-3 add-contact">
+                                    <!-- <span class="add-contact-text">
+                                        <i class="material-icons add-contact-icon">
+                                            add
+                                        </i>
+                                        Add contact number
+                                    </span> -->
+                                </span>
+                            
+                                <div class="col-12 sched-title">
+                                    <div class="schedule-title">
+                                        Clinic's Schedule
+                                        <span class="add-sched">
+                                            ${searchBtn}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="col-4 inner-sched-text">
+                                        ${weekSched}
+                                    </div>
+                                    <div class="col-4 inner-sched-text">
+                                        ${timeFrom}
+                                    </div>
+                                    <div class="col-4 inner-sched-text">
+                                        ${timeTo}
+                                    </div>
+                                </div>
+                            </div>`
+
+                    clinicContent = `
+                        <div class="outer-clinic-content">
+                            <div class="clinic-title">
+                                Clinic Information
+                                ${this.addClinicBtn}
                             </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="col-4 inner-sched-text">
-                                ${weekSched}
-                            </div>
-                            <div class="col-4 inner-sched-text">
-                                ${timeFrom}
-                            </div>
-                            <div class="col-4 inner-sched-text">
-                                ${timeTo}
-                            </div>
-                        </div>
-                    </div>
-                </div>`
+                            <div class="edit-clinic">
+                                ${this.editBtn}
+                            </div>    
+                            ${clinicInfo}
+                        </div>`
+                }
             }
         }
 
@@ -323,7 +330,7 @@ class Profile {
             </div>
             ${prc}
         </div>
-        ${clinicInfo}
+        ${clinicContent}
         ${mobileMap}
            `
            this.centerDiv.innerHTML = details
@@ -348,7 +355,7 @@ class Profile {
 
 
         if (docs.datas.uType === 'doctor') {
-            name = `Dr. ${name}`
+            name = `M.D. ${name}`
             _specialtyDiv = `
                     <div class="specialty">
                             <div class="specialty-content">
@@ -469,9 +476,6 @@ class Profile {
                 }
             }
         }
-
-        this.centerDiv.innerHTML = `
-        `
 
         // Updating profile picture 
         document.querySelector('.upload-avatar').addEventListener('change', e => {
